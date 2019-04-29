@@ -18,7 +18,6 @@
 
 <template>
   <section :id='$style.container'>
-    <b>Live view</b>
     <div :id='$style.liveviews'>
       <div v-for='source in sources' :class='$style.liveview' :style='{"background-image": `url(${source.url})`}' @click='open_pic(source)'>
         <div><img @click='evt => remove_source(evt, source)' src='~/assets/img/remove-timelapse.svg' /></div>

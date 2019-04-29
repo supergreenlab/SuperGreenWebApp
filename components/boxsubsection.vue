@@ -42,7 +42,8 @@ export default {
 #title
   flex: 1
   flex-direction: column
-  color: #898989
+  color: #777777
+  font-weight: 600
 
 #title > *
   display: block
