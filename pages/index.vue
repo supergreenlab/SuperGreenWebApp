@@ -18,7 +18,6 @@
 
 <template>
   <section :id='$style.container'>
-    hello lol
   </section>
 </template>
 

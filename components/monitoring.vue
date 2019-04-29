@@ -7,7 +7,7 @@
     icon='subsection-monitoring-status.svg'
     title='Box status'>
       <div :class='$style.body'>
-        lol
+        <h1 :id='$style.status'>OK</h1>
       </div>
     </BoxSubSection>
     <BoxSubSection 
@@ -43,9 +43,11 @@ export default {
 
 <style module lang=stylus>
 
-#body
+.body
   display: flex
   flex: 1
-  width: 100%
+
+#status
+  color: #3BB30B
 
 </style>

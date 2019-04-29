@@ -18,7 +18,14 @@
 
 <template>
   <div :id='$style.loading'>
-    <div :id='$style.loadingpic'></div>
+    <div :id="$style.spinner">
+      <div :id="$style.rect1"></div>
+      <div :id="$style.rect2"></div>
+      <div :id="$style.rect3"></div>
+      <div :id="$style.rect4"></div>
+      <div :id="$style.rect5"></div>
+    </div>
+
     {{ label }}
   </div>
 </template>
@@ -30,15 +37,6 @@ export default {
 </script>
 
 <style module lang=stylus>
-
-@-webkit-keyframes rotation {
-  from {
-    -webkit-transform: rotate(0deg);
-  }
-  to {
-    -webkit-transform: rotate(359deg);
-  }
-}
 
 #loading
   display: flex
@@ -54,14 +52,50 @@ export default {
   background-color: rgba(255, 255, 255, 0.8)
   z-index: 3
 
-#loadingpic
-  width: 20pt
-  height: 20pt
-  margin-bottom: 10pt
-  background-image: url('~assets/img/loading.svg')
-  background-position: center
-  background-size: contain
-  background-repeat: no-repeat
-  animation: rotation 2s infinite 
+#spinner
+  margin: 20px auto
+  width: 50px
+  height: 40px
+  text-align: center
+  font-size: 10px
 
+#spinner > div
+  background-color: #3BB30B
+  height: 100%
+  width: 6px
+  display: inline-block
+  
+  -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out
+  animation: sk-stretchdelay 1.2s infinite ease-in-out
+
+#spinner #rect2
+  -webkit-animation-delay: -1.1s
+  animation-delay: -1.1s
+
+#spinner #rect3
+  -webkit-animation-delay: -1.0s
+  animation-delay: -1.0s
+
+#spinner #rect4
+  -webkit-animation-delay: -0.9s
+  animation-delay: -0.9s
+
+#spinner #rect5
+  -webkit-animation-delay: -0.8s
+  animation-delay: -0.8s
+
+@-webkit-keyframes sk-stretchdelay {
+  0%, 40%, 100% { -webkit-transform: scaleY(0.4) }  
+  20% { -webkit-transform: scaleY(1.0) }
+}
+
+@keyframes sk-stretchdelay {
+  0%, 40%, 100% { 
+    transform: scaleY(0.4)
+    -webkit-transform: scaleY(0.4)
+  }  20% { 
+    transform: scaleY(1.0)
+    -webkit-transform: scaleY(1.0)
+  }
+}
 </style>

@@ -48,8 +48,9 @@ export default {
       },
       set(value) {
         const { 
-          i, box, controller, j, led
-        } = this.$props
+          j, led
+        } = this.$props,
+          controller = this.controller
         this.$store.dispatch('controllers/set_led_param', {id: controller.broker_clientid.value, i: j, key: 'dim', value: Math.round(value)}) 
       },
     },
