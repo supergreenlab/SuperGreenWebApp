@@ -1,0 +1,35 @@
+<template>
+  <BoxSection
+    icon='section-remotecamera.svg'
+    title='Remote camera'
+    color='#73C253'>
+  <BoxSubSection 
+    icon='subsection-remotecamera-liveview.svg'
+    title='Live view'>
+      <div :id='$style.body'>
+        lol
+      </div>
+    </BoxSubSection>
+  </BoxSection>
+</template>
+
+<script>
+
+import BoxSection from '~/components/boxsection'
+import BoxSubSection from '~/components/boxsubsection'
+import BlowerControlSubSection from '~/components/blowercontrolsubsection'
+
+export default {
+  components: { BoxSection, BoxSubSection, BlowerControlSubSection, },
+}
+
+</script>
+
+<style module lang=stylus>
+
+#body
+  display: flex
+  flex: 1
+  width: 100%
+
+</style>

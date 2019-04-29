@@ -1,0 +1,51 @@
+{
+  "id": "sgkx4",
+  "title": "Super Green Kit x4",
+  "description": "1 box: Veg + Boom",
+  "icon": "supergreenkitx4.png",
+  "keys": {
+    "state": 2,
+    "boxes": [
+      {
+        "enabled": 1,
+        "timer_type": 1,
+        "on_hour": 1,
+        "on_min": 0,
+        "off_hour": 19,
+        "off_min": 0
+      }, {
+        "enabled": 0
+      }, {
+        "enabled": 0
+      }
+    ],
+    "leds": [
+      {
+        "box": 0,
+        "enabled": 1,
+        "dim": 100
+      },
+      {
+        "box": 0,
+        "enabled": 1,
+        "dim": 100
+      },
+      {
+        "box": 0,
+        "enabled": 1,
+        "dim": 100
+      },
+      {
+        "box": 0,
+        "enabled": 1,
+        "dim": 100
+      },
+      {
+        "enabled": 0
+      },
+      {
+        "enabled": 0
+      }
+    ]
+  }
+}

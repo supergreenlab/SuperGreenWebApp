@@ -1,0 +1,60 @@
+{
+  "id": "sgkx6",
+  "title": "Super Green Kit x6",
+  "description": "2 box: 1 Veg + 1 Boom",
+  "icon": "supergreenkitx6.png",
+  "keys": {
+    "state": 2,
+    "boxes": [
+      {
+        "enabled": 1,
+        "timer_type": 1,
+        "on_hour": 7,
+        "on_min": 0,
+        "off_hour": 19,
+        "off_min": 0
+      }, {
+        "enabled": 1,
+        "timer_type": 1,
+        "on_hour": 1,
+        "on_min": 0,
+        "off_hour": 19,
+        "off_min": 0
+      }, {
+        "enabled": 0
+      }
+    ],
+    "leds": [
+      {
+        "box": 0,
+        "enabled": 1,
+        "dim": 100
+      },
+      {
+        "box": 0,
+        "enabled": 1,
+        "dim": 100
+      },
+      {
+        "box": 0,
+        "enabled": 1,
+        "dim": 100
+      },
+      {
+        "box": 0,
+        "enabled": 1,
+        "dim": 100
+      },
+      {
+        "box": 1,
+        "enabled": 1,
+        "dim": 100
+      },
+      {
+        "box": 1,
+        "enabled": 1,
+        "dim": 100
+      }
+    ]
+  }
+}
