@@ -9,7 +9,7 @@
     icon='subsection-remotecamera-liveview.svg'
     title='Live view'>
       <div :id='$style.body'>
-        <BoxLiveview />
+        <Liveview />
       </div>
       <a :id='$style.ismyweedok' href=''>Is my weed ok ?</a>
     </BoxSubSection>
@@ -21,10 +21,10 @@
 import BoxSection from '~/components/boxsection'
 import BoxSubSection from '~/components/boxsubsection'
 import BlowerControlSubSection from '~/components/blowercontrolsubsection'
-import BoxLiveview from '~/components/boxliveview'
+import Liveview from '~/components/liveview'
 
 export default {
-  components: { BoxSection, BoxSubSection, BoxLiveview, },
+  components: { BoxSection, BoxSubSection, Liveview, },
 }
 
 </script>

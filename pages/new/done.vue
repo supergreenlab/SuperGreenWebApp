@@ -44,7 +44,7 @@ export default {
       } else if (controller.wifi_status.value == 4) {
         return `/controller/${controller.broker_clientid.value}/setup/wifi-sta`
       }
-      return `/controller/${controller.broker_clientid.value}/`
+      return `/controller/${controller.broker_clientid.value}/0`
     },
   },
 }

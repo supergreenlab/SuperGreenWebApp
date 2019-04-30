@@ -18,19 +18,29 @@
 
 <template>
   <section :id='$style.container'>
-    <div :id='$style.graph'>
-      <svg width='100%' height='100%' ref='graph'>
+    <div :id='$style.graph' ref='graph'>
+      <svg width='100%' height='100%'>
         <g v-if='!loading'>
           <polygon :points="fill_points" :style="{fill: color, opacity: 0.2}"></polygon>
           <path :d="stroke_path" :style="{stroke: color, 'stroke-width': 2}" fill=none></path>
         </g>
       </svg>
     </div>
+    <Loading v-if='loading' />
   </section>
 </template>
 
 <script>
+import Loading from '~/components/loading'
+
 export default {
+  components: { Loading, },
+  data() {
+    return {
+      gwidth: -1,
+      gheight: -1,
+    }
+  },
   props: {
     min: Number,
     max: Number,
@@ -41,10 +51,22 @@ export default {
     loading: Boolean,
   },
   computed: {
+    width() {
+      if (this.$data.gwidth == -1) {
+        this.$data.gwidth = this.$refs.graph.clientWidth
+      }
+      return this.$data.gwidth
+    },
+    height() {
+      if (this.$data.gheight == -1) {
+        this.$data.gheight = this.$refs.graph.clientHeight
+      }
+      return this.$data.gheight
+    },
     fill_points() {
       if (!this.$refs.graph) return ''
-      const width = this.$refs.graph.clientWidth,
-            height = this.$refs.graph.clientHeight,
+      const width = this.width,
+            height = this.height,
             { min, max, metrics } = this.$props,
             xspan = width / (metrics.length - 1),
             ymin = min - (max - min) * 0.2,
@@ -62,8 +84,8 @@ export default {
 
     stroke_path() {
       if (!this.$refs.graph) return ''
-      const width = this.$refs.graph.clientWidth,
-            height = this.$refs.graph.clientHeight,
+      const width = this.width,
+            height = this.height,
             { min, max, metrics } = this.$props,
             xspan = width / (metrics.length - 1),
             ymin = min - (max - min) * 0.2,
@@ -82,6 +104,18 @@ export default {
       }
       return points
     },
+  },
+  methods: {
+    resize() {
+      this.$data.gwidth = this.$refs.graph.clientWidth
+      this.$data.gheight = this.$refs.graph.clientHeight
+    },
+  },
+  mounted: function () {
+    window.addEventListener('resize', this.resize, true)
+  },
+  beforeDestroy: function () {
+    window.removeEventListener('resize', this.resize, true)
   },
 }
 </script>

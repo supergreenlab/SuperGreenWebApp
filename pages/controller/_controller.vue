@@ -24,6 +24,9 @@
       </div>
       <a v-if='failed' href='javascript:void(0)' v-on:click='retry'>Retry now</a>
     </div>
+    <div v-else-if='waiting' :id='$style.loading'>
+      <h1>Found !</h1>
+    </div>
     <nuxt-child v-else :key='$route.params.controller' />
   </section>
 </template>
@@ -36,6 +39,7 @@ export default {
   data() {
     return {
       failed: false,
+      waiting: true,
     }
   },
   components: { Box, Loading, },
@@ -46,6 +50,8 @@ export default {
       if (controller && controller.found == false) {
         try {
           await this.$store.dispatch('controllers/search_controller', {id: controller.broker_clientid.value})
+          this.$data.waiting = true
+          setTimeout(() => this.$data.waiting = false, 1000)
         } catch(e) {
           console.log(e)
           this.$data.failed = true

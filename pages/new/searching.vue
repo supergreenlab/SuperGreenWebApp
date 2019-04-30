@@ -22,7 +22,7 @@
       <CloseButton />
     </section>
     <section :id='$style.body'>
-      <div :id='$style.icon'></div>
+      <div :id='$style.loading'><Loading /></div>
       <div :id='$style.message'>
         <h3>Please wait - Finding your controller...</h3>
         <small>Probing {{ retries }} / 5</small>
@@ -33,9 +33,10 @@
 
 <script>
 import CloseButton from '~/components/closebutton.vue'
+import Loading from '~/components/loading'
 
 export default {
-  components: { CloseButton, },
+  components: { CloseButton, Loading, },
   layout: 'fullscreen',
   computed: {
     retries() {
@@ -85,14 +86,11 @@ export default {
   align-items: center
   text-align: center
 
-#icon
+#loading
+  position: relative
   max-width: 150pt
-  min-height: 150pt
+  min-height: 100pt
   width: 50%
-  background-image: url('~assets/img/loading.png')
-  background-position: center
-  background-size: contain
-  background-repeat: no-repeat
   
 #message
   display: flex

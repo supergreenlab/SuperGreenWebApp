@@ -25,7 +25,6 @@
       <div :id="$style.rect4"></div>
       <div :id="$style.rect5"></div>
     </div>
-
     {{ label }}
   </div>
 </template>
@@ -54,15 +53,15 @@ export default {
 
 #spinner
   margin: 20px auto
-  width: 50px
-  height: 40px
+  width: 100%
+  height: 100%
   text-align: center
   font-size: 10px
 
 #spinner > div
   background-color: #3BB30B
   height: 100%
-  width: 6px
+  width: 10%
   display: inline-block
   
   -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out
