@@ -48,7 +48,6 @@ export default {
     max: Number,
     title: String,
     color: String,
-    value: String,
     metrics: Array,
     loading: Boolean,
     suffix: String,
@@ -110,12 +109,12 @@ export default {
 
     max_value() {
       const { metrics, } = this.$props,
-        maxv = metrics.sort((m1, m2) => m1 > m2)[0]
+        maxv = metrics.sort((m1, m2) => m1 < m2)[0]
       return maxv
     },
     min_value() {
       const { metrics, } = this.$props,
-        minv = metrics.sort((m1, m2) => m1 < m2)[0]
+        minv = metrics.sort((m1, m2) => m1 > m2)[0]
       return minv
     },
 
@@ -126,7 +125,7 @@ export default {
             { metrics, min, max, } = this.$props,
             ymin = min - (max - min) * 0.2,
             ymax = max + (max - min) * 0.2
-      return height - ((this.max_value - ymin) / (ymax - ymin) * height)
+      return (this.max_value - ymin) / (ymax - ymin) * height + 4
     },
 
     min_top() {
@@ -136,7 +135,7 @@ export default {
             { metrics, min, max, } = this.$props,
             ymin = min - (max - min) * 0.2,
             ymax = max + (max - min) * 0.2
-      return (this.min_value - ymin) / (ymax - ymin) * height
+      return height - ((this.min_value - ymin) / (ymax - ymin) * height) + 4
     },
   },
   methods: {

@@ -13,17 +13,17 @@
     <BoxSubSection 
     icon='subsection-monitoring-temperature.svg'
     title='Temperature'
-    value='25°'>
+    :value="last_temperature">
       <div :class='$style.body'>
-        <Graphs title='Temperature' color='#3bb30b' :value='last_temperature' :metrics='temperature' :loading='loading' :min=10 :max=40 suffix='°' />
+        <Graphs title='Temperature' color='#3bb30b' :metrics='temperature' :loading='loading' :min=10 :max=40 suffix='°' />
       </div>
     </BoxSubSection>
     <BoxSubSection 
     icon='subsection-monitoring-humidity.svg'
     title='Humidity'
-    value='51%'>
+    :value="last_humidity">
       <div :class='$style.body'>
-        <Graphs title='Humidity' color='#0b81b3' :value='last_humidity' :metrics='humidity' :loading='loading' :min=0 :max=100 suffix='%' />
+        <Graphs title='Humidity' color='#0b81b3' :metrics='humidity' :loading='loading' :min=0 :max=100 suffix='%' />
       </div>
     </BoxSubSection>
   </BoxSection>
