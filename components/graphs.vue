@@ -22,9 +22,11 @@
       <svg width='100%' height='100%'>
         <g v-if='!loading'>
           <polygon :points="fill_points" :style="{fill: color, opacity: 0.2}"></polygon>
-          <path :d="stroke_path" :style="{stroke: color, 'stroke-width': 2}" fill=none></path>
+          <path :d="stroke_path" :style='{stroke: color, "stroke-width": 2}' fill=none></path>
         </g>
       </svg>
+      <div v-if='!loading' :class='$style.line' :id='$style.max_line' :style='{bottom: `${max_top}px`, color}'>{{ this.max_value }}{{ suffix }}</div>
+      <div v-if='!loading' :class='$style.line' :id='$style.min_line' :style='{top: `${min_top}px`, color}'>{{ this.min_value }}{{ suffix }}</div>
     </div>
     <Loading v-if='loading' />
   </section>
@@ -49,6 +51,7 @@ export default {
     value: String,
     metrics: Array,
     loading: Boolean,
+    suffix: String,
   },
   computed: {
     width() {
@@ -104,6 +107,37 @@ export default {
       }
       return points
     },
+
+    max_value() {
+      const { metrics, } = this.$props,
+        maxv = metrics.sort((m1, m2) => m1 > m2)[0]
+      return maxv
+    },
+    min_value() {
+      const { metrics, } = this.$props,
+        minv = metrics.sort((m1, m2) => m1 < m2)[0]
+      return minv
+    },
+
+    max_top() {
+      if (!this.$refs.graph) return ''
+      const width = this.width,
+            height = this.height,
+            { metrics, min, max, } = this.$props,
+            ymin = min - (max - min) * 0.2,
+            ymax = max + (max - min) * 0.2
+      return height - ((this.max_value - ymin) / (ymax - ymin) * height)
+    },
+
+    min_top() {
+      if (!this.$refs.graph) return ''
+      const width = this.width,
+            height = this.height,
+            { metrics, min, max, } = this.$props,
+            ymin = min - (max - min) * 0.2,
+            ymax = max + (max - min) * 0.2
+      return (this.min_value - ymin) / (ymax - ymin) * height
+    },
   },
   methods: {
     resize() {
@@ -128,8 +162,25 @@ export default {
 
 #graph
   flex: 1
+  position: relative
   border-radius: 1pt
   border-left: 1.5pt solid #dddddd
   border-bottom: 1.5pt solid #dddddd
+
+.line
+  position: absolute
+  left: -30pt
+  width: calc(100% + 30pt)
+  font-size: 1.2em
+  font-weight: 600
+
+#max_line
+  padding-bottom: 2pt
+  border-bottom: 2px dashed #c4c4c4
+
+#min_line
+  padding-top: 2pt
+  border-top: 2px dashed #c4c4c4
+ 
 
 </style>
