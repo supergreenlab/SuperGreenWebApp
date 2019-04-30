@@ -3,9 +3,10 @@
     :icon='`subsection-blower-${schedule}.svg`'
     title='Blower power'
     :subtitle='`(when the lights are ${schedule}.)`'
-    value='35%'>
+    :value='`${blower}%`'>
     <div :id='$style.body'>
-      <span>0%</span><Slider /><span>100%</span>
+      <span>0%</span><Slider v-model='blower' /><span>100%</span>
+      <Loading v-if='loading' />
     </div>
   </BoxSubSection>
 </template>
@@ -14,10 +15,36 @@
 
 import BoxSubSection from '~/components/boxsubsection'
 import Slider from '~/components/slider'
+import Loading from '~/components/loading'
 
 export default {
-  props: ['schedule'],
-  components: { BoxSubSection, Slider, },
+  props: ['schedule', 'param'],
+  components: { BoxSubSection, Slider, Loading, },
+  computed: {
+    blower: {
+      get() {
+        const controller = this.controller,
+              boxid = this.$route.params.box,
+              { param } = this.$props
+        return controller.boxes[boxid][param].value
+      },
+      set(value) {
+        const controller = this.controller,
+              boxid = this.$route.params.box,
+              { param } = this.$props
+        this.$store.dispatch('controllers/set_box_param', {id: controller.broker_clientid.value, i: boxid, key: param, value: Math.round(value)}) 
+      },
+    },
+    loading() {
+      const controller = this.controller,
+            boxid = this.$route.params.box,
+            { param } = this.$props
+      return controller.boxes[boxid][param].loading
+    },
+    controller() {
+      return this.$store.getters['controllers/getSelected']
+    },
+  },
 }
 
 </script>
@@ -26,7 +53,10 @@ export default {
 
 #body
   flex: 1
+  position: relative
   display: flex
+  color: #777777
+  font-weight: 400
 
 #body > *
   display: block

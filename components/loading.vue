@@ -49,7 +49,7 @@ export default {
   height: 100%
   border-radius: 3pt
   background-color: rgba(255, 255, 255, 0.8)
-  z-index: 3
+  z-index: 100
 
 #spinner
   margin: 20px auto

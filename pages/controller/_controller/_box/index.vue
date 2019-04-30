@@ -61,11 +61,6 @@ export default {
     })
     this.retry()
   },
-  async fetch({ store }) {
-    await store.dispatch('controllers/init')
-    await store.dispatch('liveviews/init')
-    await store.dispatch('graphs/init')
-  },
 }
 </script>
 
