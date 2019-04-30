@@ -5,8 +5,10 @@
     :subtitle='`(when the lights are ${schedule}.)`'
     :value='`${blower}%`'>
     <div :id='$style.body'>
-      <span>0%</span><Slider v-model='blower' /><span>100%</span>
-      <Loading height='75pt' width='80pt' v-if='loading' />
+      <div :id='$style.slider'>
+        <span>0%</span><Slider v-model='blower' /><span>100%</span>
+      </div>
+      <Loading v-if='loading' height='20pt' width='40pt' />
     </div>
   </BoxSubSection>
 </template>
@@ -58,13 +60,16 @@ export default {
   color: #777777
   font-weight: 400
 
-#body > *
+#slider
+  width: 100%
+
+#slider > *
   display: block
 
-#body > span:nth-of-type(1)
+#slider > span:nth-of-type(1)
   margin-right: 10pt
 
-#body > span:nth-of-type(2)
+#slider > span:nth-of-type(2)
   margin-left: 10pt
 
 </style>
