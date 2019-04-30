@@ -20,7 +20,7 @@
   <section v-if='controller' :id='$style.container'>
     <div v-if='!controller.found' :id='$style.loading'>
       <div :id='$style.loading_relative'>
-        <Loading :label='`Searching controller.. ${controller.found_try}/3`' />
+        <Loading width='100pt' height='75pt' :label='`Searching controller.. ${controller.found_try}/3`' />
       </div>
       <a v-if='failed' href='javascript:void(0)' v-on:click='retry'>Retry now</a>
     </div>

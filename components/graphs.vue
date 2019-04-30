@@ -28,7 +28,7 @@
       <div v-if='!loading' :class='$style.line' :id='$style.max_line' :style='{bottom: `${max_top}px`, color}'>{{ this.max_value }}{{ suffix }}</div>
       <div v-if='!loading' :class='$style.line' :id='$style.min_line' :style='{top: `${min_top}px`, color}'>{{ this.min_value }}{{ suffix }}</div>
     </div>
-    <Loading v-if='loading' />
+    <Loading v-if='loading' width='80pt' height='50pt' />
   </section>
 </template>
 

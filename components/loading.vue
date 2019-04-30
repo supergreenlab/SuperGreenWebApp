@@ -18,7 +18,7 @@
 
 <template>
   <div :id='$style.loading'>
-    <div :id="$style.spinner">
+    <div :id="$style.spinner" :style='{width, height}'>
       <div :id="$style.rect1"></div>
       <div :id="$style.rect2"></div>
       <div :id="$style.rect3"></div>
@@ -31,7 +31,15 @@
 
 <script>
 export default {
-  props: ['label']
+  props: {
+    label: String,
+    width: {
+      default: '100%',
+    },
+    height: {
+      default: '100%',
+    },
+  },
 }
 </script>
 
@@ -47,16 +55,13 @@ export default {
   left: 0
   width: 100%
   height: 100%
-  border-radius: 3pt
   background-color: rgba(255, 255, 255, 0.8)
   z-index: 100
 
 #spinner
-  margin: 20px auto
-  width: 100%
-  height: 100%
   text-align: center
   font-size: 10px
+  opacity: 0.5
 
 #spinner > div
   background-color: #3BB30B

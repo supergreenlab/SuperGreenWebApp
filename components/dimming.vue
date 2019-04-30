@@ -14,7 +14,7 @@
             <div :class='$style.masterbuttons' :id='$style.plus' @click='masterplus'></div>
             <div :id='$style.separator'></div>
             <div :class='$style.masterbuttons' :id='$style.minus' @click='masterminus'></div>
-            <Loading v-if='loading' />
+            <Loading v-if='loading' width='50pt' height='30pt' />
           </div>
         </BoxSubSection>
       </div>
@@ -55,7 +55,9 @@ export default {
     master(v) {
       const controller = this.controller,
             boxid = this.$route.params.box
-      for (let i in controller.leds.filter((l) => l.box.value == boxid)) {
+      for (let i in controller.leds) {
+        const l = controller.leds[i]
+        if (l.box.value != boxid) continue
         const value = controller.leds[i].dim.value + v
         this.$store.dispatch('controllers/set_led_param', {id: controller.broker_clientid.value, i, key: 'dim', value: Math.round(value)}) 
       }
@@ -70,7 +72,9 @@ export default {
   mounted() {
     const controller = this.controller,
       boxid = this.$route.params.box
-    for (let i in controller.leds.filter((l) => l.box.value == boxid)) {
+    for (let i in controller.leds) {
+      const l = controller.leds[i]
+      if (l.box.value != boxid) continue
       this.$store.dispatch('controllers/load_led_param', {id: controller.broker_clientid.value, i, key: 'dim'}) 
     }
   },

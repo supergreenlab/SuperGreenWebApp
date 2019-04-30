@@ -11,7 +11,7 @@
         <div :class='$style.body'>
           <ScheduleButtons title='18h' icon='button-nightday-veg.svg' subtitle='Veg' color='#3BB30B' :selected='timespan > 12' @click='veg' />
           <ScheduleButtons title='12h' icon='button-nightday-bloom.svg' subtitle='Bloom' color='#E561A0' :selected='timespan <= 12' @click='bloom' />
-          <Loading v-if='loading' />
+          <Loading v-if='loading' width='50pt' height='30pt' />
         </div>
       </BoxSubSection>
       <BoxSubSection 
@@ -20,7 +20,7 @@
         <div :class='$style.body'>
           <ScheduleButtons title='18h' icon='button-nightday-dayshift.svg' subtitle='Day' color='#CEC946' :selected='on_hour < off_hour' @click='day' />
           <ScheduleButtons title='12h' icon='button-nightday-nightshift.svg' subtitle='Night' color='#3F44B9' :selected='on_hour > off_hour' @click='night' />
-          <Loading v-if='loading' />
+          <Loading v-if='loading' width='50pt' height='30pt' />
         </div>
       </BoxSubSection>
     </section>
@@ -42,7 +42,7 @@ export default {
             boxid = this.$route.params.box,
             on_hour = controller.boxes[boxid].on_hour.value,
             off_hour = controller.boxes[boxid].off_hour.value
-      return (off_hour > on_hour) ? (off_hour - on_hour) : ((on_hour + 24) - off_hour)
+      return (on_hour < off_hour) ? (off_hour - on_hour) : ((off_hour + 24) - on_hour)
     },
     on_hour() {
       const controller = this.controller,

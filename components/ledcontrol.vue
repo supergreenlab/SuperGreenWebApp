@@ -26,7 +26,7 @@
     <div :id='$style.slider'>
       <Slider v-model='dim' />
     </div>
-    <Loading v-if='loading' />
+    <Loading v-if='loading' width='30pt' height='20pt' />
   </section>
 </template>
 

@@ -6,7 +6,7 @@
     :value='`${blower}%`'>
     <div :id='$style.body'>
       <span>0%</span><Slider v-model='blower' /><span>100%</span>
-      <Loading v-if='loading' />
+      <Loading height='75pt' width='80pt' v-if='loading' />
     </div>
   </BoxSubSection>
 </template>

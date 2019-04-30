@@ -32,6 +32,7 @@ export default {
   height: 100pt
   transition: box-shadow 0.2s
   cursor: pointer
+  color: #777777
 
 #container > img
   margin: 10pt 0

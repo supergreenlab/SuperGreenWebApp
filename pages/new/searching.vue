@@ -22,7 +22,7 @@
       <CloseButton />
     </section>
     <section :id='$style.body'>
-      <div :id='$style.loading'><Loading /></div>
+      <div :id='$style.loading'><Loading width='100pt' height='75pt' /></div>
       <div :id='$style.message'>
         <h3>Please wait - Finding your controller...</h3>
         <small>Probing {{ retries }} / 5</small>
