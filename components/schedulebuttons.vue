@@ -1,5 +1,5 @@
 <template>
-  <section :id='$style.container' :class='selected ? $style.selected : ""'>
+  <section :id='$style.container' :class='selected ? $style.selected : ""' @click='onClick'>
     {{ title }}
     <img :src='require(`~/assets/img/${icon}`)'></div>
     <span :style='{color}'>{{ subtitle }}</span>
@@ -9,6 +9,11 @@
 <script>
 export default {
   props: ['title', 'icon', 'subtitle', 'color', 'selected', ],
+  methods: {
+    onClick() {
+      this.$emit('click')
+    },
+  },
 }
 </script>
 
@@ -26,6 +31,7 @@ export default {
   width: 100pt
   height: 100pt
   transition: box-shadow 0.2s
+  cursor: pointer
 
 #container > img
   margin: 10pt 0

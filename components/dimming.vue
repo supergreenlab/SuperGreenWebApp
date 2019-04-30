@@ -67,6 +67,13 @@ export default {
       this.master(-25)
     },
   },
+  mounted() {
+    const controller = this.controller,
+      boxid = this.$route.params.box
+    for (let i in controller.leds.filter((l) => l.box.value == boxid)) {
+      this.$store.dispatch('controllers/load_led_param', {id: controller.broker_clientid.value, i, key: 'dim'}) 
+    }
+  },
 }
 
 </script>
