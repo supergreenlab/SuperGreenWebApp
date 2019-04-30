@@ -11,9 +11,10 @@
         title='Master switch'
         value='50w'>
           <div :id='$style.masterbody'>
-            <div :class='$style.masterbuttons' :id='$style.plus'></div>
+            <div :class='$style.masterbuttons' :id='$style.plus' @click='masterplus'></div>
             <div :id='$style.separator'></div>
-            <div :class='$style.masterbuttons' :id='$style.minus'></div>
+            <div :class='$style.masterbuttons' :id='$style.minus' @click='masterminus'></div>
+            <Loading v-if='loading' />
           </div>
         </BoxSubSection>
       </div>
@@ -37,14 +38,35 @@
 import BoxSection from '~/components/boxsection'
 import BoxSubSection from '~/components/boxsubsection'
 import LedControl from '../components/ledcontrol'
+import Loading from '~/components/loading'
 
 export default {
-  components: { BoxSection, BoxSubSection, LedControl, },
+  components: { BoxSection, BoxSubSection, LedControl, Loading, },
   computed: {
     controller() {
       return this.$store.getters['controllers/getSelected']
     },
-  }
+    loading() {
+      const controller = this.controller
+      return controller.leds.findIndex((l) => l.dim.loading) != -1
+    },
+  },
+  methods: {
+    master(v) {
+      const controller = this.controller,
+            boxid = this.$route.params.box
+      for (let i in controller.leds.filter((l) => l.box.value == boxid)) {
+        const value = controller.leds[i].dim.value + v
+        this.$store.dispatch('controllers/set_led_param', {id: controller.broker_clientid.value, i, key: 'dim', value: Math.round(value)}) 
+      }
+    },
+    masterplus() {
+      this.master(25)
+    },
+    masterminus() {
+      this.master(-25)
+    },
+  },
 }
 
 </script>
@@ -53,6 +75,7 @@ export default {
 
 #body
   display: flex
+  position: relative
 
 #left
   flex: 0.6
@@ -78,8 +101,8 @@ export default {
   justify-content: center
 
 .masterbuttons
-  width: 50pt
-  height: 50pt
+  width: 35pt
+  height: 35pt
   background-position: center
   background-size: contain
   background-repeat: no-repeat
