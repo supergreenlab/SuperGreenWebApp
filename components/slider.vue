@@ -18,7 +18,7 @@
 
 <template>
   <section :id='$style.container'>
-    <vue-slider :min='0' :max='100' v-model='vcomp' :id='$style.slider' width='100%' />
+    <vue-slider :min='0' :max='100' v-model='vcomp' :id='$style.slider' width='100%' :lazy="true" />
   </section>
 </template>
 
