@@ -141,7 +141,7 @@ export default {
   left: 0
   top: 0
   background-color: rgba(255, 255, 255, 0.8)
-  color: #777777
+  color: #D04949
   z-index: 1000
 
 </style>
