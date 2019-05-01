@@ -29,7 +29,7 @@
     <section :id='$style.nav'>
       <NextButton :onClick='writePreset' label='Configure' />
     </section>
-    <Loading v-if='loading' :label='`Uploading config.. ${parseInt(done/total*100)}%`' />
+    <Loading v-if='loading' :label='`Uploading config.. ${parseInt(done/total*100)}%`' width='115pt' height='80pt' />
   </section>
 </template>
 

@@ -23,7 +23,9 @@
       <div :id='$style.settings' :class='show_settings ? $style.settingsactive : ""' @click='settings'></div>
     </div>
     <iframe :id='$style.settingsframe' v-if='show_settings' :src='`http://${controller.wifi_ip.value}/fs/app.html`'></iframe>
-    <nuxt-child v-else :key='$route.params.box' />
+    <div v-else :id='$style.body'>
+      <nuxt-child :key='$route.params.box' />
+    </div>
   </section>
 </template>
 
@@ -111,5 +113,9 @@ export default {
 .settingsactive
   width: 19pt !important
   background-image: url('~assets/img/close.svg') !important
+
+#body
+  display: flex
+  position: relative
 
 </style>

@@ -156,6 +156,7 @@ export default {
 <style module lang=stylus>
 
 #container
+  flex: 1
   display: flex  
   margin: 10pt
 

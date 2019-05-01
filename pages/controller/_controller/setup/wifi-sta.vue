@@ -33,7 +33,7 @@
     <section :id='$style.nav'>
       <NextButton  :onClick='saveWifi' label='Connect wifi' />
     </section>
-    <Loading v-if='loading' label='Setting up wifi..' />
+    <Loading v-if='loading' label='Setting up wifi..' width='115pt' height='80pt' />
   </section>
 </template>
 

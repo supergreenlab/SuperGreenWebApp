@@ -65,7 +65,6 @@ export default {
   opacity: 0.8
 
 #body
-  flex: 1
   padding-left: 20pt
 
 </style>

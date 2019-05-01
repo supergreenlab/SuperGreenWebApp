@@ -68,10 +68,9 @@ export default {
 
 #container
   flex: 1
-  position: relative
   display: flex
+  position: relative
   flex-direction: column
-  overflow-y: auto
 
 #container > div
   max-width: 700pt

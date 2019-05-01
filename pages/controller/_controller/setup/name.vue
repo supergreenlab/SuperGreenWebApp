@@ -31,7 +31,7 @@
     <section :id='$style.nav'>
       <NextButton :onClick='saveName' label='Save name' />
     </section>
-    <Loading v-if='loading' label='Setting name..' />
+    <Loading v-if='loading' label='Setting name..' width='115pt' height='80pt' />
   </section>
 </template>
 
