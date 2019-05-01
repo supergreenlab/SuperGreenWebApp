@@ -29,7 +29,7 @@
   </section>
   <section v-else :id='$style.containercenter'>
     <button v-on:click='enable()'>Enable</button>
-    <Loading v-if='loadingenable' width='150pt' height='115pt' />
+    <Loading v-if='loadingenable' width='115pt' height='80pt' />
   </section>
 </template>
 

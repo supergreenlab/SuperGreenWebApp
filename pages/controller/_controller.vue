@@ -56,6 +56,8 @@ export default {
           console.log(e)
           this.$data.failed = true
         }
+      } else if(controller.found == true) {
+        this.$data.waiting = false
       }
     },
   },

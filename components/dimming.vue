@@ -22,6 +22,7 @@
         <BoxSubSection 
         icon='subsection-dimming-independent.svg'
         title='Independent light dimming'>
+          <div :id='$style.timer'>Current timer desired power:&nbsp;<span :id='$style.timerpower'>{{ timerpower }}%</span></div>
           <div :id='$style.independentbody'>
             <div v-for='(led, j) in controller.leds' v-if='led.box.value == $route.params.box' :key='controller.broker_clientid.value + j' :class='$style.led'>
               <LedControl :j='j' :led='led' />
@@ -43,6 +44,11 @@ import Loading from '~/components/loading'
 export default {
   components: { BoxSection, BoxSubSection, LedControl, Loading, },
   computed: {
+    timerpower() {
+      const controller = this.controller,
+            boxid = this.$route.params.box
+      return this.controller.boxes[boxid].timer_output.value
+    },
     controller() {
       return this.$store.getters['controllers/getSelected']
     },
@@ -87,6 +93,18 @@ export default {
 #body
   display: flex
   position: relative
+
+#timer
+  display: flex
+  flex: 1
+  width: 100%
+  padding: 0pt 0 5pt 15pt
+  color: #777777
+  font-weight: 400
+
+#timerpower
+  color: #47B71A
+  font-weight: 600
 
 #left
   flex: 0.6

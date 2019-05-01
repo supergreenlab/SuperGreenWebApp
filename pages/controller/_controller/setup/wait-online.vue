@@ -87,6 +87,7 @@ export default {
   flex: 1
   flex-direction: column
   min-height: 100vh
+  background-color: white
 
 #top
   display: flex
