@@ -26,7 +26,7 @@
       <div v-if='!started' :id='$style.first_step'>
         <p>
           - Make sure the controller <b>stopped it's wifi</b>, if not, press the <b>Wifi reconfig</b> button below.<br />
-          - Connect back to <b>your home wifi</b><br />
+          - If it did, you can connect back to <b>your home wifi</b><br />
           - Then click "<b>Search</b>" below
         </p>
         <div>
@@ -42,10 +42,11 @@
         <p>
           <b>Controller not found</b><br />
           - Try turning it <b>on and off again</b><br />
-          - Make sure the controller's wifi is <b>not back on</b>, if it is, <a href='javascript:void(0)' v-on:click='goBack'>go back to previous step</a><br />
+          - Make sure the controller's wifi is <b>not back on</b>, if it is, press the <b>Wifi reconfig</b> button below.<br />
           - You can also directly enter the IP address<br/>
         </p>
         <div>
+          <button :id='$style.button' :class='$style.cancel' @click='goBack'>Wifi reconfig</button>
           <button :id='$style.button' @click='waitOnline'>Retry</button>
           <button :id='$style.button' @click='toggleIPForm'>Try with IP</button>
         </div>
@@ -68,7 +69,7 @@
       </div>
     </section>
     <section v-if='started && !loading && !failed' :id='$style.nav'>
-      <NextButton label='Go !' to='/' />
+      <NextButton label='Go !' :to='`/controller/${controller.broker_clientid.value}/0`' />
     </section>
   </section>
 </template>

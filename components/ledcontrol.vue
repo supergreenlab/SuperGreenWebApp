@@ -27,6 +27,7 @@
       <Slider v-model='dim' />
     </div>
     <Loading v-if='loading' width='30pt' height='20pt' />
+    <div v-if='led.enabled.value != 1' :id='$style.disabled'>disabled</div>
   </section>
 </template>
 
@@ -98,13 +99,13 @@ export default {
 
 #box
   display: flex
+  align-items: center
+  justify-content: center
   flex-direction: column
   background-color: white
   border: 1px solid #ebebeb
   border-radius: 3pt
   color: #8b8b8b
-  align-items: center
-  justify-content: center
   width: 45pt
   height: 45pt
 
@@ -129,5 +130,18 @@ export default {
 
 #slider
   width: 100%
+
+#disabled
+  position: absolute
+  display: flex
+  align-items: center
+  justify-content: center
+  width: 100%
+  height: 100%
+  left: 0
+  top: 0
+  background-color: rgba(255, 255, 255, 0.8)
+  color: #777777
+  z-index: 1000
 
 </style>
