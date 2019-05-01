@@ -19,14 +19,21 @@
 <template>
   <section :id='$style.container'>
     <div :id='$style.boxes'>
-      <div :class='$style.box' :id='$route.params.box == i ? $style.selected : ""' v-for='box, i in controller.boxes' @click='select(i)'>box #{{ i+1 }}</div>
+      <div :class='`${$style.box} ${show_settings ? $style.hidden : ""}`' v-for='box, i in controller.boxes' :id='$route.params.box == i ? $style.selected : ""' @click='select(i)'>box #{{ i+1 }}</div>
+      <div :id='$style.settings' :class='show_settings ? $style.settingsactive : ""' @click='settings'></div>
     </div>
-    <nuxt-child :key='$route.params.box' />
+    <iframe :id='$style.settingsframe' v-if='show_settings' :src='`http://${controller.wifi_ip.value}/fs/app.html`'></iframe>
+    <nuxt-child v-else :key='$route.params.box' />
   </section>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      show_settings: false
+    }
+  },
   computed: {
     controller() {
       return this.$store.getters['controllers/getSelected']
@@ -38,6 +45,9 @@ export default {
   methods: {
     select(i) {
       this.$router.push(`/controller/${this.controller.broker_clientid.value}/${i}`)
+    },
+    settings() {
+      this.$data.show_settings = !this.$data.show_settings
     },
   },
 }
@@ -54,6 +64,7 @@ export default {
 
 #boxes
   display: flex
+  position: relative
   background-color: #454545
   padding-left: 5pt
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25)
@@ -66,10 +77,39 @@ export default {
   font-weight: 600
   cursor: pointer
 
+.hidden
+  visibility: hidden
+
 .box:hover
   background-color: #404040
 
 #selected
   background-color: #020202
+
+#settings
+  position: absolute
+  width: 23pt
+  height: 100%
+  top: 0
+  right: 10pt
+  background-image: url('~assets/img/settings.svg')
+  background-position: center
+  background-size: contain
+  background-repeat: no-repeat
+  cursor: pointer
+
+#settings:hover
+  opacity: 0.8
+
+#settings:active
+  opacity: 0.5
+
+#settingsframe
+  border: none
+  height: 100%
+
+.settingsactive
+  width: 19pt !important
+  background-image: url('~assets/img/close.svg') !important
 
 </style>
