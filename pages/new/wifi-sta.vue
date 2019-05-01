@@ -24,8 +24,8 @@
     <section :id='$style.body'>
       <div :id='$style.icon'></div>
       <div :id='$style.form'>
-        <h3>Search the controller by it’s name:</h3>
-        <input v-model='url' type='text' @keydown='enter' placeholder='supergreendriver' />
+        <h3>Search the controller by it’s name or ip address:</h3>
+        <input v-model='url' type='text' @keydown='enter' placeholder='supergreendriver or 192.168.blah.blah' />
       </div>
     </section>
     <section :id='$style.nav'>
@@ -48,11 +48,11 @@ export default {
   layout: 'fullscreen',
   methods: {
     onNext(e) {
-      let url = this.$data.url.toLowerCase().replace(/([^A-Za-z0-9.-])+/g, '-')
-      if (url.indexOf('.local') == -1) {
+      let url = this.$data.url
+      if (!/^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/.test(this.$data.url) && this.$data.url.indexOf('.local') == -1) {
         url = `${url}.local`
       }
-      this.$store.commit('controllers/configure_search_new_controller', {url , is_sta: true})
+      this.$store.commit('controllers/configure_search_new_controller', {url, is_sta: true})
     },
     enter(e) {
       if (e.key == 'Enter') {
