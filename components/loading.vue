@@ -18,7 +18,7 @@
 
 <template>
   <div :id='$style.loading'>
-    <div :id="$style.spinner" :style='{width, height}'>
+    <div :id="$style.spinner" :style='{width, height, "margin-bottom": label ? "20pt" : ""}'>
       <div :id="$style.rect1"></div>
       <div :id="$style.rect2"></div>
       <div :id="$style.rect3"></div>

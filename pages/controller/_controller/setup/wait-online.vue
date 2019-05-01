@@ -21,12 +21,47 @@
     <section v-if='!loading && !failed' :id='$style.top'>
       <CloseButton />
     </section>
-    <h1>Connect your computer back to the wifi network</h1>
-    <small v-if='!(started && !loading && !failed)'>Check that the <div :id='$style.ssid'></div> is not back, if you can still connect to it, it means wifi configuration failed. If it is back on, please connect to it, and <a href='javascript:void(0)' v-on:click='goBack'>go back to previous step</a>. (macosx might still show it for some time, check that it fails to connect befor going back)</small>
+    <h1>Search for the controller on home wifi</h1>
     <section :id='$style.body'>
-      <a v-if='!started' href='javascript:void(0)' v-on:click='waitOnline'>I switched wifi, and the box stopped it's wifi. Search it !</a>
-      <Loading v-if='loading' :label='`Searching controller.. ${controller.found_try}/3`' />
-      <a v-if='started && !loading && failed' href='javascript:void(0)' v-on:click='waitOnline'>Oups, did you try turning it off and back on again ? then click here to retry.</a>
+      <div v-if='!started' :id='$style.first_step'>
+        <p>
+          - Make sure the controller <b>stopped it's wifi</b>, if not, press the <b>Wifi reconfig</b> button below.<br />
+          - Connect back to <b>your home wifi</b><br />
+          - Then click "<b>Search</b>" below
+        </p>
+        <div>
+          <button :id='$style.button' :class='$style.cancel' @click='goBack'>Wifi reconfig</button>
+          <button :id='$style.button' @click='waitOnline'>Search</button>
+        </div>
+        <small v-if='!(started && !loading && !failed)'>Check that the <div :id='$style.ssid'></div> is not back, if you can still connect to it, it means wifi configuration failed. If it is back on, <b>please connect to it</b>, and press <b>Wifi reconfig</b>. (macosx might still show it for some time, check that it fails to connect before going back)</small>
+      </div>
+      <div v-if='loading'>
+        <Loading :label='`Searching controller.. ${controller.found_try}/3`' width='115pt' height='80pt' />
+      </div>
+      <div v-if='started && !loading && failed && !try_ip' :id='$style.failed_step'>
+        <p>
+          <b>Controller not found</b><br />
+          - Try turning it <b>on and off again</b><br />
+          - Make sure the controller's wifi is <b>not back on</b>, if it is, <a href='javascript:void(0)' v-on:click='goBack'>go back to previous step</a><br />
+          - You can also directly enter the IP address<br/>
+        </p>
+        <div>
+          <button :id='$style.button' @click='waitOnline'>Retry</button>
+          <button :id='$style.button' @click='toggleIPForm'>Try with IP</button>
+        </div>
+      </div>
+      <div v-if='started && !loading && failed && try_ip' :id='$style.failed_step'>
+        <p>
+          <b>Controller not found</b><br />
+          - Enter the IP address below<br />
+          - Click <b>Search by IP</b>
+        </p>
+        <input v-model='addr' type='text' @keydown='enter' placeholder='192.168.x.x' @click='waitOnline' />
+        <div>
+          <button :id='$style.button' :class='$style.cancel' @click='toggleIPForm'>Cancel</button>
+          <button :disabled='!isvalid' :id='$style.button' @click='waitOnline'>Search by IP</button>
+        </div>
+      </div>
       <div v-if='started && !loading && !failed'>
         <h3>Now we're talking:)</h3>
         <small>Click the Go! button on the bottom right</small>
@@ -49,10 +84,15 @@ export default {
       started: false,
       loading: false,
       failed: false,
+      try_ip: false,
+      addr: '',
     }
   },
   components: { CloseButton, NextButton, Loading, },
   computed: {
+    isvalid() {
+      return /^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/.test(this.$data.addr)
+    },
     controller() {
       return this.$store.getters['controllers/getSelected']
     },
@@ -64,7 +104,7 @@ export default {
       this.$data.loading = true
       const controller = this.$store.getters['controllers/getSelected']
       try {
-        await this.$store.dispatch('controllers/search_controller', {id: controller.broker_clientid.value})
+        await this.$store.dispatch('controllers/search_controller', {id: controller.broker_clientid.value, ip: this.isvalid ? this.$data.addr : ''})
       } catch(e) {
         console.log(e)
         this.$data.failed = true
@@ -72,8 +112,16 @@ export default {
       this.$data.loading = false
     },
     goBack() {
-      this.$router.back()
+      this.$router.replace(`/controller/${this.controller.broker_clientid.value}/setup/wifi-sta`)
     },
+    enter(e) {
+      if (e.key == 'Enter' && this.isvalid) {
+        this.waitOnline()
+      }
+    },
+    toggleIPForm() {
+      this.$data.try_ip = !this.$data.try_ip
+    }
   }
 }
 </script>
@@ -99,20 +147,19 @@ export default {
   display: flex
   position: relative
   flex-direction: column
+  align-items: center
+  justify-content: center
   flex: 1
   padding: 20pt
   width: 100%
   height: 200pt
-  align-items: center
-  justify-content: center
 
-#body > img
-  margin: 10pt
+#body > div
+  max-width: 300pt
 
-#container > small
+#first_step > small
   text-align: center
   color: #e84a4a
-  padding: 10pt 50pt
 
 #body > input
   width: 100%
@@ -131,5 +178,39 @@ export default {
   background-size: contain
   background-position: left
   background-image: url('~assets/img/wifi-ssid.png')
+
+#first_step
+  display: flex
+  align-items: center
+  justify-content: center
+  flex-direction: column
+
+#failed_step
+  display: flex
+  align-items: center
+  justify-content: center
+  flex-direction: column
+
+#failed_step > h2
+  margin: 20pt
+
+#failed_step > input
+  margin: 10pt
+
+#button
+  background-color: #3bb30b
+  border: none
+  padding: 5pt 20pt
+  margin: 10pt
+  border-radius: 3pt
+  color: white
+  cursor: pointer
+
+#button:disabled
+  background-color: #c4c4c4
+  opacity: 0.7
+
+#button.cancel
+  background-color: #c4c4c4
 
 </style>

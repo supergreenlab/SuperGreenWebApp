@@ -22,7 +22,7 @@
       <CloseButton />
     </section>
     <section :id='$style.body'>
-      <img src="~/assets/img/wifi-icon.png">
+      <div :id='$style.icon'></div>
       <section>
         <h3>Connect to the driver’s</b><br />
         wifi network:</h3><br />
@@ -84,5 +84,15 @@ export default {
   background-size: contain
   background-position: left
   background-image: url('~assets/img/wifi-ssid.png')
+
+#icon
+  flex: 1
+  max-height: 100pt
+  width: 50%
+  margin-bottom: 20pt
+  background-image: url('~assets/img/wifi-icon.png')
+  background-position: center
+  background-size: contain
+  background-repeat: no-repeat
 
 </style>
