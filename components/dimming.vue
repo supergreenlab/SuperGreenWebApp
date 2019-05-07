@@ -144,6 +144,7 @@ export default {
   cursor: pointer
   border: 1px solid #ebebeb
   border-radius: 3pt
+  margin: 20pt 0pt
 
 .masterbuttons:hover
   opacity: 0.8

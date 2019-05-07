@@ -89,17 +89,17 @@ export default {
       const controller = this.$store.getters['controllers/getSelected'],
             boxid = this.$route.params.box,
             timer_output = controller.boxes[boxid].timer_output.value
-      if (timer_output > 0) {
-        return 
+      if (timer_output <= 0) {
+        return 0
       }
 
       const on_sec = controller.boxes[boxid].on_hour.value * 3600 + controller.boxes[boxid].on_min.value * 60,
-            off_hour = controller.boxes[boxid].off_hour.value * 3600 + controller.boxes[boxid].off_min.value * 60,
+            off_sec = controller.boxes[boxid].off_hour.value * 3600 + controller.boxes[boxid].off_min.value * 60,
             dt = new Date(),
-            cur_sec = secs = dt.getSeconds() + (60 * dt.getMinutes()) + (60 * 60 * dt.getHours()),
-            time_span = (on_hour < off_hour) ? (off_hour - on_hour) : ((off_hour + 24) - on_hour),
-            on_since = cur_sec - on_sec
-      return (on_hour < off_hour ? on_since : on_since + 24)
+            cur_sec = dt.getSeconds() + (60 * dt.getMinutes()) + (60 * 60 * dt.getHours()),
+            time_span = (on_sec < off_sec) ? (off_sec - on_sec) : ((off_sec + (24 * 3600)) - on_sec),
+            on_since = (on_sec < cur_sec ? (cur_sec - on_sec) : ((cur_sec + (24 * 3600)) - on_sec))
+      return on_since / time_span * 100
     },
   },
 }
