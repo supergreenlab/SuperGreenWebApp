@@ -3,13 +3,7 @@
     icon='section-monitoring.svg'
     title='Status & Monitoring'
     color='#0B81B3'>
-    <BoxSubSection 
-    icon='subsection-monitoring-status.svg'
-    title='Box status'>
-      <div :class='$style.body'>
-        <h1 :id='$style.status'>OK</h1>
-      </div>
-    </BoxSubSection>
+    <Status :temperature='last_temperature' :humidity='last_humidity' :timer_advancement='timer_advancement' />
     <BoxSubSection 
     icon='subsection-monitoring-temperature.svg'
     title='Temperature'
@@ -33,10 +27,11 @@
 
 import BoxSection from '~/components/boxsection.vue'
 import BoxSubSection from '~/components/boxsubsection.vue'
+import Status from '~/components/status.vue'
 import Graphs from '~/components/graphs.vue'
 
 export default {
-  components: { BoxSection, BoxSubSection, Graphs, },
+  components: { BoxSection, BoxSubSection, Status, Graphs, },
   created() {
     const controller = this.$store.getters['controllers/getSelected'],
           boxid = this.$route.params.box,
@@ -90,6 +85,22 @@ export default {
       }
       return "-"
     },
+    timer_advancement() {
+      const controller = this.$store.getters['controllers/getSelected'],
+            boxid = this.$route.params.box,
+            timer_output = controller.boxes[boxid].timer_output.value
+      if (timer_output > 0) {
+        return 
+      }
+
+      const on_sec = controller.boxes[boxid].on_hour.value * 3600 + controller.boxes[boxid].on_min.value * 60,
+            off_hour = controller.boxes[boxid].off_hour.value * 3600 + controller.boxes[boxid].off_min.value * 60,
+            dt = new Date(),
+            cur_sec = secs = dt.getSeconds() + (60 * dt.getMinutes()) + (60 * 60 * dt.getHours()),
+            time_span = (on_hour < off_hour) ? (off_hour - on_hour) : ((off_hour + 24) - on_hour),
+            on_since = cur_sec - on_sec
+      return (on_hour < off_hour ? on_since : on_since + 24)
+    },
   },
 }
 
@@ -100,8 +111,5 @@ export default {
 .body
   display: flex
   flex: 1
-
-#status
-  color: #3BB30B
 
 </style>

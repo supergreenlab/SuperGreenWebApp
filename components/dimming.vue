@@ -136,12 +136,14 @@ export default {
   justify-content: center
 
 .masterbuttons
-  width: 40pt
-  height: 40pt
+  width: 50pt
+  height: 50pt
   background-position: center
   background-size: contain
   background-repeat: no-repeat
   cursor: pointer
+  border: 1px solid #ebebeb
+  border-radius: 3pt
 
 .masterbuttons:hover
   opacity: 0.8
