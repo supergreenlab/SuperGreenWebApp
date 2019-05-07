@@ -19,7 +19,7 @@
 <template>
   <section v-if='enabled' :id='$style.container'>
     <div :id='$style.header'>
-      <h1>Box #1</h1>
+      <h1>Box #{{ boxnum }}</h1>
     </div>
     <RemoteCamera />
     <Monitoring />
@@ -44,6 +44,10 @@ import Loading from '~/components/loading'
 export default {
   components: { RemoteCamera, Monitoring, BlowerControl, Dimming, Schedule, Loading, },
   computed: {
+    boxnum() {
+      const boxid = this.$route.params.box
+      return parseInt(boxid) + 1
+    },
     enabled() {
       const controller = this.$store.getters['controllers/getSelected'],
             boxid = this.$route.params.box
