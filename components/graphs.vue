@@ -19,7 +19,7 @@
 <template>
   <section :id='$style.container'>
     <div :id='$style.graph' ref='graph'>
-      <svg width='100%' height='100%'>
+      <svg xmlns="http://www.w3.org/2000/svg" width='100%' height='100%'>
         <g v-if='!loading'>
           <polygon :points="fill_points" :style="{fill: color, opacity: 0.2}"></polygon>
           <path :d="stroke_path" :style='{stroke: color, "stroke-width": 2}' fill=none></path>
@@ -127,7 +127,6 @@ export default {
             ymax = max + (max - min) * 0.2
       return (this.max_value - ymin) / (ymax - ymin) * height + 4
     },
-
     min_top() {
       if (!this.$refs.graph) return ''
       const width = this.width,

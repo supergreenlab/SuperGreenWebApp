@@ -63,7 +63,7 @@ export default {
       if (controller.wifi_status.value == 4) {
         this.$router.push(`/controller/${controller.broker_clientid.value}/setup/wifi-sta`)
       }
-      this.$router.push(`/controller/${controller.broker_clientid.value}/box/0`)
+      this.$router.push(`/controller/${controller.broker_clientid.value}/0`)
     },
     enter(e) {
       if (e.key == 'Enter') {

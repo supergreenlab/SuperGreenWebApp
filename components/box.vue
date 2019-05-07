@@ -80,7 +80,6 @@ export default {
   margin: 0pt 5pt 0 10pt
   max-width: 700pt
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15)
-  height: 100%
 
 #containercenter
   display: flex

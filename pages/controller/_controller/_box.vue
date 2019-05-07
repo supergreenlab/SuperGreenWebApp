@@ -19,11 +19,10 @@
 <template>
   <section :id='$style.container'>
     <div :id='$style.boxes'>
-      <div :class='`${$style.box} ${show_settings ? $style.hidden : ""}`' v-for='box, i in controller.boxes' :id='$route.params.box == i ? $style.selected : ""' @click='select(i)'>box #{{ i+1 }}</div>
-      <div :id='$style.settings' :class='show_settings ? $style.settingsactive : ""' @click='settings'></div>
+      <div :class='`${$style.box} ${settings ? $style.hidden : ""}`' v-for='box, i in controller.boxes' :id='$route.params.box == i ? $style.selected : ""' @click='select(i)'>box #{{ i+1 }}</div>
+      <nuxt-link :id='$style.settings' :class='settings ? $style.settingsactive : ""' :to='settings ? `/controller/${controller.broker_clientid.value}/${boxid}` : `/controller/${controller.broker_clientid.value}/${boxid}/settings`'></nuxt-link>
     </div>
-    <iframe :id='$style.settingsframe' v-if='show_settings' :src='`http://${controller.wifi_ip.value}/fs/app.html`'></iframe>
-    <div v-else :id='$style.body'>
+    <div :id='$style.body'>
       <nuxt-child :key='$route.params.box' />
     </div>
   </section>
@@ -31,11 +30,6 @@
 
 <script>
 export default {
-  data() {
-    return {
-      show_settings: false
-    }
-  },
   computed: {
     controller() {
       return this.$store.getters['controllers/getSelected']
@@ -43,13 +37,13 @@ export default {
     boxid() {
       return this.$route.params.box
     },
+    settings() {
+      return this.$route.name == 'controller-controller-box-settings'
+    },
   },
   methods: {
     select(i) {
       this.$router.push(`/controller/${this.controller.broker_clientid.value}/${i}`)
-    },
-    settings() {
-      this.$data.show_settings = !this.$data.show_settings
     },
   },
 }
@@ -63,6 +57,7 @@ export default {
   display: flex
   flex-direction: column
   overflow-y: auto
+  min-height: 100%
 
 #boxes
   display: flex
@@ -83,12 +78,18 @@ export default {
   visibility: hidden
 
 .box:hover
-  background-color: #404040
+  background-color: #303030
 
 #selected
   background-color: #020202
 
+#body
+  display: flex
+  position: relative
+  min-height: 100%
+
 #settings
+  display: block
   position: absolute
   width: 23pt
   height: 100%
@@ -99,6 +100,7 @@ export default {
   background-size: contain
   background-repeat: no-repeat
   cursor: pointer
+  z-index: 1001
 
 #settings:hover
   opacity: 0.8
@@ -106,16 +108,9 @@ export default {
 #settings:active
   opacity: 0.5
 
-#settingsframe
-  border: none
-  height: 100%
-
 .settingsactive
   width: 19pt !important
   background-image: url('~assets/img/close.svg') !important
 
-#body
-  display: flex
-  position: relative
 
 </style>

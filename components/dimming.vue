@@ -10,6 +10,7 @@
         icon='subsection-dimming-master.svg'
         title='Master switch'
         value='50w'>
+          <small :id='$style.masterhint'>Dims all leds +25% or -25% at once.</small>
           <div :id='$style.masterbody'>
             <div :class='$style.masterbuttons' :id='$style.plus' @click='masterplus'></div>
             <div :id='$style.separator'></div>
@@ -83,6 +84,7 @@ export default {
       if (l.box.value != boxid) continue
       this.$store.dispatch('controllers/load_led_param', {id: controller.broker_clientid.value, i, key: 'dim'}) 
     }
+    this.$store.dispatch('controllers/load_box_param', {id: controller.broker_clientid.value, i: boxid, key: 'timer_output'}) 
   },
 }
 
@@ -114,9 +116,13 @@ export default {
 
 #masterbody
   display: flex
-  flex-direction: column
   align-items: center
   justify-content: center
+
+#masterhint
+  align-self: flex-start
+  color: #777777
+  margin: 0 0 10pt 0
 
 #independentbody
   flex: 1
@@ -130,8 +136,8 @@ export default {
   justify-content: center
 
 .masterbuttons
-  width: 35pt
-  height: 35pt
+  width: 40pt
+  height: 40pt
   background-position: center
   background-size: contain
   background-repeat: no-repeat
@@ -147,10 +153,10 @@ export default {
   background-image: url('~assets/img/button-light-dimming-master-plus.svg')
 
 #separator
-  height: 1pt
-  width: 50pt
+  width: 1pt
+  height: 40pt
   background-color: #C4C4C4
-  margin: 10pt 0 0pt 0
+  margin: 10pt 10pt 10pt 10pt
 
 #minus
   background-image: url('~assets/img/button-light-dimming-master-minus.svg')

@@ -89,7 +89,7 @@ export default {
   line-height: 15pt
 
 #list > div:hover
-  background-color: #020202
+  background-color: #303030
   cursor: pointer
 
 #list > div:active
@@ -117,7 +117,7 @@ export default {
   opacity: 0.2
 
 .selected
-  background-color: #020202
+  background-color: #020202 !important
 
 .selected::after
   content: ''

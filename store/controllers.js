@@ -324,7 +324,11 @@ export const actions = {
           config = controller.boxes[i][key].config_key
     context.commit('loading_box_param', {id, i, key})
     try {
-      const { data: value } = await controller_chain(id)(async () => axios.get(`http://${controller.wifi_ip.value}/${config.integer ? 'i' : 's'}?k=BOX_${i}_${key.toUpperCase()}`, {timeout: 5000}))
+      let { data: value } = await controller_chain(id)(async () => axios.get(`http://${controller.wifi_ip.value}/${config.integer ? 'i' : 's'}?k=BOX_${i}_${key.toUpperCase()}`, {timeout: 5000}))
+      if (key.indexOf('hour') !== -1) {
+        value = (value - new Date().getTimezoneOffset()/60) % 24
+        value = value < 0 ? value + 24 : value
+      }
       context.commit('loaded_box_param', {id, i, key, value: config.integer ? parseInt(value) : value})
     } catch(e) {
       context.commit('loaded_box_param', {id, i, key, error: e})
@@ -368,6 +372,11 @@ export const actions = {
           config = controller.boxes[i][key].config_key
     context.commit('loading_box_param', {id, i, key})
     try {
+      if (key.indexOf('hour') !== -1) {
+        value = (value + new Date().getTimezoneOffset()/60) % 24
+        value = value < 0 ? value + 24 : value
+      }
+
       await controller_chain(id)(async () => await axios.post(`http://${controller.wifi_ip.value}/${config.integer ? 'i' : 's'}?k=BOX_${i}_${key.toUpperCase()}&v=${value}`, {timeout: 5000}))
       await context.dispatch('load_box_param', {id, i, key})
     } catch(e) {
