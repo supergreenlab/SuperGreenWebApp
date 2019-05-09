@@ -44,9 +44,9 @@ export default {
       const { timer_advancement } = this.$props
       if (timer_advancement == 0)
         return ['NIGHT', '#3F44B9', false]
-      else if (timer_advancement > 80)
+      else if (timer_advancement > 85)
         return ['EVENING', '#EDA63B', false]
-      else if (timer_advancement < 20)
+      else if (timer_advancement < 15)
         return ['MORNING', '#A6A9E7', false]
       return ['SUNSHINE', '#CEC946', false]
     },
