@@ -28,7 +28,7 @@
       <input type='text' v-model='ssid' placeholder='Enter SSID' />
       <input type='text' v-model='password' placeholder='Enter wpa-passkey' />
     </section>
-    <section :id='$style.nav'>
+    <section v-if='valid' :id='$style.nav'>
       <NextButton  :onClick='saveWifi' label='Connect wifi' />
     </section>
     <Loading v-if='loading' label='Setting up wifi..' width='115pt' height='80pt' />
@@ -52,6 +52,9 @@ export default {
   computed: {
     controller() {
       return this.$store.getters['controllers/getSelected']
+    },
+    valid() {
+      return this.$data.ssid && this.$data.password
     },
   },
   methods: {
