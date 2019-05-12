@@ -1,7 +1,7 @@
 {
   "name": "SuperGreenDesktopApp",
   "version": "1.0.0",
-  "description": "SuperGreenLab&#39;s control panel",
+  "description": "SuperGreenLab's control panel",
   "author": "vitaminwater",
   "private": true,
   "scripts": {

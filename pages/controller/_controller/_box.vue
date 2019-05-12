@@ -20,6 +20,7 @@
   <section :id='$style.container'>
     <div :id='$style.boxes'>
       <div :class='`${$style.box} ${settings ? $style.hidden : ""}`' v-for='box, i in controller.boxes' :id='$route.params.box == i ? $style.selected : ""' @click='select(i)'>box #{{ i+1 }}</div>
+      <nuxt-link :id='$style.wifi' :to='`/controller/${controller.broker_clientid.value}/setup/wifi-sta`'></nuxt-link>
       <nuxt-link :id='$style.settings' :class='settings ? $style.settingsactive : ""' :to='settings ? `/controller/${controller.broker_clientid.value}/${boxid}` : `/controller/${controller.broker_clientid.value}/${boxid}/settings`'></nuxt-link>
     </div>
     <div :id='$style.body'>
@@ -112,5 +113,24 @@ export default {
   width: 19pt !important
   background-image: url('~assets/img/close.svg') !important
 
+#wifi
+  display: block
+  position: absolute
+  width: 23pt
+  height: 100%
+  top: 0
+  right: 40pt
+  background-image: url('~assets/img/wifi.svg')
+  background-position: center
+  background-size: contain
+  background-repeat: no-repeat
+  cursor: pointer
+  z-index: 1001
+
+#wifi:hover
+  opacity: 0.8
+
+#wifi:active
+  opacity: 0.5
 
 </style>

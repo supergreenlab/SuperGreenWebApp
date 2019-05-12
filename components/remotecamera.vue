@@ -11,7 +11,7 @@
       <div :id='$style.body'>
         <Liveview />
       </div>
-      <a :id='$style.ismyweedok' href=''>Is my weed ok ?</a>
+      <a :id='$style.ismyplantok' href=''>Is my plant ok ?</a>
     </BoxSubSection>
   </BoxSection>
 </template>
@@ -36,7 +36,7 @@ export default {
   flex: 1
   width: 100%
 
-#ismyweedok
+#ismyplantok
   display: block
   text-align: right
 
