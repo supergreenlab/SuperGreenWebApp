@@ -21,8 +21,6 @@
     <section :id='$style.top'>
       <CloseButton />
     </section>
-    <h1>New box detected.</h1>
-    <h3>Connect it</h3>
     <section :id='$style.body'>
       <img src='~/assets/img/wifi-robot-icon.png' />
       <h2>Wifi configuration:</h2>
