@@ -54,8 +54,6 @@ export default {
     select(controller) {
       if (controller.state.value == 0) {
         this.$router.push(`/controller/${controller.broker_clientid.value}/preset`)
-      } else if (controller.wifi_status.value == 4) {
-        this.$router.push(`/controller/${controller.broker_clientid.value}/wifi-sta`)
       } else {
         this.$router.push(`/controller/${controller.broker_clientid.value}/0`)
       }

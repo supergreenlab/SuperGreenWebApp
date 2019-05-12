@@ -60,9 +60,6 @@ export default {
             mdns_domain = this.$data.name.toLowerCase().replace(/([^A-Za-z0-9.-])+/g, '-')
       await this.$store.dispatch('controllers/set_controller_param', {id: controller.broker_clientid.value, key: 'device_name', value: this.$data.name}) 
       await this.$store.dispatch('controllers/set_controller_param', {id: controller.broker_clientid.value, key: 'mdns_domain', value: mdns_domain}) 
-      if (controller.wifi_status.value == 4) {
-        this.$router.push(`/controller/${controller.broker_clientid.value}/setup/wifi-sta`)
-      }
       this.$router.push(`/controller/${controller.broker_clientid.value}/0`)
     },
     enter(e) {
