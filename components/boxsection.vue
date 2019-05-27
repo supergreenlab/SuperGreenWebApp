@@ -5,7 +5,7 @@
       <h2 :style='{color: (dark ? "#676767" : "")}'>{{ title }}</h2>
       <a v-if='link && linkurl' :href='linkurl' target='_blank'>{{ link }}</a>
     </div>
-    <div :id='$style.body'>
+    <div :id='$style.body' :style='{height}'>
       <slot></slot>
     </div>
   </section>
@@ -14,7 +14,7 @@
 <script>
 
 export default {
-  props: ['icon', 'title', 'link', 'linkurl', 'color', 'gradientfrom', 'gradientto', 'dark',],
+  props: ['icon', 'title', 'link', 'linkurl', 'color', 'gradientfrom', 'gradientto', 'dark', 'height',],
   computed: {
     headerstyle() {
       const {
@@ -39,6 +39,7 @@ export default {
   display: flex
   flex-direction: column
   width: 100%
+  overflow-y: hidden
 
 #header
   position: relative
@@ -65,6 +66,8 @@ export default {
   opacity: 0.8
 
 #body
-  padding-left: 20pt
+  position: relative
+  margin-left: 20pt
+  transition: height 0.5s
 
 </style>

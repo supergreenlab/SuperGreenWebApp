@@ -2,24 +2,30 @@
   <BoxSection
     icon='section-monitoring.svg'
     title='Status & Monitoring'
-    color='#0B81B3'>
-    <Status :temperature='last_temperature' :humidity='last_humidity' :timer_advancement='timer_advancement' />
-    <BoxSubSection 
-    icon='subsection-monitoring-temperature.svg'
-    title='Temperature'
-    :value="last_temperature">
-      <div :class='$style.body'>
-        <Graphs title='Temperature' color='#3bb30b' :metrics='temperature' :loading='loading' :min=10 :max=40 suffix='°' />
-      </div>
-    </BoxSubSection>
-    <BoxSubSection 
-    icon='subsection-monitoring-humidity.svg'
-    title='Humidity'
-    :value="last_humidity">
-      <div :class='$style.body'>
-        <Graphs title='Humidity' color='#0b81b3' :metrics='humidity' :loading='loading' :min=0 :max=100 suffix='%' />
-      </div>
-    </BoxSubSection>
+    color='#0B81B3'
+    :height='expanded ? `${contentHeight + statusHeight}px` : `${statusHeight}px`'>
+    <div ref='status'>
+      <Status :temperature='last_temperature' :humidity='last_humidity' :timer_advancement='timer_advancement' />
+    </div>
+    <div ref='content'>
+      <BoxSubSection 
+      icon='subsection-monitoring-temperature.svg'
+      title='Temperature'
+      :value="last_temperature">
+        <div :class='$style.body'>
+          <Graphs title='Temperature' color='#3bb30b' :metrics='temperature' :loading='loading' :min=10 :max=40 suffix='°' />
+        </div>
+      </BoxSubSection>
+      <BoxSubSection 
+      icon='subsection-monitoring-humidity.svg'
+      title='Humidity'
+      :value="last_humidity">
+        <div :class='$style.body'>
+          <Graphs title='Humidity' color='#0b81b3' :metrics='humidity' :loading='loading' :min=0 :max=100 suffix='%' />
+        </div>
+      </BoxSubSection>
+    </div>
+    <BoxSectionExpander @click='toggleExpand' :expanded='expanded' ref='expander' />
   </BoxSection>
 </template>
 
@@ -27,16 +33,33 @@
 
 import BoxSection from '~/components/boxsection.vue'
 import BoxSubSection from '~/components/boxsubsection.vue'
+import BoxSectionExpander from '~/components/boxsectionexpander'
 import Status from '~/components/status.vue'
 import Graphs from '~/components/graphs.vue'
 
 export default {
-  components: { BoxSection, BoxSubSection, Status, Graphs, },
+  components: { BoxSection, BoxSubSection, BoxSectionExpander, Status, Graphs, },
+  data() {
+    return {
+      expanded: false,
+      statusHeight: 0,
+      contentHeight: 0,
+    }
+  },
   created() {
     const controller = this.$store.getters['controllers/getSelected'],
           boxid = this.$route.params.box,
           graph_id = `temphumi.${controller.broker_clientid.value}.${boxid}`
     this.$store.dispatch('graphs/load_graph', {id: graph_id, url: `http://metrics.supergreenlab.com?box=${boxid}&controller=${controller.broker_clientid.value}`})
+  },
+  mounted() {
+    this.$data.statusHeight = this.$refs.status.clientHeight
+    this.$data.contentHeight = this.$refs.content.clientHeight
+  },
+  methods: {
+    toggleExpand() {
+      this.$data.expanded = !this.$data.expanded
+    }
   },
   computed: {
     loading() {

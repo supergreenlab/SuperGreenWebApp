@@ -23,7 +23,7 @@
       <Logo color='black' size='3em' />
     </section>
     <section :id='$style.nav'>
-      <NextButton v-on:click.native='onNext' to='/new/plug' />
+      <NextButton :onClick='onNext' />
       <small>* clicking this "Next &gt;" button confirms that you are major in your state and are not violating any laws.</small>
     </section>
   </section>
@@ -38,9 +38,10 @@ export default {
   components: { Logo, CloseButton, NextButton, },
   layout: 'fullscreen',
   methods: {
-    onNext(e) {
+    onNext() {
       this.$store.commit('app/first_start')
       this.$store.commit('controllers/configure_search_new_controller', {url: '192.168.4.1', is_sta: false})
+      this.$router.push('/new/plug')
     }
   }
 }

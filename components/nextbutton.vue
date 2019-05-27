@@ -19,7 +19,7 @@
 <template>
   <section :id='$style.container'>
     <nuxt-link v-if='to' :to='to'>{{ label }} &gt;</nuxt-link>
-    <a v-else-if='onClick' href='javascript:void(0)' v-on:click='onClick()'>{{ label }} &gt;</a>
+    <a v-else-if='onClick' href='javascript:void(0)' v-on:click='onClick'>{{ label }} &gt;</a>
     <span v-else>{{ label }} &gt;</span>
   </section>
 </template>

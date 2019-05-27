@@ -9,7 +9,7 @@
       <h2 v-if='value'>{{ value }}</h2>
       <div :id='$style.underline'></div>
     </div>
-    <div :id='$style.body'>
+    <div :id='$style.body' :style='{height}'>
       <slot></slot>
     </div>
   </section>
@@ -18,7 +18,7 @@
 <script>
 
 export default {
-  props: ['icon', 'title', 'subtitle', 'value'],
+  props: ['icon', 'title', 'subtitle', 'value', 'height',],
 }
 
 </script>
@@ -29,6 +29,7 @@ export default {
   display: flex
   flex-direction: column
   width: 100%
+  overflow-y: hidden
 
 #header
   position: relative
@@ -63,8 +64,9 @@ export default {
   background-color: #898989
 
 #body
-  flex: 1 
   position: relative
   padding: 10pt
+  transition: height 0.5s
+  overflow-y: hidden
 
 </style>

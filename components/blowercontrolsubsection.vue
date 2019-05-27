@@ -3,8 +3,9 @@
     :icon='`subsection-blower-${schedule}.svg`'
     title='Blower power'
     :subtitle='`(when the lights are ${schedule}.)`'
-    :value='`${blower}%`'>
-    <div :id='$style.body'>
+    :value='`${blower}%`'
+    :height='expanded ? `${bodyHeight}pt` : 0'>
+    <div :id='$style.body' ref='body' :class='!expanded ? $style.hidden : ""'>
       <div :id='$style.slider'>
         <span>0%</span><Slider v-model='blower' /><span>100%</span>
       </div>
@@ -20,7 +21,15 @@ import Slider from '~/components/slider'
 import Loading from '~/components/loading'
 
 export default {
-  props: ['schedule', 'param'],
+  props: ['schedule', 'param', 'expanded', ],
+  data() {
+    return {
+      bodyHeight: 0,
+    }
+  },
+  mounted() {
+    this.$data.bodyHeight = this.$refs.body.clientHeight
+  },
   components: { BoxSubSection, Slider, Loading, },
   computed: {
     blower: {
@@ -59,8 +68,13 @@ export default {
   display: flex
   color: #777777
   font-weight: 400
+  transition: opacity 0.5s
+
+.hidden
+  opacity: 0
 
 #slider
+  display: flex
   width: 100%
 
 #slider > *

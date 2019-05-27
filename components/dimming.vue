@@ -57,11 +57,17 @@
 
 import BoxSection from '~/components/boxsection'
 import BoxSubSection from '~/components/boxsubsection'
+import BoxSectionExpander from '~/components/boxsectionexpander'
 import LedControl from '../components/ledcontrol'
 import Loading from '~/components/loading'
 
 export default {
-  components: { BoxSection, BoxSubSection, LedControl, Loading, },
+  components: { BoxSection, BoxSubSection, BoxSectionExpander, LedControl, Loading, },
+  data() {
+    return {
+      expanded: false,
+    }
+  },
   computed: {
     timerpower() {
       const controller = this.controller,
@@ -92,6 +98,9 @@ export default {
     },
     masterminus() {
       this.master(-25)
+    },
+    toggleExpand() {
+      this.$data.expanded = !this.$data.expanded
     },
   },
   mounted() {

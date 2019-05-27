@@ -39,6 +39,7 @@ export default {
 
   router: {
     middleware: ['welcome'],
+    mode: 'hash',
   },
 
   /*
@@ -62,7 +63,12 @@ export default {
     /*
     ** You can extend webpack config here
     */
-    extend(config, ctx) {
+    extend(config, { isDev, isClient }) {
+			if (!isDev) {
+				// relative links, please.
+				config.output.publicPath = './_nuxt/'
+			}
+			return config;
     }
   }
 }

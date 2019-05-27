@@ -110,13 +110,11 @@ export default {
     max_value() {
       const { metrics, } = this.$props,
         maxv = metrics.sort((m1, m2) => m2 - m1)[0]
-      console.log('max_value', maxv, metrics)
       return maxv
     },
     min_value() {
       const { metrics, } = this.$props,
         minv = metrics.sort((m1, m2) => m1 - m2)[0]
-      console.log('min_value', minv, metrics)
       return minv
     },
 
