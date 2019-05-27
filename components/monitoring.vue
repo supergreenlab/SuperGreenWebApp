@@ -1,3 +1,21 @@
+<!--
+      Copyright (C) 2019  SuperGreenLab <towelie@supergreenlab.com>
+      Author: Constantin Clauzel <constantin.clauzel@gmail.com>
+
+      This program is free software: you can redistribute it and/or modify
+      it under the terms of the GNU General Public License as published by
+      the Free Software Foundation, either version 3 of the License, or
+      (at your option) any later version.
+
+      This program is distributed in the hope that it will be useful,
+      but WITHOUT ANY WARRANTY; without even the implied warranty of
+      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+      GNU General Public License for more details.
+
+      You should have received a copy of the GNU General Public License
+      along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+
 <template>
   <BoxSection
     icon='section-monitoring.svg'
@@ -8,22 +26,24 @@
       <Status :temperature='last_temperature' :humidity='last_humidity' :timer_advancement='timer_advancement' />
     </div>
     <div ref='content'>
-      <BoxSubSection 
-      icon='subsection-monitoring-temperature.svg'
-      title='Temperature'
-      :value="last_temperature">
-        <div :class='$style.body'>
-          <Graphs title='Temperature' color='#3bb30b' :metrics='temperature' :loading='loading' :min=10 :max=40 suffix='°' />
-        </div>
-      </BoxSubSection>
-      <BoxSubSection 
-      icon='subsection-monitoring-humidity.svg'
-      title='Humidity'
-      :value="last_humidity">
-        <div :class='$style.body'>
-          <Graphs title='Humidity' color='#0b81b3' :metrics='humidity' :loading='loading' :min=0 :max=100 suffix='%' />
-        </div>
-      </BoxSubSection>
+      <GraphSubSection
+        icon='subsection-monitoring-temperature.svg'
+        title='Temperature'
+        :graphid='`temp.${controller.broker_clientid.value}.${boxid}`'
+        :url='`http://metrics.supergreenlab.com?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_SHT21_TEMP_C&t=72`'
+        color='#3bb30b'
+        :min=10
+        :max=40
+        suffix='°'/>
+      <GraphSubSection
+        icon='subsection-monitoring-humidity.svg'
+        title='Humidity'
+        :graphid='`humi.${controller.broker_clientid.value}.${boxid}`'
+        :url='`http://metrics.supergreenlab.com?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_SHT21_TEMP_C&t=72`'
+        color='#0b81b3'
+        :min=0
+        :max=100
+        suffix='%'/>
     </div>
     <BoxSectionExpander @click='toggleExpand' :expanded='expanded' ref='expander' />
   </BoxSection>
@@ -34,23 +54,17 @@
 import BoxSection from '~/components/boxsection.vue'
 import BoxSubSection from '~/components/boxsubsection.vue'
 import BoxSectionExpander from '~/components/boxsectionexpander'
+import GraphSubSection from '~/components/graphsubsection'
 import Status from '~/components/status.vue'
-import Graphs from '~/components/graphs.vue'
 
 export default {
-  components: { BoxSection, BoxSubSection, BoxSectionExpander, Status, Graphs, },
+  components: { BoxSection, BoxSubSection, BoxSectionExpander, Status, GraphSubSection, },
   data() {
     return {
       expanded: false,
       statusHeight: 0,
       contentHeight: 0,
     }
-  },
-  created() {
-    const controller = this.$store.getters['controllers/getSelected'],
-          boxid = this.$route.params.box,
-          graph_id = `temphumi.${controller.broker_clientid.value}.${boxid}`
-    this.$store.dispatch('graphs/load_graph', {id: graph_id, url: `http://metrics.supergreenlab.com?box=${boxid}&controller=${controller.broker_clientid.value}`})
   },
   mounted() {
     this.$data.statusHeight = this.$refs.status.clientHeight + 20
@@ -62,25 +76,11 @@ export default {
     }
   },
   computed: {
-    loading() {
-      const controller = this.$store.getters['controllers/getSelected'],
-            boxid = this.$route.params.box,
-            graph_id = `temphumi.${controller.broker_clientid.value}.${boxid}`,
-            source = this.$store.getters['graphs/source'](graph_id)
-      if (!source) {
-        return true
-      }
-      return !source.loaded
+    controller() {
+      return this.$store.getters['controllers/getSelected']
     },
-    temperature() {
-      const controller = this.$store.getters['controllers/getSelected'],
-            boxid = this.$route.params.box,
-            graph_id = `temphumi.${controller.broker_clientid.value}.${boxid}`,
-            source = this.$store.getters['graphs/source'](graph_id)
-      if (!source || !source.metrics.temp) {
-        return []
-      }
-      return source.metrics.temp.map((t) => t[1])
+    boxid() {
+      return this.$route.params.box
     },
     last_temperature() {
       const temperature = this.temperature
@@ -89,16 +89,6 @@ export default {
         return (v < -100 || v > 100) ? 'error' : `${v}°`
       }
       return "-"
-    },
-    humidity() {
-      const controller = this.$store.getters['controllers/getSelected'],
-            boxid = this.$route.params.box,
-            graph_id = `temphumi.${controller.broker_clientid.value}.${boxid}`,
-            source = this.$store.getters['graphs/source'](graph_id)
-      if (!source || !source.metrics.humi) {
-        return []
-      }
-      return source.metrics.humi.map((h) => h[1])
     },
     last_humidity() {
       const humidity = this.humidity
@@ -130,9 +120,5 @@ export default {
 </script>
 
 <style module lang=stylus>
-
-.body
-  display: flex
-  flex: 1
 
 </style>

@@ -68,7 +68,7 @@ export const actions = {
   async load_graph(context, { id, url}) {
     context.commit('add_source', { id, url })
     await new Promise((r) => setTimeout(r, 500))
-    const { data: metrics } = await axios.get(url)
+    const { data: { metrics: metrics } } = await axios.get(url)
     context.commit('set_metrics', {id, metrics: metrics})
   },
 }

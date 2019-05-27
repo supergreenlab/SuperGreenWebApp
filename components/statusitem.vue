@@ -1,7 +1,7 @@
 <template>
   <section :id='$style.container'>
     <small>{{ title }}</small>
-    <h1 :id='$style.value' :style='{color}' :class='blink ? $style.blink : ""'>{{ value }}</h1>
+    <h2 :id='$style.value' :style='{color}' :class='blink ? $style.blink : ""'>{{ value }}</h2>
   </section>
 </template>
 

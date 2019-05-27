@@ -20,9 +20,9 @@
   <section :id='$style.container'>
     <div :id='$style.list'>
       <div :id='$style.relative' v-for='(controller, i) in controllers' :class='controller.broker_clientid.value === selected ? $style.selected : ""' @click='select(controller)'>
-        <small>Controller {{ i + 1 }}</small><br />
+        Controller {{ i + 1 }}<br />
         <b>{{ controller.device_name.value }}</b><br />
-        <small :class='$style.green'>Online</small>
+        <span :class='$style.green'>Online</span>
       </div>
     </div>
     <div :id='$style.add'>

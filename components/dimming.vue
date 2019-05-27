@@ -30,6 +30,7 @@
         <DimmingIndependent :expanded='expanded' :controller='controller' :loading='loading'/>
       </div>
     </div>
+    <BoxSectionExpander @click='toggleExpand' :expanded='expanded' ref='expander' />
   </BoxSection>
 </template>
 
