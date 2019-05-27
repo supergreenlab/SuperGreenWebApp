@@ -18,7 +18,7 @@
 
 <template>
   <section :id='$style.container'>
-    <div :id='$style.header'>
+    <div :id='$style.header' :class='!subtitle ? $style.nosub : ""'>
       <img :src='require(`~/assets/img/${icon}`)' />
       <div :id='$style.title'>
         <b>{{ title }}</b>
@@ -56,7 +56,10 @@ export default {
   margin: 5pt
   padding: 2pt
   align-items: center
-  min-height: 45pt
+  min-height: 40pt
+
+#header.nosub
+  min-height: 30pt
 
 #title
   flex: 1

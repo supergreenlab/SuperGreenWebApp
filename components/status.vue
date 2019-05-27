@@ -62,6 +62,6 @@ export default {
 
 .status
   display: flex
-  flex-basis: 20%
+  flex-basis: 15%
 
 </style>
