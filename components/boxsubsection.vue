@@ -65,7 +65,7 @@ export default {
 
 #body
   position: relative
-  padding: 10pt
+  margin: 10pt
   transition: height 0.5s
   overflow-y: hidden
 

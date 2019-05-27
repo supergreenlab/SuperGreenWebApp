@@ -53,8 +53,8 @@ export default {
     this.$store.dispatch('graphs/load_graph', {id: graph_id, url: `http://metrics.supergreenlab.com?box=${boxid}&controller=${controller.broker_clientid.value}`})
   },
   mounted() {
-    this.$data.statusHeight = this.$refs.status.clientHeight
-    this.$data.contentHeight = this.$refs.content.clientHeight
+    this.$data.statusHeight = this.$refs.status.clientHeight + 20
+    this.$data.contentHeight = this.$refs.content.clientHeight + 20
   },
   methods: {
     toggleExpand() {

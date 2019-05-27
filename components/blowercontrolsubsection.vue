@@ -4,7 +4,7 @@
     title='Blower power'
     :subtitle='`(when the lights are ${schedule}.)`'
     :value='`${blower}%`'
-    :height='expanded ? `${bodyHeight}pt` : 0'>
+    :height='expanded ? `${bodyHeight}px` : 0'>
     <div :id='$style.body' ref='body' :class='!expanded ? $style.hidden : ""'>
       <div :id='$style.slider'>
         <span>0%</span><Slider v-model='blower' /><span>100%</span>
@@ -28,7 +28,7 @@ export default {
     }
   },
   mounted() {
-    this.$data.bodyHeight = this.$refs.body.clientHeight
+    this.$data.bodyHeight = this.$refs.body.clientHeight + 25
   },
   components: { BoxSubSection, Slider, Loading, },
   computed: {

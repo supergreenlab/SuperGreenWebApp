@@ -5,7 +5,7 @@
     color='#73C253'
     link='Checkout the HowTo build here'
     linkurl='https://github.com/supergreenlab/SuperGreenLive'
-    :height='expanded ? `${contentHeight}px` : "25px"'>
+    :height='expanded ? `${contentHeight}px` : "30px"'>
     <div ref='content' :id='$style.content' :class='!expanded ? $style.hidden : ""'>
       <BoxSubSection 
         icon='subsection-remotecamera-liveview.svg'
