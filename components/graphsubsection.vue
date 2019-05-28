@@ -20,10 +20,24 @@
   <BoxSubSection 
   :icon='icon'
   :title='title'
-  :value="lastValue">
-    <div>
+  :value='lastValue'
+  :color='color'
+  :height='expanded ? `${headerHeight + bodyHeight}px` : `${headerHeight}px`'>
+    <div :id='$style.header' ref='header'>
+      <div :class='$style.minmax'>
+        <span :class='$style.label'>Low:</span>
+        <span :class='$style.value' :style='{color}'>19°</span>
+      </div>
+      <div :class='$style.minmax'>
+        <span :class='$style.label'>Low:</span>
+        <span :class='$style.value' :style='{color}'>25°</span>
+      </div>
+      <div :id='$style.spacer'></div>
+      <a href='javascript:void(0)' @click='expand' :id='$style.expander' :class='expanded ? $style.expanded : ""'>
+        View graph <img :src='require(`~/assets/img/${expander}`)' />
+      </a>
     </div>
-    <div :class='$style.body'>
+    <div :id='$style.body' ref='body'>
       <Graphs
       :title='title'
       :color='color'
@@ -33,25 +47,40 @@
       :max='max'
       :suffix='suffix' />
     </div>
+    <Loading v-if='loading' width='80pt' height='50pt' />
   </BoxSubSection>
 </template>
 
 <script>
 
 import BoxSubSection from '~/components/boxsubsection.vue'
+import Graphs from '~/components/graphs.vue'
+import Loading from '~/components/loading'
 
 export default {
-  components: {BoxSubSection, },
-  props: ['icon', 'title', 'graphid', 'url', 'color', 'metrics', 'loading', 'min', 'max', 'suffix'],
+  data() {
+    return {
+      expanded: false,
+      headerHeight: 0,
+      bodyHeight: 0,
+    }
+  },
+  mounted() {
+    this.$data.headerHeight = this.$refs.header.clientHeight
+    this.$data.bodyHeight = this.$refs.body.clientHeight
+    this.$props.mounted()
+  },
+  components: {BoxSubSection, Graphs, Loading, },
+  props: ['icon', 'title', 'graphid', 'url', 'color', 'min', 'max', 'suffix', 'expander', 'sizeChanged', 'mounted'],
   computed: {
     lastValue() {
-      const { graphid } = this.$props,
+      const { graphid, suffix } = this.$props,
             source = this.$store.getters['graphs/source'](graphid)
-      if (!source || !source.metrics) {
+      if (!source || !source.metrics || !source.metrics.length) {
         return '-'
       }
       const v = source.metrics[source.metrics.length-1][1]
-      return (v < -100 || v > 100) ? 'error' : `${v}°`
+      return (v < -100 || v > 100) ? 'error' : `${v}${suffix}`
     },
     metrics() {
       const { graphid } = this.$props,
@@ -70,6 +99,12 @@ export default {
       return !source.loaded
     },
   },
+  methods: {
+    expand() {
+      this.$data.expanded = !this.$data.expanded
+      this.$props.sizeChanged(this.$data.expanded ? this.$data.bodyHeight : -this.$data.bodyHeight)
+    },
+  },
   created() {
     const { graphid, url } = this.$props
     this.$store.dispatch('graphs/load_graph', {id: graphid, url})
@@ -79,8 +114,48 @@ export default {
 
 <style module lang=stylus>
 
-.body
+#body
   display: flex
+  flex: 1
+
+#header
+  display: flex
+  align-items: center
+  justify-content: flex-start
+  width: 100%
+  padding-left: 10pt
+
+.label
+  font-weight: 300
+  color: #777777
+
+.value
+  font-weight: 600
+  font-size: 1.1em
+  margin-right: 10pt
+
+#expander
+  display: flex
+  align-items: center
+  padding: 3pt
+  border: 1px solid #E4E4E4
+  border-radius: 2pt
+  justify-self: flex-end
+  color: #777777
+  text-decoration: none
+  font-size: 0.9em
+
+#expander > img
+  width: 18px
+  height: 10.125px
+  margin-left: 2pt
+  transform: rotate(0deg)  
+  transition: transform 0.2s
+
+#expander.expanded > img
+  transform: rotate(180deg)  
+
+#spacer
   flex: 1
 
 </style>

@@ -24,7 +24,7 @@
         <b>{{ title }}</b>
         <small v-if='subtitle'>{{ subtitle }}</small>
       </div>
-      <h4 v-if='value'>{{ value }}</h4>
+      <h4 v-if='value' :style='{color: color || "#47B71A"}'>{{ value }}</h4>
       <div :id='$style.underline'></div>
     </div>
     <div :id='$style.body' :style='{height}'>
@@ -36,7 +36,7 @@
 <script>
 
 export default {
-  props: ['icon', 'title', 'subtitle', 'value', 'height',],
+  props: ['icon', 'title', 'subtitle', 'value', 'height', 'color', ],
 }
 
 </script>
@@ -76,9 +76,6 @@ export default {
   width: 30px
   height: 30px
 
-#header > h4
-  color: #47B71A
-  
 #underline
   position: absolute
   left: 30pt

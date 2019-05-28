@@ -18,31 +18,18 @@
 
 <template>
   <section :id='$style.container'>
-    <div :id='$style.graph' ref='graph'>
-      <svg xmlns="http://www.w3.org/2000/svg" width='100%' height='100%'>
-        <g v-if='!loading'>
-          <polygon :points="fill_points" :style="{fill: color, opacity: 0.2}"></polygon>
-          <path :d="stroke_path" :style='{stroke: color, "stroke-width": 2}' fill=none></path>
-        </g>
-      </svg>
-      <div v-if='!loading' :class='$style.line' :id='$style.max_line' :style='{bottom: `${max_top}px`, color}'>{{ this.max_value }}{{ suffix }}</div>
-      <div v-if='!loading' :class='$style.line' :id='$style.min_line' :style='{top: `${min_top}px`, color}'>{{ this.min_value }}{{ suffix }}</div>
-    </div>
     <Loading v-if='loading' width='80pt' height='50pt' />
   </section>
 </template>
 
 <script>
+import VueCharts from 'vue-chartjs'
+import { Bar, Line } from 'vue-chartjs'
 import Loading from '~/components/loading'
 
 export default {
+  extends: Bar,
   components: { Loading, },
-  data() {
-    return {
-      gwidth: -1,
-      gheight: -1,
-    }
-  },
   props: {
     min: Number,
     max: Number,
@@ -51,103 +38,6 @@ export default {
     metrics: Array,
     loading: Boolean,
     suffix: String,
-  },
-  computed: {
-    width() {
-      if (this.$data.gwidth == -1) {
-        this.$data.gwidth = this.$refs.graph.clientWidth
-      }
-      return this.$data.gwidth
-    },
-    height() {
-      if (this.$data.gheight == -1) {
-        this.$data.gheight = this.$refs.graph.clientHeight
-      }
-      return this.$data.gheight
-    },
-    fill_points() {
-      if (!this.$refs.graph) return ''
-      const width = this.width,
-            height = this.height,
-            { min, max, metrics } = this.$props,
-            xspan = width / (metrics.length - 1),
-            ymin = min - (max - min) * 0.2,
-            ymax = max + (max - min) * 0.2
-      let points = `0,${height} `,
-          x = 0
-      for (let i in metrics) {
-        const value = (metrics[i] - ymin) / (ymax - ymin)
-        points += `${x},${value * height} `
-        x += xspan
-      }
-      points += `${width},${height}`
-      return points
-    },
-
-    stroke_path() {
-      if (!this.$refs.graph) return ''
-      const width = this.width,
-            height = this.height,
-            { min, max, metrics } = this.$props,
-            xspan = width / (metrics.length - 1),
-            ymin = min - (max - min) * 0.2,
-            ymax = max + (max - min) * 0.2
-      let points = '',
-          x = 0
-      for (let i in metrics) {
-        if (i == 0) {
-          points += 'M'
-        } else {
-          points += 'L'
-        }
-        const value = (metrics[i] - ymin) / (ymax - ymin)
-        points += `${x} ${value * height} `
-        x += xspan
-      }
-      return points
-    },
-
-    max_value() {
-      const { metrics, } = this.$props,
-        maxv = metrics.sort((m1, m2) => m2 - m1)[0]
-      return maxv
-    },
-    min_value() {
-      const { metrics, } = this.$props,
-        minv = metrics.sort((m1, m2) => m1 - m2)[0]
-      return minv
-    },
-
-    max_top() {
-      if (!this.$refs.graph) return ''
-      const width = this.width,
-            height = this.height,
-            { metrics, min, max, } = this.$props,
-            ymin = min - (max - min) * 0.2,
-            ymax = max + (max - min) * 0.2
-      return (this.max_value - ymin) / (ymax - ymin) * height + 4
-    },
-    min_top() {
-      if (!this.$refs.graph) return ''
-      const width = this.width,
-            height = this.height,
-            { metrics, min, max, } = this.$props,
-            ymin = min - (max - min) * 0.2,
-            ymax = max + (max - min) * 0.2
-      return height - ((this.min_value - ymin) / (ymax - ymin) * height) + 4
-    },
-  },
-  methods: {
-    resize() {
-      this.$data.gwidth = this.$refs.graph.clientWidth
-      this.$data.gheight = this.$refs.graph.clientHeight
-    },
-  },
-  mounted: function () {
-    window.addEventListener('resize', this.resize, true)
-  },
-  beforeDestroy: function () {
-    window.removeEventListener('resize', this.resize, true)
   },
 }
 </script>
@@ -158,28 +48,5 @@ export default {
   flex: 1
   display: flex  
   margin: 10pt
-
-#graph
-  flex: 1
-  position: relative
-  border-radius: 1pt
-  border-left: 1.5pt solid #dddddd
-  border-bottom: 1.5pt solid #dddddd
-
-.line
-  position: absolute
-  left: -30pt
-  width: calc(100% + 30pt)
-  font-size: 1.2em
-  font-weight: 600
-
-#max_line
-  padding-bottom: 2pt
-  border-bottom: 2px dashed #c4c4c4
-
-#min_line
-  padding-top: 2pt
-  border-top: 2px dashed #c4c4c4
- 
 
 </style>

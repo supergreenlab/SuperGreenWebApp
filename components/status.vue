@@ -21,11 +21,22 @@ import StatusItem from '~/components/statusitem.vue'
 import BoxSubSection from '~/components/boxsubsection.vue'
 
 export default {
-  props: ['temperature', 'humidity', 'timer_advancement',],
   components: { StatusItem, BoxSubSection, },
+  created() {
+    this.$store.dispatch('controllers/load_box_param', {id: this.controller.broker_clientid.value, i: this.boxid, key: 'sht21_temp_c'})
+    this.$store.dispatch('controllers/load_box_param', {id: this.controller.broker_clientid.value, i: this.boxid, key: 'sht21_temp_f'})
+    this.$store.dispatch('controllers/load_box_param', {id: this.controller.broker_clientid.value, i: this.boxid, key: 'sht21_humi'})
+    this.$store.dispatch('controllers/load_box_param', {id: this.controller.broker_clientid.value, i: this.boxid, key: 'arduino_co2'})
+  },
   computed: {
+    controller() {
+      return this.$store.getters['controllers/getSelected']
+    },
+    boxid() {
+      return this.$route.params.box
+    },
     temperature_status() {
-      const { temperature } = this.$props
+      const temperature = this.controller.boxes[this.boxid].sht21_temp_c.value
       if (temperature > 35)
         return ['TOO HOT', '#D04949', true]
       else if (temperature < 18)
@@ -33,15 +44,23 @@ export default {
       return ['OK', '#3BB30B', false]
     },
     humidity_status() {
-      const { humidity } = this.$props
+      const humidity = this.controller.boxes[this.boxid].sht21_humi.value
       if (humidity > 75)
         return ['TOO HIGH', '#D04949', true]
       else if (humidity < 20)
         return ['TOO LOW', '#42BCCC', true]
       return ['OK', '#3BB30B', false]
     },
+    co2_status() {
+      const co2 = this.controller.boxes[this.boxid].co2.value
+      if (co2 > 1600)
+        return ['TOO HIGH', '#D04949', true]
+      else if (co2 < 800)
+        return ['TOO LOW', '#42BCCC', true]
+      return ['OK', '#3BB30B', false]
+    },
     timer_status() {
-      const { timer_advancement } = this.$props
+      const timer_advancement = this.timer_advancement
       if (timer_advancement == 0)
         return ['NIGHT', '#3F44B9', false]
       else if (timer_advancement > 85)
@@ -49,6 +68,22 @@ export default {
       else if (timer_advancement < 15)
         return ['MORNING', '#A6A9E7', false]
       return ['SUNSHINE', '#CEC946', false]
+    },
+    timer_advancement() {
+      const controller = this.controller,
+            boxid = this.boxid,
+            timer_output = controller.boxes[boxid].timer_output.value
+      if (timer_output <= 0) {
+        return 0
+      }
+
+      const on_sec = controller.boxes[boxid].on_hour.value * 3600 + controller.boxes[boxid].on_min.value * 60,
+            off_sec = controller.boxes[boxid].off_hour.value * 3600 + controller.boxes[boxid].off_min.value * 60,
+            dt = new Date(),
+            cur_sec = dt.getSeconds() + (60 * dt.getMinutes()) + (60 * 60 * dt.getHours()),
+            time_span = (on_sec < off_sec) ? (off_sec - on_sec) : ((off_sec + (24 * 3600)) - on_sec),
+            on_since = (on_sec < cur_sec ? (cur_sec - on_sec) : ((cur_sec + (24 * 3600)) - on_sec))
+      return on_since / time_span * 100
     },
   },
 }

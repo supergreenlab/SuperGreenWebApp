@@ -21,9 +21,9 @@
     icon='section-monitoring.svg'
     title='Status & Monitoring'
     color='#0B81B3'
-    :height='expanded ? `${contentHeight + statusHeight}px` : `${statusHeight}px`'>
+    :height='expanded ? `${contentHeight + statusHeight + 27}px` : `${statusHeight}px`'>
     <div ref='status'>
-      <Status :temperature='last_temperature' :humidity='last_humidity' :timer_advancement='timer_advancement' />
+      <Status />
     </div>
     <div ref='content'>
       <GraphSubSection
@@ -34,16 +34,34 @@
         color='#3bb30b'
         :min=10
         :max=40
-        suffix='°'/>
+        suffix='°'
+        expander='expander-blue.svg'
+        :sizeChanged='sizeChanged'
+        :mounted='updateHeights'/>
       <GraphSubSection
         icon='subsection-monitoring-humidity.svg'
         title='Humidity'
         :graphid='`humi.${controller.broker_clientid.value}.${boxid}`'
-        :url='`http://metrics.supergreenlab.com?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_SHT21_TEMP_C&t=72`'
+        :url='`http://metrics.supergreenlab.com?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_SHT21_HUMI&t=72`'
         color='#0b81b3'
         :min=0
         :max=100
-        suffix='%'/>
+        suffix='%'
+        expander='expander-green.svg'
+        :sizeChanged='sizeChanged'
+        :mounted='updateHeights'/>
+      <GraphSubSection
+        icon='subsection-monitoring-co2.svg'
+        title='CO2'
+        :graphid='`co2.${controller.broker_clientid.value}.${boxid}`'
+        :url='`http://metrics.supergreenlab.com?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_CO2&t=72`'
+        color='#DDB31C'
+        :min=300
+        :max=2500
+        suffix='ppm'
+        expander='expander-yellow.svg'
+        :sizeChanged='sizeChanged'
+        :mounted='updateHeights'/>
     </div>
     <BoxSectionExpander @click='toggleExpand' :expanded='expanded' ref='expander' />
   </BoxSection>
@@ -73,7 +91,13 @@ export default {
   methods: {
     toggleExpand() {
       this.$data.expanded = !this.$data.expanded
-    }
+    },
+    sizeChanged(v) {
+      this.$data.contentHeight += v
+    },
+    updateHeights() {
+      setTimeout(() => this.$data.contentHeight = this.$refs.content.clientHeight, 1000)
+    },
   },
   computed: {
     controller() {
@@ -81,38 +105,6 @@ export default {
     },
     boxid() {
       return this.$route.params.box
-    },
-    last_temperature() {
-      const temperature = this.temperature
-      if (temperature && temperature.length) {
-        const v = temperature[temperature.length-1]
-        return (v < -100 || v > 100) ? 'error' : `${v}°`
-      }
-      return "-"
-    },
-    last_humidity() {
-      const humidity = this.humidity
-      if (humidity && humidity.length) {
-        const v = humidity[humidity.length-1]
-        return (v < 0 || v > 100) ? 'error' : `${v}%`
-      }
-      return "-"
-    },
-    timer_advancement() {
-      const controller = this.$store.getters['controllers/getSelected'],
-            boxid = this.$route.params.box,
-            timer_output = controller.boxes[boxid].timer_output.value
-      if (timer_output <= 0) {
-        return 0
-      }
-
-      const on_sec = controller.boxes[boxid].on_hour.value * 3600 + controller.boxes[boxid].on_min.value * 60,
-            off_sec = controller.boxes[boxid].off_hour.value * 3600 + controller.boxes[boxid].off_min.value * 60,
-            dt = new Date(),
-            cur_sec = dt.getSeconds() + (60 * dt.getMinutes()) + (60 * 60 * dt.getHours()),
-            time_span = (on_sec < off_sec) ? (off_sec - on_sec) : ((off_sec + (24 * 3600)) - on_sec),
-            on_since = (on_sec < cur_sec ? (cur_sec - on_sec) : ((cur_sec + (24 * 3600)) - on_sec))
-      return on_since / time_span * 100
     },
   },
 }
