@@ -53,10 +53,11 @@ export default {
   background-color: #454545
   flex-direction: column
   box-shadow: 4px 0px 4px rgba(0, 0, 0, 0.25)
-  z-index: 2000
+  z-index: 1000
   transition: margin-left 0.2s, opacity 0.5s
 
   @media screen and (max-width: 600px)
+    z-index: 2000
     position: absolute
     top: 0
     left: 0
