@@ -19,6 +19,7 @@
 <template>
   <section :id='$style.container'>
     <div :id='$style.boxes'>
+      <div :id='$style.menu' v-on:click='menu'></div>
       <div :class='`${$style.box} ${settings ? $style.hidden : ""}`' v-for='box, i in controller.boxes' :id='$route.params.box == i ? $style.selected : ""' @click='select(i)'>box #{{ i+1 }}</div>
       <nuxt-link :id='$style.wifi' :to='`/controller/${controller.broker_clientid.value}/setup/wifi-sta`'></nuxt-link>
       <nuxt-link :id='$style.settings' :class='settings ? $style.settingsactive : ""' :to='settings ? `/controller/${controller.broker_clientid.value}/${boxid}` : `/controller/${controller.broker_clientid.value}/${boxid}/settings`'></nuxt-link>
@@ -45,6 +46,9 @@ export default {
   methods: {
     select(i) {
       this.$router.push(`/controller/${this.controller.broker_clientid.value}/${i}`)
+    },
+    menu() {
+      this.$root.$emit('menu')
     },
   },
 }
@@ -83,6 +87,19 @@ export default {
 
 #selected
   background-color: #020202
+
+#menu
+  width: 20pt
+  margin: 0 5pt 0 0
+  background-image: url('~assets/img/menu.svg')
+  background-position: center
+  background-size: contain
+  background-repeat: no-repeat
+  @media screen and (min-width: 600px)
+    display: none
+  
+#menu:hover
+  opacity: 0.5
 
 #body
   display: flex

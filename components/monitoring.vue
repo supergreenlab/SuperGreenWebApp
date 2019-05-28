@@ -90,6 +90,7 @@ export default {
   },
   methods: {
     toggleExpand() {
+      this.$data.contentHeight = this.$refs.content.clientHeight
       this.$data.expanded = !this.$data.expanded
     },
     sizeChanged(v) {

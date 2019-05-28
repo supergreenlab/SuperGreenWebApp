@@ -19,7 +19,8 @@
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
     "vue-chartjs": "^3.4.2",
-    "vue-slider-component": "^3.0.30"
+    "vue-slider-component": "^3.0.30",
+    "vue2-touch-events": "^2.0.0"
   },
   "devDependencies": {
     "nodemon": "^1.18.9"

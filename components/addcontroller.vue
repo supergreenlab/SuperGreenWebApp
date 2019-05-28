@@ -19,14 +19,15 @@
 <template>
   <section :id='$style.container'>
     <h2>Add controller</h2>
+    <img :id='$style.close' src='~/assets/img/remove-timelapse.svg' v-on:click='hide' />
     <div :id='$style.items'>
-      <div :class='$style.item'>
+      <div :class='$style.item' v-on:click='first()'>
         <AddControllerItem title='Just got it !' icon='brand-new.svg' button='Setup' v-on:click='first()' />
       </div>
-      <div :class='$style.item'>
+      <div :class='$style.item' v-on:click='wifi()'>
         <AddControllerItem title='Already running' icon='running.svg' button='Find it' v-on:click='wifi()' />
       </div>
-      <div :class='$style.item'>
+      <div :class='$style.item' v-on:click='shop()'>
         <AddControllerItem title='Get a new one' icon='shop.svg' button='Shop' v-on:click='shop()' />
       </div>
     </div>
@@ -38,6 +39,7 @@ import AddControllerItem from './addcontrolleritem'
 
 export default {
   components: {AddControllerItem,},
+  props: ['onClose'],
   methods: {
     first() {
       this.$store.commit('controllers/configure_search_new_controller', {url: '192.168.4.1', is_sta: false})
@@ -50,6 +52,9 @@ export default {
     shop() {
       window.open('https://supergreenlab.com')
     },
+    hide() {
+      this.$props.onClose && this.$props.onClose()
+    },
   },
 }
 </script>
@@ -58,6 +63,7 @@ export default {
 
 #container
   display: flex
+  position: relative
   flex-direction: column
   flex: 1
   background-color: #454545
@@ -68,11 +74,25 @@ export default {
 
 #items
   display: flex
+  @media screen and (max-width: 600px)
+    align-items: center
+    flex-direction: column
 
 .item
   display: flex
   width: 120pt
   height: 170pt
   margin: 10pt 10pt 10pt 0
+  @media screen and (max-width: 600px)
+    width: 100%
+
+#close
+  position: fixed
+  top: 5pt
+  right: 5pt
+  transition: opacity 0.2s
+
+#close:hover
+  opacity: 0.3
 
 </style>

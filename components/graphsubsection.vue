@@ -34,7 +34,7 @@
       </div>
       <div :id='$style.spacer'></div>
       <a href='javascript:void(0)' @click='expand' :id='$style.expander' :class='expanded ? $style.expanded : ""'>
-        View graph <img :src='require(`~/assets/img/${expander}`)' />
+        {{ expanded ? "Hide graph" : "View graph" }} <img :src='require(`~/assets/img/${expander}`)' />
       </a>
     </div>
     <div :id='$style.body' ref='body'>

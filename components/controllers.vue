@@ -28,7 +28,7 @@
     <div :id='$style.add'>
       <img :class='$style.add_img' :src='!overlay ? require("~/assets/img/add.svg") : require("~/assets/img/remove.svg")' @click="show" />
       <div :id='$style.overlay' :class='overlay ? $style.show : $style.hide'>
-        <AddController />
+        <AddController :onClose='hide' />
       </div>
     </div>
   </section>
@@ -62,6 +62,9 @@ export default {
       this.$data.overlay = !this.$data.overlay
       return evt => evt.preventDefault()
     },
+    hide() {
+      this.$data.overlay = false
+    },
   },
 }
 </script>
@@ -69,6 +72,7 @@ export default {
 <style module lang=stylus>
 #container
   display: flex
+  position: relative
   height: 100%
   align-items: center
   justify-content: space-between
@@ -82,7 +86,7 @@ export default {
 
 #list > div
   color: white
-  padding: 10pt
+  padding: 10pt 0pt 10pt 10pt
   transition: background-color .2s
   line-height: 15pt
 
@@ -100,7 +104,6 @@ export default {
   position: relative
 
 #add
-  position: relative
   transition: opacity .2s
 
 .add_img
@@ -142,20 +145,39 @@ export default {
   position: absolute
   left: 0
   bottom: 0
-  width: 100vw
   background-color: #454545
   border-radius: 2pt
   z-index: 10
   color: white
   padding-left: 15pt
-  transition: margin-left 0.2s, opacity 0.5s
+
+  @media screen and (max-width: 600px)
+    width: 100vw
+    height: 100vh
+    transition: margin-bottom 0.2s, opacity 0.5s
+    overflow-y: auto
+
+  @media screen and (min-width: 600px)
+    transition: margin-left 0.2s, opacity 0.5s
+    width: 100vw
+    overflow-x: auto
 
 .show
-  margin-left: 100%
   opacity: 1
 
+  @media screen and (max-width: 600px)
+    margin-bottom: 0
+
+  @media screen and (min-width: 600px)
+    margin-left: calc(100% - 5pt)
+
 .hide
-  margin-left: -100vw
   opacity: 0
+
+  @media screen and (max-width: 600px)
+    margin-bottom: -100vh
+
+  @media screen and (min-width: 600px)
+    margin-left: -100vw
 
 </style>
