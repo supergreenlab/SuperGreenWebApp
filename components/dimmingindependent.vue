@@ -20,6 +20,7 @@
   <BoxSubSection 
   icon='subsection-dimming-independent.svg'
   title='Independent light dimming'
+  :value='independentValue'
   :height='expanded ? `${contentHeight}px` : "0"'>
     <div ref='content'>
       <div :id='$style.timer'>Current timer desired power:&nbsp;<span :id='$style.timerpower'>{{ timerpower }}%</span></div>
@@ -54,6 +55,11 @@ export default {
       const controller = this.controller,
             boxid = this.$route.params.box
       return this.controller.boxes[boxid].timer_output.value
+    },
+    independentValue() {
+      const controller = this.controller,
+            boxid = this.$route.params.box
+      return this.controller.leds.filter((l) => l.enabled.value && l.box.value == boxid).reduce((acc, l, i) => `${acc}${acc ? "-":""}${l.dim.value}%`, '')
     },
   }
 }
