@@ -88,7 +88,7 @@ export default {
       if (!source || !source.metrics) {
         return []
       }
-      return source.metrics.map((t) => t[1])
+      return source.metrics
     },
     loading() {
       const { graphid } = this.$props,
@@ -144,6 +144,9 @@ export default {
   color: #777777
   text-decoration: none
   font-size: 0.9em
+
+#expander:hover
+  background-color: #EEEEEE
 
 #expander > img
   width: 18px

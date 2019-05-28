@@ -12,10 +12,13 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.3.6",
+    "chart.js": "^2.8.0",
     "cross-env": "^5.2.0",
+    "momentjs": "^2.0.0",
     "nuxt": "^2.4.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
+    "vue-chartjs": "^3.4.2",
     "vue-slider-component": "^3.0.30"
   },
   "devDependencies": {

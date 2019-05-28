@@ -30,31 +30,31 @@
         icon='subsection-monitoring-temperature.svg'
         title='Temperature'
         :graphid='`temp.${controller.broker_clientid.value}.${boxid}`'
-        :url='`http://metrics.supergreenlab.com?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_SHT21_TEMP_C&t=72`'
+        :url='`http://metrics.supergreenlab.com?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_SHT21_TEMP_C&t=72&n=50`'
         color='#3bb30b'
         :min=10
         :max=40
         suffix='°'
-        expander='expander-blue.svg'
+        expander='expander-green.svg'
         :sizeChanged='sizeChanged'
         :mounted='updateHeights'/>
       <GraphSubSection
         icon='subsection-monitoring-humidity.svg'
         title='Humidity'
         :graphid='`humi.${controller.broker_clientid.value}.${boxid}`'
-        :url='`http://metrics.supergreenlab.com?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_SHT21_HUMI&t=72`'
+        :url='`http://metrics.supergreenlab.com?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_SHT21_HUMI&t=72&n=50`'
         color='#0b81b3'
         :min=0
         :max=100
         suffix='%'
-        expander='expander-green.svg'
+        expander='expander-blue.svg'
         :sizeChanged='sizeChanged'
         :mounted='updateHeights'/>
       <GraphSubSection
         icon='subsection-monitoring-co2.svg'
         title='CO2'
         :graphid='`co2.${controller.broker_clientid.value}.${boxid}`'
-        :url='`http://metrics.supergreenlab.com?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_CO2&t=72`'
+        :url='`http://metrics.supergreenlab.com?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_CO2&t=72&n=50`'
         color='#DDB31C'
         :min=300
         :max=2500

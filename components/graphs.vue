@@ -18,18 +18,20 @@
 
 <template>
   <section :id='$style.container'>
+    <div :id='$style.chart'>
+      <Chart v-if='!loading' :chart-data='chartMetrics' :style='{width: "100%", height: "200pt"}' />
+    </div>
     <Loading v-if='loading' width='80pt' height='50pt' />
   </section>
 </template>
 
 <script>
-import VueCharts from 'vue-chartjs'
-import { Bar, Line } from 'vue-chartjs'
+import Chart from '~/components/chart'
 import Loading from '~/components/loading'
+import moment from 'moment'
 
 export default {
-  extends: Bar,
-  components: { Loading, },
+  components: { Chart, Loading, },
   props: {
     min: Number,
     max: Number,
@@ -38,6 +40,19 @@ export default {
     metrics: Array,
     loading: Boolean,
     suffix: String,
+  },
+  computed: {
+    chartMetrics() {
+      const { title, metrics, color } = this.$props
+      return {
+        datasets: [{
+          label: title,
+          data: metrics.map(m => ({x: new Date(m[0]*1000), y: m[1]})),
+          fill: false,
+          borderColor: color,
+        },],
+      }
+    },
   },
 }
 </script>
@@ -48,5 +63,10 @@ export default {
   flex: 1
   display: flex  
   margin: 10pt
+
+#chart
+  position: relative
+  width: 100%
+  height: 200pt
 
 </style>
