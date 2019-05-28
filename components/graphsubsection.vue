@@ -26,11 +26,11 @@
     <div :id='$style.header' ref='header'>
       <div :class='$style.minmax'>
         <span :class='$style.label'>Low:</span>
-        <span :class='$style.value' :style='{color}'>19°</span>
+        <span :class='$style.value' :style='{color}'>{{ minValue }}{{ suffix }}</span>
       </div>
       <div :class='$style.minmax'>
-        <span :class='$style.label'>Low:</span>
-        <span :class='$style.value' :style='{color}'>25°</span>
+        <span :class='$style.label'>High:</span>
+        <span :class='$style.value' :style='{color}'>{{ maxValue }}{{ suffix }}</span>
       </div>
       <div :id='$style.spacer'></div>
       <a href='javascript:void(0)' @click='expand' :id='$style.expander' :class='expanded ? $style.expanded : ""'>
@@ -81,6 +81,23 @@ export default {
       }
       const v = source.metrics[source.metrics.length-1][1]
       return (v < -100 || v > 100) ? 'error' : `${v}${suffix}`
+    },
+    minValue() {
+      const { graphid, suffix } = this.$props,
+            source = this.$store.getters['graphs/source'](graphid)
+      if (!source || !source.metrics || !source.metrics.length) {
+        return '-'
+      }
+      const v = Object.assign([], source.metrics).sort((m1, m2) => m1[1] - m2[1])[0][1]
+      return v
+    },
+    maxValue() {
+      const { graphid, suffix } = this.$props,
+            source = this.$store.getters['graphs/source'](graphid)
+      if (!source || !source.metrics || !source.metrics.length) {
+        return '-'
+      }
+      return Object.assign([], source.metrics).sort((m1, m2) => m2[1] - m1[1])[0][1]
     },
     metrics() {
       const { graphid } = this.$props,
