@@ -28,6 +28,18 @@
     <div ref='content'>
       <GraphSubSection
         icon='subsection-monitoring-temperature.svg'
+        title='Light'
+        :graphid='`light.${controller.broker_clientid.value}.${boxid}`'
+        :url='`http://metrics.supergreenlab.com?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_TIMER_OUTPUT&t=72&n=50`'
+        color='#3bb30b'
+        :min=10
+        :max=40
+        suffix='%'
+        expander='expander-green.svg'
+        :sizeChanged='sizeChanged'
+        :mounted='updateHeights'/>
+      <GraphSubSection
+        icon='subsection-monitoring-temperature.svg'
         title='Temperature'
         :graphid='`temp.${controller.broker_clientid.value}.${boxid}`'
         :url='`http://metrics.supergreenlab.com?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_SHT21_TEMP_C&t=72&n=50`'
