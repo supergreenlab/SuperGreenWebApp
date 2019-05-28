@@ -72,6 +72,12 @@ export default {
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25)
   z-index: 1000
 
+  @media screen and (max-width: 600px)
+    top: 0
+    left: 0
+    width: 100vw
+    position: fixed
+
 .box
   padding: 10pt
   text-decoration-line: underline;

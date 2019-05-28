@@ -85,6 +85,10 @@ export default {
   max-width: 700pt
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15)
 
+  @media screen and (max-width: 600px)
+    width: 100vw
+    margin: 0pt 0pt 0 0pt
+
 #containercenter
   display: flex
   flex-direction: column

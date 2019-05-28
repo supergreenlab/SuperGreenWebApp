@@ -1,12 +1,12 @@
 <template>
   <section :id='$style.container'>
-    <section :id='$style.menu' :class='!shown ? $style.hide : ""' v-touch:swipe.left='hide'>
+    <section :id='$style.menu' :class='!shown ? $style.hide : ""'>
       <Logo margin='5pt' vertical=true size='1.2em' />
       <Controllers />
     </section>
     <section :id='$style.body'>
       <nuxt />
-      <div v-if='shown' :id='$style.touch' v-touch:swipe.left='hide'></div>
+      <div v-if='shown' :id='$style.touch' v-touch:swipe.left='hide' v-on:click='hide'></div>
     </section>
   </section>
 </template>
