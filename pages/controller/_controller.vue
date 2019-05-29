@@ -66,7 +66,7 @@ export default {
     for (let i in controller.leds) {
       this.$store.dispatch('controllers/load_led_param', {id: controller.broker_clientid.value, i, key: 'box'}) 
     }
-    //this.retry()
+    this.retry()
   },
   computed: {
     controller() {
