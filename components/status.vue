@@ -4,13 +4,16 @@
   title='Box status'>
     <div :id='$style.container'>
       <div :class='$style.status'>
-        <StatusItem title='Temperature' :value='temperature_status[0]' :color='temperature_status[1]' :blink='temperature_status[2]' />
+        <StatusItem title='Inside weather' :value='timer_status[0]' :icon='timer_status[1]' :blink='timer_status[2]' />
       </div>
       <div :class='$style.status'>
-        <StatusItem title='Humidity' :value='humidity_status[0]' :color='humidity_status[1]' :blink='humidity_status[2]' />
+        <StatusItem title='Temperature' :value='temperature_status[0]' :icon='temperature_status[1]' :blink='temperature_status[2]' />
       </div>
       <div :class='$style.status'>
-        <StatusItem title='Inside weather' :value='timer_status[0]' :color='timer_status[1]' :blink='timer_status[2]' />
+        <StatusItem title='Humidity' :value='humidity_status[0]' :icon='humidity_status[1]' :blink='humidity_status[2]' />
+      </div>
+      <div :class='$style.status'>
+        <StatusItem title='CO2' :value='co2_status[0]' :icon='co2_status[1]' :blink='co2_status[2]' />
       </div>
     </div>
   </BoxSubSection>
@@ -38,36 +41,36 @@ export default {
     temperature_status() {
       const temperature = this.controller.boxes[this.boxid].sht21_temp_c.value
       if (temperature > 35)
-        return ['TOO HOT', '#D04949', true]
+        return [`${temperature}° - To high`, 'status-temperature-icon-high.svg', true]
       else if (temperature < 18)
-        return ['TOO COLD', '#42BCCC', true]
-      return ['OK', '#3BB30B', false]
+        return [`${temperature}° - To low`, 'status-temperature-icon-low.svg', true]
+      return [`${temperature}° - Ok`, 'status-temperature-icon-ok.svg', false]
     },
     humidity_status() {
       const humidity = this.controller.boxes[this.boxid].sht21_humi.value
       if (humidity > 75)
-        return ['TOO HIGH', '#D04949', true]
+        return [`${humidity}% - To high`, 'status-humidity-icon-high.svg', true]
       else if (humidity < 20)
-        return ['TOO LOW', '#42BCCC', true]
-      return ['OK', '#3BB30B', false]
+        return [`${humidity}% - To low`, 'status-humidity-icon-low.svg', true]
+      return [`${humidity}% - Ok`, 'status-humidity-icon-ok.svg', false]
     },
     co2_status() {
-      const co2 = this.controller.boxes[this.boxid].co2.value
+      const co2 = this.controller.boxes[this.boxid].arduino_co2.value
       if (co2 > 1600)
-        return ['TOO HIGH', '#D04949', true]
+        return [`${co2}ppm - To high`, 'status-co2-icon-high.svg', true]
       else if (co2 < 800)
-        return ['TOO LOW', '#42BCCC', true]
-      return ['OK', '#3BB30B', false]
+        return [`${co2}ppm - To low`, 'status-co2-icon-low.svg', true]
+      return [`${co2}ppm - Ok`, 'status-co2-icon-ok.svg', false]
     },
     timer_status() {
       const timer_advancement = this.timer_advancement
       if (timer_advancement == 0)
-        return ['NIGHT', '#3F44B9', false]
+        return ['NIGHT', 'status-weather-icon-night.svg', false]
       else if (timer_advancement > 85)
-        return ['EVENING', '#EDA63B', false]
+        return ['EVENING', 'status-weather-icon-evening.svg', false]
       else if (timer_advancement < 15)
-        return ['MORNING', '#A6A9E7', false]
-      return ['SUNSHINE', '#CEC946', false]
+        return ['MORNING', 'status-weather-icon-morning.svg', false]
+      return ['SUNSHINE', 'status-weather-icon-sunshine.svg', false]
     },
     timer_advancement() {
       const controller = this.controller,
@@ -98,5 +101,7 @@ export default {
 .status
   display: flex
   flex-basis: 15%
+  @media screen and (max-width: 600px)
+    flex-basis: 50%
 
 </style>

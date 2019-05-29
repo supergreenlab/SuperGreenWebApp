@@ -1,13 +1,14 @@
 <template>
   <section :id='$style.container'>
     <small>{{ title }}</small>
-    <h2 :id='$style.value' :style='{color}' :class='blink ? $style.blink : ""'>{{ value }}</h2>
+    <div :id='$style.icon' :class='blink ? $style.blink : ""' :style='{"background-image": `url(${require(`~/assets/img/${icon}`)})`}' />
+    <b :id='$style.value'>{{ value }}</b>
   </section>
 </template>
 
 <script>
 export default {
-  props: ['title', 'value', 'color', 'blink', ],
+  props: ['title', 'value', 'icon', 'blink', ],
 }
 </script>
 
@@ -22,8 +23,7 @@ export default {
   color: #777777
 
 #value
-  margin: 5pt 0
-  color: #3BB30B
+  margin: 0pt 0
 
 @keyframes blinker {
   50% {
@@ -33,5 +33,13 @@ export default {
 
 .blink
   animation: blinker 1s linear infinite;
+
+#icon
+  height: 30pt
+  width: 30pt
+  margin: 5pt
+  background-position: center
+  background-repeat: no-repeat
+  background-size: contain
 
 </style>
