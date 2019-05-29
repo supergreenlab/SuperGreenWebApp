@@ -66,7 +66,7 @@ export default {
     for (let i in controller.leds) {
       this.$store.dispatch('controllers/load_led_param', {id: controller.broker_clientid.value, i, key: 'box'}) 
     }
-    this.retry()
+    //this.retry()
   },
   computed: {
     controller() {
@@ -108,10 +108,10 @@ export default {
   justify-content: center
   position: relative
   background-color: white
+  white-space: nowrap
 
 #loading_relative
   position: relative
   height: 200pt
-  width: 400pt
 
 </style>
