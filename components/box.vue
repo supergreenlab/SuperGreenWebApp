@@ -78,8 +78,6 @@ export default {
 <style module lang=stylus>
 
 #container
-  display: flex
-  flex-direction: column
   background-color: white
   margin: 0pt 5pt 0 10pt
   max-width: 700pt

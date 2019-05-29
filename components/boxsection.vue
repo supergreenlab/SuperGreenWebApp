@@ -54,8 +54,6 @@ export default {
 #container
   position: relative
   margin: 0 auto
-  display: flex
-  flex-direction: column
   width: 100%
   overflow-y: hidden
 

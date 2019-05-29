@@ -44,8 +44,6 @@ export default {
 <style module lang=stylus>
 
 #container
-  display: flex
-  flex-direction: column
   width: 100%
   overflow-y: hidden
 
