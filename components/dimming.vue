@@ -81,6 +81,8 @@ export default {
 #body
   display: flex
   position: relative
+  @media screen and (max-width: 600px)
+    flex-direction: column
 
 #left
   flex: 0.6

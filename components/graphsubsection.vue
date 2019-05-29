@@ -134,6 +134,7 @@ export default {
 #body
   display: flex
   flex: 1
+  overflow-x: auto
 
 #header
   display: flex
@@ -161,6 +162,7 @@ export default {
   color: #777777
   text-decoration: none
   font-size: 0.9em
+  white-space: nowrap
 
 #expander:hover
   background-color: #EEEEEE

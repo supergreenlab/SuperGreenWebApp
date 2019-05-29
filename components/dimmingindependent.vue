@@ -85,9 +85,11 @@ export default {
   flex-wrap: wrap
 
 .led
-  flex: 25%
+  flex-basis: 25%
   display: flex
   align-items: center
   justify-content: center
+  @media screen and (max-width: 600px)
+    flex-basis: 50%
 
 </style>

@@ -88,6 +88,7 @@ export default {
   @media screen and (max-width: 600px)
     width: 100vw
     margin: 0pt 0pt 0 0pt
+    padding-top: 40pt
 
 #containercenter
   display: flex

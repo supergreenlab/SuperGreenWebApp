@@ -51,5 +51,7 @@ export default {
   display: flex
   flex: 1
   width: 100%
+  @media screen and (max-width: 600px)
+    flex-direction: column
 
 </style>

@@ -72,11 +72,12 @@ export default {
 <style module lang=stylus>
 #container
   display: flex
-  position: relative
   height: 100%
   align-items: center
   justify-content: space-between
   flex-direction: column
+  overflow-x: hidden
+  overflow-y: auto
 
 #list
   display: flex

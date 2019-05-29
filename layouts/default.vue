@@ -55,13 +55,13 @@ export default {
   box-shadow: 4px 0px 4px rgba(0, 0, 0, 0.25)
   z-index: 1000
   transition: margin-left 0.2s, opacity 0.5s
+  height: 100vh
 
   @media screen and (max-width: 600px)
     z-index: 2000
     position: absolute
     top: 0
     left: 0
-    height: 100vh
 
 #menu.hide
   margin-left: -100%
