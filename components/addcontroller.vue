@@ -87,12 +87,11 @@ export default {
     width: 100%
 
 #close
-  top: 5pt
-  right: 5pt
   transition: opacity 0.2s
   @media screen and (max-width: 600px)
     position: fixed
-    width: 100%
+    top: 5pt
+    right: 5pt
   @media screen and (min-width: 600px)
     position: absolute
 

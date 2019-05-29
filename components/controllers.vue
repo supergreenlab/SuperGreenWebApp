@@ -152,6 +152,7 @@ export default {
   padding-left: 15pt
 
   @media screen and (max-width: 600px)
+    left: 0
     width: 100vw
     height: 100vh
     transition: margin-bottom 0.2s, opacity 0.5s
