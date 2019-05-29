@@ -90,4 +90,6 @@ export default {
   margin-left: 20pt
   transition: height 0.5s
 
+  @media screen and (max-width: 600px)
+    margin-left: 0pt
 </style>
