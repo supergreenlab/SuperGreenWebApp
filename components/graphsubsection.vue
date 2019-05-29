@@ -80,7 +80,7 @@ export default {
         return '-'
       }
       const v = source.metrics[source.metrics.length-1][1]
-      return (v < -100 || v > 100) ? 'error' : `${v}${suffix}`
+      return `${v}${suffix}`
     },
     minValue() {
       const { graphid, suffix } = this.$props,

@@ -27,15 +27,15 @@
     </div>
     <div ref='content'>
       <GraphSubSection
-        icon='subsection-monitoring-temperature.svg'
+        icon='subsection-monitoring-light.svg'
         title='Light'
         :graphid='`light.${controller.broker_clientid.value}.${boxid}`'
         :url='`http://metrics.supergreenlab.com?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_TIMER_OUTPUT&t=72&n=50`'
-        color='#3bb30b'
+        color='#D4CF5D'
         :min=10
         :max=40
         suffix='%'
-        expander='expander-green.svg'
+        expander='expander-yellow.svg'
         :sizeChanged='sizeChanged'
         :mounted='updateHeights'/>
       <GraphSubSection
@@ -66,7 +66,7 @@
         icon='subsection-monitoring-co2.svg'
         title='CO2'
         :graphid='`co2.${controller.broker_clientid.value}.${boxid}`'
-        :url='`http://metrics.supergreenlab.com?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_CO2&t=72&n=50`'
+        :url='`http://metrics.supergreenlab.com?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_ARDUINO_CO2&t=72&n=50`'
         color='#DDB31C'
         :min=300
         :max=2500
