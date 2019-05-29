@@ -87,10 +87,14 @@ export default {
     width: 100%
 
 #close
-  position: fixed
   top: 5pt
   right: 5pt
   transition: opacity 0.2s
+  @media screen and (max-width: 600px)
+    position: fixed
+    width: 100%
+  @media screen and (min-width: 600px)
+    position: absolute
 
 #close:hover
   opacity: 0.3

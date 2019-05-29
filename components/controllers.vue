@@ -72,6 +72,7 @@ export default {
 <style module lang=stylus>
 #container
   display: flex
+  max-width: 100vw
   height: 100%
   align-items: center
   justify-content: space-between
@@ -142,9 +143,7 @@ export default {
   color: #FF4B4B
 
 #overlay
-  display: flex
   position: absolute
-  left: 0
   bottom: 0
   background-color: #454545
   border-radius: 2pt
@@ -159,7 +158,7 @@ export default {
     overflow-y: auto
 
   @media screen and (min-width: 600px)
-    transition: margin-left 0.2s, opacity 0.5s
+    transition: left 0.2s, opacity 0.5s
     width: 100vw
     overflow-x: auto
 
@@ -170,7 +169,7 @@ export default {
     margin-bottom: 0
 
   @media screen and (min-width: 600px)
-    margin-left: calc(100% - 5pt)
+    left: 0pt
 
 .hide
   opacity: 0
@@ -179,6 +178,6 @@ export default {
     margin-bottom: -100vh
 
   @media screen and (min-width: 600px)
-    margin-left: -100vw
+    left: -100vw
 
 </style>
