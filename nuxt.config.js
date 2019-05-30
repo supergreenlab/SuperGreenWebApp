@@ -10,7 +10,7 @@ export default {
     title: pkg.name,
     meta: [
       { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
       { hid: 'description', name: 'description', content: pkg.description }
     ],
     link: [
@@ -67,9 +67,10 @@ export default {
     extend(config, { isDev, isClient }) {
 			if (!isDev) {
 				// relative links, please.
-				config.output.publicPath = './_nuxt/'
+				config.output.publicPath = './nuxt/'
 			}
 			return config;
-    }
+    },
+    publicPath: '/nuxt/',
   }
 }
