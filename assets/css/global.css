@@ -1,5 +1,6 @@
 @import './normalize.css';
 @import './fonts.css';
+@import './slider.css';
 
 html {
 	font-size: 11pt;
@@ -62,11 +63,4 @@ input[type=text] {
 
 input[type=text]::placeholder {
   color: #d2d2d2;
-}
-.vue-slider-dot-handle {
-  border: 1pt solid white !important;
-  background-color: #636363 !important;
-}
-.vue-slider-process {
-  background-color: #c4c4c4 !important;
 }

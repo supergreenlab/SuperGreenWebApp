@@ -22,7 +22,7 @@
   title='Master switch'
   :value='`${average}%`'
   :height='expanded ? `${contentHeight}px` : "0"'>
-    <div ref='content'>
+    <div :id='$style.body' ref='content' :class='!expanded ? $style.hidden : ""'>
       <small :id='$style.masterhint'>Dims all leds +25% or -25% at once.</small>
       <div :id='$style.masterbody'>
         <div :class='$style.masterbuttons' :id='$style.plus' @click='masterplus'></div>
@@ -124,5 +124,11 @@ export default {
 
 #minus
   background-image: url('~assets/img/button-light-dimming-master-minus.svg')
+
+#body
+  transition: opacity 0.5s
+
+.hidden
+  opacity: 0
 
 </style>

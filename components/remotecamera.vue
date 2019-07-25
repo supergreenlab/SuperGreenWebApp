@@ -25,7 +25,6 @@
 import BoxSection from '~/components/boxsection'
 import BoxSubSection from '~/components/boxsubsection'
 import BoxSectionExpander from '~/components/boxsectionexpander'
-import BlowerControlSubSection from '~/components/blowercontrolsubsection'
 import Liveview from '~/components/liveview'
 
 export default {

@@ -86,6 +86,5 @@ export default {
   position: relative
   margin: 10pt
   transition: height 0.5s
-  overflow-y: hidden
 
 </style>

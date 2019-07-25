@@ -293,7 +293,7 @@ export const actions = {
     const addr = ip || controller.wifi_ip.value
     if (addr) {
       try {
-        await controller_chain(id)(() => axios.get(`http://${addr}/s?k=MDNS_DOMAIN`, {timeout: 5000}))
+        await controller_chain(id)(() => axios.get(`http://${addr}/s?k=MDNS_DOMAIN`, {timeout: 5000}), (e, n) => context.commit('set_found_try', {id, n}))
         if (ip) {
           context.commit('loaded_controller_param', {id, key: 'wifi_ip', value: addr})
         }
@@ -304,7 +304,7 @@ export const actions = {
     }
     if (!found_by_ip) {
       const { data: ip } = await controller_chain(id)(() => axios.get(`http://${url}.local/s?k=WIFI_IP`, {timeout: 5000}), (e, n) => context.commit('set_found_try', {id, n}))
-      context.commit('loaded_controller_param', {id, key: 'wifi_ip', value: wifi_ip})
+      context.commit('loaded_controller_param', {id, key: 'wifi_ip', value: ip})
     }
     context.commit('set_found', id)
   },

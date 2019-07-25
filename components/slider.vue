@@ -18,13 +18,12 @@
 
 <template>
   <section :id='$style.container'>
-    <vue-slider :min='0' :max='100' v-model='vcomp' :id='$style.slider' width='100%' :lazy="true" :contained='true' />
+    <vue-slider :min='0' :max='100' v-model='vcomp' :id='$style.slider' height='15pt' :lazy="true" :contained='true' dotSize='30' interval='5' absorb='true'/>
   </section>
 </template>
 
 <script>
 import VueSlider from 'vue-slider-component'
-import 'vue-slider-component/theme/antd.css'
 
 export default {
   props: [ 'value' ],
@@ -48,9 +47,6 @@ export default {
 
 #container
   flex: 1
-  display: flex
-  align-items: center
-  justify-content: center
   cursor: pointer
   
 #slider

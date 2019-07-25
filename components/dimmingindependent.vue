@@ -22,7 +22,7 @@
   title='Independent light dimming'
   :value='independentValue'
   :height='expanded ? `${contentHeight}px` : "0"'>
-    <div ref='content'>
+    <div :id='$style.body' ref='content' :class='!expanded ? $style.hidden : ""'>
       <div :id='$style.timer'>Current timer desired power:&nbsp;<span :id='$style.timerpower'>{{ timerpower }}%</span></div>
       <div :id='$style.independentbody'>
         <div v-for='(led, j) in controller.leds' v-if='led.box.value == $route.params.box' :key='controller.broker_clientid.value + j' :class='$style.led'>
@@ -85,11 +85,17 @@ export default {
   flex-wrap: wrap
 
 .led
-  flex-basis: 25%
+  flex-basis: 50%
   display: flex
   align-items: center
   justify-content: center
   @media screen and (max-width: 600px)
-    flex-basis: 50%
+    flex-basis: 100%
+
+#body
+  transition: opacity 0.5s
+
+.hidden
+  opacity: 0
 
 </style>

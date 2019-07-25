@@ -18,10 +18,10 @@
 
 <template>
   <section :id='$style.container'>
-    <b>{{ j + 1 }}</b>
     <div :id='$style.box'>
+      <h2 :id='$style.n'>{{ j + 1 }}</h2>
       <div :id='$style.onoff' :class='led.dim.value > 75 ? $style.on : (led.dim.value > 25 ? $style.mid : $style.off)' @click='toggleOnOff'></div>
-      <b>{{ led.dim.value }}%</b>
+      <b :id='$style.value'>{{ led.dim.value }}%</b>
     </div>
     <div :id='$style.slider'>
       <Slider v-model='dim' />
@@ -84,21 +84,15 @@ export default {
 
 #container
   display: flex
-  position: relative
   flex-direction: column
   align-items: center
   justify-content: center
   margin: 4pt
-
-#container > b
-  align-self: flex-start
-  margin-left: 2pt
-  margin-bottom: -6pt
-  z-index: 2
-  text-shadow: -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 2px 2px 0 #fff
+  width: 100%
 
 #box
   display: flex
+  position: relative
   align-items: center
   justify-content: center
   flex-direction: column
@@ -106,13 +100,19 @@ export default {
   border: 1px solid #ebebeb
   border-radius: 3pt
   color: #8b8b8b
-  width: 45pt
-  height: 45pt
+  width: 100%
+  height: 90pt
+
+#n
+  align-self: flex-start
+  margin-left: 2pt
+  margin-bottom: -6pt
+  z-index: 2
+  text-shadow: -2px -2px 0 #fff, 2px -2px 0 #fff, -2px 2px 0 #fff, 2px 2px 0 #fff
 
 #onoff
-  width: 25pt
-  height: 25pt
-  align-self: flex-end 
+  width: 50pt
+  height: 50pt
   margin: 2pt
   background-repeat: no-repeat
   background-size: contain
@@ -143,5 +143,9 @@ export default {
   background-color: rgba(255, 255, 255, 0.8)
   color: #D04949
   z-index: 1000
+
+#value
+  font-weight: 600
+  font-size: 1.2em
 
 </style>
