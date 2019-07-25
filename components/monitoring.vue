@@ -21,7 +21,7 @@
     icon='section-monitoring.svg'
     title='Status & Monitoring'
     color='#0B81B3'
-    :height='expanded ? `${contentHeight + statusHeight + 27}px` : `${statusHeight}px`'>
+    :height='expanded ? `${contentHeight + statusHeight + 27}px` : `${statusHeight + 20}px`'>
     <div ref='status'>
       <Status />
     </div>
