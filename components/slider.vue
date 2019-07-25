@@ -18,7 +18,7 @@
 
 <template>
   <section :id='$style.container'>
-    <vue-slider :min='0' :max='100' v-model='vcomp' :id='$style.slider' height='15pt' :lazy="true" :contained='true' dotSize='30' interval='5' absorb='true'/>
+    <vue-slider :min='0' :max='100' v-model='vcomp' :id='$style.slider' height='15pt' :lazy="true" :contained='true' dotSize='30' :interval='5' absorb='true'/>
   </section>
 </template>
 

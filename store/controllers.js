@@ -232,13 +232,36 @@ const wait_for_controller = async function (url, onTry) {
   for (let i = 0; i < 5; ++i) {
     onTry()
     try {
-      const { data: name } = await axios.get(`http://${url}/s?k=DEVICE_NAME`, {timeout: 5000})
-      return name
+      const { data: ip } = await axios.get(`http://${url}/s?k=WIFI_IP`, {timeout: 5000})
+      return ip
     } catch(e) {
       console.log(e)
     }
   }
   return false
+}
+
+const zeroconf_discovery = async function (name) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      window.cordova.plugins.zeroconf.unwatch('_http._tcp.', 'local.')
+      reject()
+    }, 20000)
+    window.cordova.plugins.zeroconf.watch('_http._tcp.', 'local.', function({action, service}) {
+      if (action == 'resolved' && service.name.toLowerCase() == name.replace('.local', '').toLowerCase()) {
+        resolve(service.ipv4Addresses[0])
+        window.cordova.plugins.zeroconf.unwatch('_http._tcp.', 'local.')
+      }
+    })
+  })
+}
+
+const has_mobile_zeroconf = function() {
+  return window.cordova && window.cordova.plugins.zeroconf
+}
+
+const is_ip = (url) => {
+  return url.match(/\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/)
 }
 
 let init_done = false
@@ -250,19 +273,26 @@ export const actions = {
     }
   },
   async search_new_controller(context) {
-    let name, url = context.state.new_controller_url
+    const discovery_url = context.state.new_controller_url
+    let url = context.state.new_controller_url
     context.commit('start_search_new_controller')
-    if ((name = await wait_for_controller(url, () => context.commit('search_try'))) == false) {
-      context.commit('end_search_new_controller', {controller: null, error: 'No controller found'})
-      return
+
+    if (!is_ip(url) && has_mobile_zeroconf()) {
+      url = await zeroconf_discovery(url)
+    } else {
+      if ((url = await wait_for_controller(url, () => context.commit('search_try'))) == false) {
+        context.commit('end_search_new_controller', {controller: null, error: 'No controller found'})
+        return
+      }
     }
+    const { data: name } = await discovery_chain(async () => axios.get(`http://${url}/s?k=DEVICE_NAME`, {timeout: 5000}))
     let controller = Object.assign({}, controller_defaults, {
-      discovery_url: url,
+      discovery_url,
       device_name: Object.assign({}, controller_defaults.device_name, {value: name, loaded: true}),
     })
     context.commit('found_new_controller', {controller})
-    setTimeout(async () => {
-      const { data: broker_clientid } = await discovery_chain(async () => axios.get(`http://${url}/s?k=BROKER_CLIENTID`, {timeout: 5000})),
+    //setTimeout(async () => {
+    const { data: broker_clientid } = await discovery_chain(async () => axios.get(`http://${url}/s?k=BROKER_CLIENTID`, {timeout: 5000})),
             { data: state } = await discovery_chain(async () => axios.get(`http://${url}/i?k=STATE`, {timeout: 5000})),
             { data: wifi_ip } = await discovery_chain(async () => axios.get(`http://${url}/s?k=WIFI_IP`, {timeout: 5000})),
             { data: mdns_domain } = await discovery_chain(async () => axios.get(`http://${url}/s?k=MDNS_DOMAIN`, {timeout: 5000}))
@@ -283,7 +313,7 @@ export const actions = {
       })
       context.commit('add_controller', controller)
       context.commit('end_search_new_controller', {controller, error: null})
-    }, 500)
+    //}, 500)
   },
   async search_controller(context, { id, ip }) {
     context.commit('set_found_try', {id, n: 1})
@@ -303,8 +333,12 @@ export const actions = {
       }
     }
     if (!found_by_ip) {
-      const { data: ip } = await controller_chain(id)(() => axios.get(`http://${url}.local/s?k=WIFI_IP`, {timeout: 5000}), (e, n) => context.commit('set_found_try', {id, n}))
-      context.commit('loaded_controller_param', {id, key: 'wifi_ip', value: ip})
+      if (has_mobile_zeroconf()) {
+        const ip = await zeroconf_discovery(url)
+      } else {
+        const { data: ip } = await controller_chain(id)(() => axios.get(`http://${url}.local/s?k=WIFI_IP`, {timeout: 5000}), (e, n) => context.commit('set_found_try', {id, n}))
+        context.commit('loaded_controller_param', {id, key: 'wifi_ip', value: ip})
+      }
     }
     context.commit('set_found', id)
   },

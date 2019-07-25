@@ -11,11 +11,15 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
-      { hid: 'description', name: 'description', content: pkg.description }
+      { hid: 'description', name: 'description', content: pkg.description },
+      { name: "apple-mobile-web-app-capable", content:"yes" },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }
-    ]
+    ],
+    script: [
+      { src: 'cordova.js', ssr: false },
+    ],
   },
 	dev: process.env.NODE_ENV === 'DEV',
 
@@ -36,6 +40,7 @@ export default {
   */
   plugins: [
     { src: '~/plugins/vue-touch', ssr: false },
+    { src: '~/plugins/cordova', ssr: false },
   ],
 
   router: {
