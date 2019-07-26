@@ -248,6 +248,7 @@ const zeroconf_discovery = async function (name) {
       reject()
     }, 20000)
     window.cordova.plugins.zeroconf.watch('_http._tcp.', 'local.', function({action, service}) {
+      console.log(action, service, name)
       if (action == 'resolved' && service.name.toLowerCase() == name.replace('.local', '').toLowerCase()) {
         resolve(service.ipv4Addresses[0])
         window.cordova.plugins.zeroconf.unwatch('_http._tcp.', 'local.')
@@ -257,7 +258,7 @@ const zeroconf_discovery = async function (name) {
 }
 
 const has_mobile_zeroconf = function() {
-  return window.cordova && window.cordova.plugins.zeroconf
+  return !!window.cordova && !!window.cordova.plugins.zeroconf
 }
 
 const is_ip = (url) => {
@@ -291,29 +292,27 @@ export const actions = {
       device_name: Object.assign({}, controller_defaults.device_name, {value: name, loaded: true}),
     })
     context.commit('found_new_controller', {controller})
-    //setTimeout(async () => {
     const { data: broker_clientid } = await discovery_chain(async () => axios.get(`http://${url}/s?k=BROKER_CLIENTID`, {timeout: 5000})),
-            { data: state } = await discovery_chain(async () => axios.get(`http://${url}/i?k=STATE`, {timeout: 5000})),
-            { data: wifi_ip } = await discovery_chain(async () => axios.get(`http://${url}/s?k=WIFI_IP`, {timeout: 5000})),
-            { data: mdns_domain } = await discovery_chain(async () => axios.get(`http://${url}/s?k=MDNS_DOMAIN`, {timeout: 5000}))
-      controller = Object.assign({}, controller, {
-        loaded: true,
-        broker_clientid: Object.assign({}, controller.broker_clientid, {
-          value: broker_clientid, loaded: true
-        }),
-        state: Object.assign({}, controller.state, {
-          value: state, loaded: true
-        }),
-        wifi_ip: Object.assign({}, controller.wifi_ip, {
-          value: wifi_ip, loaded: true
-        }),
-        mdns_domain: Object.assign({}, controller.mdns_domain, {
-          value: mdns_domain, loaded: true
-        }),
-      })
-      context.commit('add_controller', controller)
-      context.commit('end_search_new_controller', {controller, error: null})
-    //}, 500)
+      { data: state } = await discovery_chain(async () => axios.get(`http://${url}/i?k=STATE`, {timeout: 5000})),
+      { data: wifi_ip } = await discovery_chain(async () => axios.get(`http://${url}/s?k=WIFI_IP`, {timeout: 5000})),
+      { data: mdns_domain } = await discovery_chain(async () => axios.get(`http://${url}/s?k=MDNS_DOMAIN`, {timeout: 5000}))
+    controller = Object.assign({}, controller, {
+      loaded: true,
+      broker_clientid: Object.assign({}, controller.broker_clientid, {
+        value: broker_clientid, loaded: true
+      }),
+      state: Object.assign({}, controller.state, {
+        value: state, loaded: true
+      }),
+      wifi_ip: Object.assign({}, controller.wifi_ip, {
+        value: wifi_ip, loaded: true
+      }),
+      mdns_domain: Object.assign({}, controller.mdns_domain, {
+        value: mdns_domain, loaded: true
+      }),
+    })
+    context.commit('add_controller', controller)
+    context.commit('end_search_new_controller', {controller, error: null})
   },
   async search_controller(context, { id, ip }) {
     context.commit('set_found_try', {id, n: 1})
@@ -335,6 +334,7 @@ export const actions = {
     if (!found_by_ip) {
       if (has_mobile_zeroconf()) {
         const ip = await zeroconf_discovery(url)
+        context.commit('loaded_controller_param', {id, key: 'wifi_ip', value: ip})
       } else {
         const { data: ip } = await controller_chain(id)(() => axios.get(`http://${url}.local/s?k=WIFI_IP`, {timeout: 5000}), (e, n) => context.commit('set_found_try', {id, n}))
         context.commit('loaded_controller_param', {id, key: 'wifi_ip', value: ip})

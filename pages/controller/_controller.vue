@@ -58,15 +58,23 @@ export default {
         }
       } else if(controller.found == true) {
         this.$data.waiting = false
+        this.load_leds()
+      }
+    },
+    async load_leds() {
+      const controller = this.$store.getters['controllers/getSelected']
+      for (let i in controller.leds) {
+        this.$store.dispatch('controllers/load_led_param', {id: controller.broker_clientid.value, i, key: 'box'}) 
       }
     },
   },
   mounted() {
     const controller = this.$store.getters['controllers/getSelected']
-    for (let i in controller.leds) {
-      this.$store.dispatch('controllers/load_led_param', {id: controller.broker_clientid.value, i, key: 'box'}) 
+    if (controller && controller.found == false) {
+      this.retry()
+    } else {
+      this.load_leds()
     }
-    this.retry()
   },
   computed: {
     controller() {

@@ -68,7 +68,7 @@ export default {
       } catch (e) {
         console.log(e)
       }
-      this.$router.push('/setup/wait-online')
+      this.$router.push(`/controller/${controller.broker_clientid.value}/setup/wait-online`)
     },
   },
 }
