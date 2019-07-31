@@ -18,21 +18,16 @@
 
 <template>
   <section :id='$style.container'>
-    <ui-button raised color="green">
+    <el-button type="success">
     <nuxt-link v-if='to' :to='to'>{{ label }} &gt;</nuxt-link>
     <a v-else-if='onClick' href='javascript:void(0)' v-on:click='onClick'>{{ label }} &gt;</a>
     <span v-else>{{ label }} &gt;</span>
-    </ui-button>
+    </el-button>
   </section>
 </template>
 
 <script>
-import Vue from 'vue';
-import { UiButton } from 'keen-ui';
-import 'keen-ui/dist/keen-ui.css';
-
 export default {
-  components: { UiButton },
   props: {
     'onClick': Function,
     'to': String, 
