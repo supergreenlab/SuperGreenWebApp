@@ -18,9 +18,11 @@
 
 <template>
   <section :id='$style.container'>
+    <el-button type="danger"  circle>
     <nuxt-link to='/'>
       <img src='~/assets/img/remove-timelapse.svg' />
     </nuxt-link>
+    </el-button>
   </section>
 </template>
 
@@ -34,6 +36,7 @@ export default {
 #container
   display: flex
   padding: 5pt
+  
 
 #container > a > img
   text-decoration: none
