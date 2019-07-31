@@ -79,6 +79,7 @@ export default {
   flex-direction: column
   overflow-x: hidden
   overflow-y: auto
+  overflow: hidden
 
 #list
   display: flex
