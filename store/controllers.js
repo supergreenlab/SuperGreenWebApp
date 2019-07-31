@@ -17,18 +17,7 @@
  */
 
 import axios from 'axios'
-import version_config from '../version_config.json'
 import storage from '../utils/storage'
-
-const controller_defaults = {
-  discovery_url: '',
-  loaded: false,
-  found: false,
-  found_try: 1,
-  i2c: [],
-  leds: [],
-  boxes: [],
-}
 
 const new_loadable_key = function(key) {
   const def = key.integer ? (key.default || 0) : key.default || ''
@@ -84,30 +73,42 @@ const controller_chain = (id) => {
 }
 const discovery_chain = schedule_promise(3, 3)
 
-for (let i in version_config.keys) {
-  const key = version_config.keys[i]
-  if (key.led) {
-    if (!controller_defaults.leds[key.led.index]) {
-      controller_defaults.leds[key.led.index] = {}
-    }
-    controller_defaults.leds[key.led.index][key.led.param] = new_loadable_key(key)
-  } else if (key.box) {
-    if (!controller_defaults.boxes[key.box.index]) {
-      controller_defaults.boxes[key.box.index] = {}
-    }
-    controller_defaults.boxes[key.box.index][key.box.param] = new_loadable_key(key)
-  } else if (key.i2c) {
-    if (!controller_defaults.i2c[key.i2c.index]) {
-      controller_defaults.i2c[key.i2c.index] = {}
-    }
-    controller_defaults.i2c[key.i2c.index][key.i2c.param] = new_loadable_key(key)
-  } else {
-    controller_defaults[key.name] = new_loadable_key(key)
+const controller_from_config = (config) => {
+  const controller_defaults = {
+    discovery_url: '',
+    loaded: false,
+    found: false,
+    found_try: 1,
+    i2c: [],
+    leds: [],
+    boxes: [],
   }
+  for (let i in config.keys) {
+    const key = config.keys[i]
+    if (key.led) {
+      if (!controller_defaults.leds[key.led.index]) {
+        controller_defaults.leds[key.led.index] = {}
+      }
+      controller_defaults.leds[key.led.index][key.led.param] = new_loadable_key(key)
+    } else if (key.box) {
+      if (!controller_defaults.boxes[key.box.index]) {
+        controller_defaults.boxes[key.box.index] = {}
+      }
+      controller_defaults.boxes[key.box.index][key.box.param] = new_loadable_key(key)
+    } else if (key.i2c) {
+      if (!controller_defaults.i2c[key.i2c.index]) {
+        controller_defaults.i2c[key.i2c.index] = {}
+      }
+      controller_defaults.i2c[key.i2c.index][key.i2c.param] = new_loadable_key(key)
+    } else {
+      controller_defaults[key.name] = new_loadable_key(key)
+    }
+  }
+  return controller_defaults
 }
 
 const stored = async function() {
-  const controllers = (await storage.get('controllers', [])).map((c) => Object.assign(c, {found: false, found_try: 1}))
+  const controllers = (await storage.get('controllers', [])).map((c) => Object.assign(c, {found: false, found_try: 1,}))
   return {
     controllers,
   }
@@ -248,13 +249,45 @@ const zeroconf_discovery = async function (name) {
       reject()
     }, 20000)
     window.cordova.plugins.zeroconf.watch('_http._tcp.', 'local.', function({action, service}) {
-      console.log(action, service, name)
       if (action == 'resolved' && service.name.toLowerCase() == name.replace('.local', '').toLowerCase()) {
         resolve(service.ipv4Addresses[0])
         window.cordova.plugins.zeroconf.unwatch('_http._tcp.', 'local.')
       }
     })
   })
+}
+
+const start_controller_daemon = (context, controller) => {
+  setTimeout(async () => {
+    while (true) {
+      try {
+        await context.dispatch('search_controller', {id: controller.broker_clientid.value})
+        break
+      } catch(e) {
+        console.log(e)
+      }
+    }
+    for (let i in controller.leds) {
+      for (let j in controller.leds[i]) {
+        context.dispatch('load_led_param', {id: controller.broker_clientid.value, i, key: j}) 
+      }
+    }
+    for (let i in controller.boxes) {
+      for (let j in controller.boxes[i]) {
+        context.dispatch('load_box_param', {id: controller.broker_clientid.value, i, key: j}) 
+      }
+    }
+    for (let i in controller.i2c) {
+      for (let j in controller.i2c[i]) {
+        context.dispatch('load_i2c_param', {id: controller.broker_clientid.value, i, key: j}) 
+      }
+    }
+    for (let i in controller) {
+      if (controller[i].value) {
+        context.dispatch('load_controller_param', {id: controller.broker_clientid.value, key: i}) 
+      }
+    }
+  }, 0)
 }
 
 const has_mobile_zeroconf = function() {
@@ -270,6 +303,9 @@ export const actions = {
   async init(context) {
     if (init_done == false) {
       context.commit('init', await stored())
+      for (let i in context.state.controllers) {
+        start_controller_daemon(context, context.state.controllers[i])
+      }
       init_done = true
     }
   },
@@ -286,6 +322,10 @@ export const actions = {
         return
       }
     }
+
+    const { data: config } = await discovery_chain(async () => axios.get(`http://${url}/fs/config.json`, {timeout: 5000})),
+          controller_defaults = controller_from_config(config)
+
     const { data: name } = await discovery_chain(async () => axios.get(`http://${url}/s?k=DEVICE_NAME`, {timeout: 5000}))
     let controller = Object.assign({}, controller_defaults, {
       discovery_url,
@@ -382,7 +422,7 @@ export const actions = {
   async load_i2c_param(context, { id, i, key }) {
     let controller = getById(context.state, id),
       config = controller.i2c[i][key].config_key
-    context.commit('loading_i2c_param', id, i, key)
+    context.commit('loading_i2c_param', {id, i, key})
     try {
       const { data: value } = await controller_chain(id)(async () => axios.get(`http://${controller.wifi_ip.value}/${config.integer ? 'i' : 's'}?k=I2C_${i}_${key.toUpperCase()}`, {timeout: 5000}))
       context.commit('loaded_i2c_param', {id, i, key, value: config.integer ? parseInt(value) : value})

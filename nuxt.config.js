@@ -39,6 +39,7 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    { src: '~/plugins/init', ssr: false },
     { src: '~/plugins/vue-touch', ssr: false },
     { src: '~/plugins/cordova', ssr: false },
   ],

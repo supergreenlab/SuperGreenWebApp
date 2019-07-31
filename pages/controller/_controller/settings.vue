@@ -17,22 +17,28 @@
  -->
 
 <template>
-  <section v-if='controller' :id='$style.container'>
-    <nuxt-child :key='$route.params.controller' />
+  <section :id='$style.container'>
+    <section :id='$style.menu'>
+      <h1 :id='$style.title'>Settings {{ controller.device_name.value }}</h1>
+      <nuxt-link :id='$style.close' :to='`/controller/${controller.broker_clientid.value}/0`'></nuxt-link>
+    </section>
+    <Wifi />
+    <Leds />
   </section>
 </template>
 
 <script>
-import Box from '~/components/box'
-import Loading from '~/components/loading'
+import Wifi from '~/components/wifi.vue'
+import Leds from '~/components/leds.vue'
+import Advanced from '~/components/advanced.vue'
 
 export default {
-  components: { Box, Loading, },
+  components: {Wifi, Leds,},
   computed: {
     controller() {
       return this.$store.getters['controllers/getSelected']
     },
-  },
+  }
 }
 </script>
 
@@ -40,33 +46,39 @@ export default {
 
 #container
   display: flex
-  position: relative
-  flex: 1
   flex-direction: column
-  background-color: #efefef
-  overflow-y: auto
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-
-#container > div
-  max-width: 700pt
-
-#loading
-  position: absolute
   width: 100%
-  height: 100%
-  top: 0
-  left: 0
-  display: flex
-  flex: 1
-  flex-direction: column
-  align-items: center
-  justify-content: center
-  position: relative
+  max-width: 700pt
+  min-height: 100vh
   background-color: white
-  white-space: nowrap
 
-#loading_relative
-  position: relative
-  height: 200pt
+#menu
+  display: flex
+  align-items: center
+  padding-right: 10pt
+  z-index: 1000
+  @media screen and (max-width: 600px)
+    top: 0
+    left: 0
+    width: 100vw
+    position: fixed
+
+#title
+  flex: 1
+  margin-left: 20pt
+  color: #717171
+
+#close
+  display: block
+  justify-self: flex-end
+  width: 19pt
+  height: 19pt
+  margin: 5pt
+  background-image: url('~assets/img/close-black.svg')
+  background-position: center
+  background-size: contain
+  background-repeat: no-repeat
+  cursor: pointer
+  z-index: 1001
 
 </style>

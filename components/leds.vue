@@ -17,21 +17,24 @@
  -->
 
 <template>
-  <section v-if='controller' :id='$style.container'>
-    <nuxt-child :key='$route.params.controller' />
+  <section :id='$style.container'>
+    <Title title='LED CONFIG' icon='light-black.svg' />
+    <div :id='$style.form'>
+      <div v-for='i in 6' :class='$style.led'>
+        <Led :n='i' />
+      </div>
+    </div>
   </section>
 </template>
 
 <script>
-import Box from '~/components/box'
-import Loading from '~/components/loading'
+import Title from '~/components/settings-title.vue'
+import Led from '~/components/led-box.vue'
 
 export default {
-  components: { Box, Loading, },
-  computed: {
-    controller() {
-      return this.$store.getters['controllers/getSelected']
-    },
+  components: {Title, Led,},
+  controller() {
+    return this.$store.getters['controllers/getSelected']
   },
 }
 </script>
@@ -40,33 +43,45 @@ export default {
 
 #container
   display: flex
-  position: relative
-  flex: 1
   flex-direction: column
-  background-color: #efefef
-  overflow-y: auto
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  padding: 0 10pt
 
-#container > div
-  max-width: 700pt
-
-#loading
-  position: absolute
-  width: 100%
-  height: 100%
-  top: 0
-  left: 0
+#form
   display: flex
-  flex: 1
-  flex-direction: column
+  justify-content: space-between
+  padding: 10pt 25pt
+  flex-wrap: wrap
+
+#fields
+  display: flex
+  align-items: flex-end
+  margin: 10pt 0
+
+#connect
+  display: flex
   align-items: center
   justify-content: center
-  position: relative
-  background-color: white
-  white-space: nowrap
+  padding: 0 15pt
+  background-color: #3BB30B
+  height: 23pt
+  color: white
+  text-decoration: none
+  border-radius: 3pt
 
-#loading_relative
-  position: relative
-  height: 200pt
+#connect:hover
+  background-color: #4BC30B
+
+#connect:active
+  background-color: #2BA30B
+  
+.input
+  margin: 0 10pt
+
+.large
+  flex: 1
+
+.led
+  margin: 10pt 5pt
+  flex-basis: 40%
 
 </style>

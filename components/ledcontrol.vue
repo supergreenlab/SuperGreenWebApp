@@ -84,6 +84,7 @@ export default {
 
 #container
   display: flex
+  position: relative
   flex-direction: column
   align-items: center
   justify-content: center

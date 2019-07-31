@@ -21,8 +21,7 @@
     <div :id='$style.boxes'>
       <div :id='$style.menu' v-on:click='menu'></div>
       <div :class='`${$style.box} ${settings ? $style.hidden : ""}`' v-for='box, i in controller.boxes' :id='$route.params.box == i ? $style.selected : ""' @click='select(i)'>box #{{ i+1 }}</div>
-      <nuxt-link :id='$style.wifi' :to='`/controller/${controller.broker_clientid.value}/setup/wifi-sta`'></nuxt-link>
-      <nuxt-link :id='$style.settings' :class='settings ? $style.settingsactive : ""' :to='settings ? `/controller/${controller.broker_clientid.value}/${boxid}` : `/controller/${controller.broker_clientid.value}/${boxid}/settings`'></nuxt-link>
+      <nuxt-link :id='$style.settings' :to='`/controller/${controller.broker_clientid.value}/settings`'></nuxt-link>
     </div>
     <div :id='$style.body'>
       <nuxt-child :key='$route.params.box' />

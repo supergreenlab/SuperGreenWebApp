@@ -1,12 +1,12 @@
 <template>
   <section :id='$style.container'>
-    <section :id='$style.menu' :class='!shown ? $style.hide : ""'>
+    <section :id='$style.menu' :class='(!shown && hasController) ? $style.hide : ""'>
       <Logo margin='5pt' vertical=true size='1.2em' />
       <Controllers />
     </section>
     <section :id='$style.body'>
       <nuxt />
-      <div v-if='shown' :id='$style.touch' v-touch:swipe.left='hide' v-on:click='hide'></div>
+      <div v-if='shown || !hasController' :id='$style.touch' v-touch:swipe.left='hide' v-on:click='hide'></div>
     </section>
   </section>
 </template>
@@ -35,6 +35,11 @@ export default {
       this.$data.shown = false
     },
   },
+  computed: {
+    hasController() {
+      return this.$route.params.controller
+    },
+  },
 }
 </script>
 
@@ -56,7 +61,6 @@ export default {
   z-index: 1000
   transition: margin-left 0.2s, opacity 0.5s
   height: 100vh
-
   @media screen and (max-width: 600px)
     z-index: 2000
     position: absolute

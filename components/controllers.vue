@@ -22,7 +22,7 @@
       <div :id='$style.relative' v-for='(controller, i) in controllers' :class='controller.broker_clientid.value === selected ? $style.selected : ""' @click='select(controller)'>
         Controller {{ i + 1 }}<br />
         <b>{{ controller.device_name.value }}</b><br />
-        <span :class='$style.green'>Online</span>
+        <span :class='controller.found ? $style.green : $style.red'>{{ controller.found ? 'Online' : 'Offline' }}</span>
       </div>
     </div>
     <div :id='$style.add'>

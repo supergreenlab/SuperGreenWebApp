@@ -18,35 +18,42 @@
 
 <template>
   <section :id='$style.container'>
-    <iframe :id='$style.settingsframe' :src='`http://${controller.wifi_ip.value}/fs/app.html`'></iframe>
+    <div :id='$style.icon' :style='{"background-image": `url(${require(`~/assets/img/${icon}`)})`}'></div>
+    <div :id='$style.title'>
+      <h1>{{ title }}</h1>
+    </div>
   </section>
 </template>
 
 <script>
+
 export default {
-  computed: {
-    controller() {
-      return this.$store.getters['controllers/getSelected']
-    },
-  },
+  props: ['title', 'icon', ],
 }
 </script>
 
 <style module lang=stylus>
 
 #container
-  flex: 1
-  max-width: 700pt
-  position: relative
   display: flex
-  flex-direction: column
-  overflow-y: auto
-  background-color: white
-  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.15)
-  margin-left: 10pt
+  align-items: center
+  margin: 15pt 0
 
-#settingsframe
-  border: none
+#icon
+  background-position: center
+  background-size: contain
+  background-repeat: no-repeat
+  width: 25pt
   height: 100%
+  margin: 0 5pt
+
+#title
+  flex: 1
+  border-bottom: 2pt solid #BEBEBE
+  margin: 0 15pt 0 0
+
+#title > h1
+  color: #6A6A6A
+  margin: 0
 
 </style>

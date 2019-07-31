@@ -21,19 +21,23 @@
     <section v-if='!loading && !failed' :id='$style.top'>
       <CloseButton />
     </section>
-    <h1>Search for the controller on home wifi</h1>
+    <h1 :id='$style.title'>Search for the controller on home wifi.</h1>
     <section :id='$style.body'>
       <div v-if='!started' :id='$style.first_step'>
-        <p>
-          - Make sure the controller <b>stopped it's wifi</b>, if not, press the <b>Wifi reconfig</b> button below.<br />
-          - If it did, you can connect back to <b>your home wifi</b><br />
-          - Then click "<b>Search</b>" below
-        </p>
         <div>
+          <h1>1</h1>
+          <div>
+            Make sure the controller <b>stopped it's wifi</b>, if not, press the <b>Wifi reconfig</b> button below.
+          </div>
           <button :id='$style.button' :class='$style.cancel' @click='goBack'>Wifi reconfig</button>
+        </div>
+        <div>
+          <h1>2</h1>
+          <div>
+            If it did, you can connect back to <b>your home wifi</b><br />
+          </div>
           <button :id='$style.button' @click='waitOnline'>Search</button>
         </div>
-        <small v-if='!(started && !loading && !failed)'>Check that the <div :id='$style.ssid'></div> is not back, if you can still connect to it, it means wifi configuration failed. If it is back on, <b>please connect to it</b>, and press <b>Wifi reconfig</b>. (macosx might still show it for some time, check that it fails to connect before going back)</small>
       </div>
       <div v-if='loading'>
         <Loading :label='`Searching controller.. ${controller.found_try}/3`' width='115pt' height='80pt' />
@@ -89,6 +93,7 @@ export default {
       addr: '',
     }
   },
+  layout: 'fullscreen',
   components: { CloseButton, NextButton, Loading, },
   computed: {
     isvalid() {
@@ -137,6 +142,12 @@ export default {
   flex-direction: column
   min-height: 100vh
   background-color: white
+  padding: 5pt
+
+#title
+  margin: 0
+  text-align: center
+  font-size: 1em
 
 #top
   display: flex
@@ -148,8 +159,6 @@ export default {
   display: flex
   position: relative
   flex-direction: column
-  align-items: center
-  justify-content: center
   flex: 1
   padding: 20pt
   width: 100%
@@ -182,8 +191,6 @@ export default {
 
 #first_step
   display: flex
-  align-items: center
-  justify-content: center
   flex-direction: column
 
 #failed_step

@@ -12,7 +12,7 @@
       <div :class='$style.status'>
         <StatusItem title='Humidity' :value='humidity_status[0]' :icon='humidity_status[1]' :blink='humidity_status[2]' />
       </div>
-      <div :class='$style.status'>
+      <div :class='$style.status' v-if='co2_status'>
         <StatusItem title='CO2' :value='co2_status[0]' :icon='co2_status[1]' :blink='co2_status[2]' />
       </div>
     </div>
@@ -55,6 +55,7 @@ export default {
       return [`${humidity}% - Ok`, 'status-humidity-icon-ok.svg', false]
     },
     co2_status() {
+      if (!this.controller.boxes[this.boxid].arduino_co2) return false
       const co2 = this.controller.boxes[this.boxid].arduino_co2.value
       if (co2 > 1600)
         return [`${co2}ppm - To high`, 'status-co2-icon-high.svg', true]

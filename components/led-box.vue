@@ -17,22 +17,23 @@
  -->
 
 <template>
-  <section v-if='controller' :id='$style.container'>
-    <nuxt-child :key='$route.params.controller' />
+  <section :id='$style.container'>
+    <div :id='$style.title'>
+      Led #{{ n }}
+    </div>
+    <div :id='$style.boxes'>
+      Box:
+      <div :class='$style.box' v-for='i in 3'>
+        {{ i }}
+      </div>
+    </div>
   </section>
 </template>
 
 <script>
-import Box from '~/components/box'
-import Loading from '~/components/loading'
 
 export default {
-  components: { Box, Loading, },
-  computed: {
-    controller() {
-      return this.$store.getters['controllers/getSelected']
-    },
-  },
+  props: ['n', 'box',],
 }
 </script>
 
@@ -40,33 +41,41 @@ export default {
 
 #container
   display: flex
-  position: relative
-  flex: 1
   flex-direction: column
-  background-color: #efefef
-  overflow-y: auto
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  font-weight: 600
+  font-size: 1.1em
+  color: #797979
 
-#container > div
-  max-width: 700pt
+#title
+  margin-bottom: 5pt
+  border-bottom: 1pt solid #BEBEBE
+  font-size: 1.1em
 
-#loading
-  position: absolute
-  width: 100%
-  height: 100%
-  top: 0
-  left: 0
+#boxes
   display: flex
-  flex: 1
-  flex-direction: column
+  align-items: center
+  justify-content: space-between
+
+.box
+  display: flex
   align-items: center
   justify-content: center
-  position: relative
-  background-color: white
-  white-space: nowrap
+  width: 40pt
+  height: 40pt
+  border: 2pt solid #BEBEBE
+  border-radius: 3pt
+  font-weight: 600
+  font-size: 1.1em
+  margin: 0 5pt
+  cursor: pointer
 
-#loading_relative
-  position: relative
-  height: 200pt
+.box:hover
+  background-color: #efefef
+
+.box:active
+  background-color: #dfdfdf
+
+#selected
+  border: 2pt solid #3BB30B
 
 </style>

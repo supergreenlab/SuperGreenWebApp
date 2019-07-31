@@ -17,20 +17,21 @@
  -->
 
 <template>
-  <section v-if='controller' :id='$style.container'>
-    <nuxt-child :key='$route.params.controller' />
+  <section :id='$style.container'>
+    <div :id='$style.label'>{{ label }}</div>
+    <input :type='type || "text"' :name='name' :value='value' @input='onInput' @change='onChange' />
   </section>
 </template>
 
 <script>
-import Box from '~/components/box'
-import Loading from '~/components/loading'
-
 export default {
-  components: { Box, Loading, },
-  computed: {
-    controller() {
-      return this.$store.getters['controllers/getSelected']
+  props: ['label', 'value', 'name', 'type',],
+  methods: {
+    onInput(e) {
+      this.$emit('input', e.target.value);
+    },
+    onChange(e) {
+      this.$emit('input', e.target.value);
     },
   },
 }
@@ -39,34 +40,22 @@ export default {
 <style module lang=stylus>
 
 #container
-  display: flex
-  position: relative
-  flex: 1
-  flex-direction: column
-  background-color: #efefef
-  overflow-y: auto
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-
-#container > div
-  max-width: 700pt
-
-#loading
-  position: absolute
   width: 100%
-  height: 100%
-  top: 0
-  left: 0
-  display: flex
-  flex: 1
-  flex-direction: column
-  align-items: center
-  justify-content: center
-  position: relative
-  background-color: white
-  white-space: nowrap
 
-#loading_relative
-  position: relative
-  height: 200pt
+#label
+  margin: 0 0 5pt 0
+  font-weight: 600
+  font-size: 1.1em
+  color: #717171
+
+#label > span
+  color: red
+
+#container > input
+  width: 100%
+  height: 23pt
+  border: 1pt solid #ABABAB
+  font-weight: 400
+  color: #717171
 
 </style>
