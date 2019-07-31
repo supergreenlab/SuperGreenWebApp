@@ -18,14 +18,21 @@
 
 <template>
   <section :id='$style.container'>
+    <ui-button raised color="green">
     <nuxt-link v-if='to' :to='to'>{{ label }} &gt;</nuxt-link>
     <a v-else-if='onClick' href='javascript:void(0)' v-on:click='onClick'>{{ label }} &gt;</a>
     <span v-else>{{ label }} &gt;</span>
+    </ui-button>
   </section>
 </template>
 
 <script>
+import Vue from 'vue';
+import { UiButton } from 'keen-ui';
+import 'keen-ui/dist/keen-ui.css';
+
 export default {
+  components: { UiButton },
   props: {
     'onClick': Function,
     'to': String, 
@@ -38,6 +45,14 @@ export default {
 </script>
 
 <style module lang=stylus>
+
+a
+  color: white
+  text-decoration: none
+  font-weight: 500
+  transition: opacity 0.2s
+  padding: 20px
+  margin: -20px
 
 #container
   display: flex
