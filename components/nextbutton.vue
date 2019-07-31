@@ -13,19 +13,26 @@
       GNU General Public License for more details.
 
       You should have received a copy of the GNU General Public License
-      along with this program.  If not, see <http://www.gnu.org/licenses/>.
+      along with this program.  If not, see <http://www.gnu.org/licenses/>.components:
  -->
 
 <template>
   <section :id='$style.container'>
+    <ui-button raised color="green">
     <nuxt-link v-if='to' :to='to'>{{ label }} &gt;</nuxt-link>
     <a v-else-if='onClick' href='javascript:void(0)' v-on:click='onClick'>{{ label }} &gt;</a>
     <span v-else>{{ label }} &gt;</span>
+    </ui-button>
   </section>
 </template>
 
 <script>
+import Vue from 'vue';
+import { UiButton } from 'keen-ui';
+import 'keen-ui/dist/keen-ui.css';
+
 export default {
+  components: { UiButton },
   props: {
     'onClick': Function,
     'to': String, 
@@ -43,14 +50,24 @@ export default {
   display: flex
   padding: 5pt
 
+a
+  color: white
+  text-decoration: none
+  font-weight: 500
+  transition: opacity 0.2s
+  padding: 20px
+  margin: -20px
+
 #container > a
+  display: block
   color: #5dbd37
   text-decoration: none
   font-size: 1.3em
   font-weight: 400
   transition: opacity 0.2s
-
+  
 #container > a:hover
-  opacity: 0.3
+  color: #5dbd37
+  font-weight: 600
 
 </style>

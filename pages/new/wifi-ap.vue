@@ -22,8 +22,8 @@
       <CloseButton />
     </section>
     <section :id='$style.body'>
-      <div :id='$style.icon'></div>
       <section>
+        <!-- <div :id='$style.icon'></div>  -->
         <h3>Connect to the driver’s</b><br />
         wifi network:</h3><br />
         SSID: <div :id='$style.ssid'></div></br >
@@ -56,6 +56,8 @@ export default {
   display: flex
   flex-direction: column
   min-height: 100vh
+  padding: 5pt
+  background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%)
 
 #top
   display: flex
@@ -64,17 +66,20 @@ export default {
 #body
   display: flex
   flex-direction: column
-  flex: 1
   justify-content: center
   align-items: center
+  padding-top: 375px
+  
 
 #body img
   max-height: 200pt
   padding-bottom: 50pt
 
+
 #nav
   display: flex
-  justify-content: flex-end
+  justify-content: center
+  padding-top: 15px
 
 #ssid
   display: inline-block
@@ -84,15 +89,5 @@ export default {
   background-size: contain
   background-position: left
   background-image: url('~assets/img/wifi-ssid.png')
-
-#icon
-  flex: 1
-  max-height: 100pt
-  width: 50%
-  margin-bottom: 20pt
-  background-image: url('~assets/img/wifi-icon.png')
-  background-position: center
-  background-size: contain
-  background-repeat: no-repeat
 
 </style>

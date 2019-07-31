@@ -53,11 +53,12 @@ export default {
   display: flex
   flex-direction: column
   min-height: 100vh
+  background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%)
 
 #body
   display: flex
+  padding-top: 300px
   flex-direction: column
-  flex: 1
   justify-content: center
   align-items: center
   text-align: center
@@ -67,6 +68,7 @@ export default {
 
 #nav
   display: flex
-  justify-content: flex-end
+  justify-content: center
+  padding-top: 15px
 
 </style>
