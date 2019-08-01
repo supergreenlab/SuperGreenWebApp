@@ -123,12 +123,6 @@ export default {
       return ('0' + v).substr(-2)
     },
   },
-  mounted() {
-    const controller = this.controller,
-      boxid = this.$route.params.box
-    this.$store.dispatch('controllers/load_box_param', {id: controller.broker_clientid.value, i: boxid, key: 'on_hour'}) 
-    this.$store.dispatch('controllers/load_box_param', {id: controller.broker_clientid.value, i: boxid, key: 'off_hour'}) 
-  },
 }
 
 </script>

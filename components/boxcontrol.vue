@@ -71,13 +71,6 @@ export default {
         this.$store.dispatch('controllers/set_box_param', {id: controller.broker_clientid.value, i, key: 'enabled', value: 0}) 
     },
   },
-  mounted() {
-    const { 
-      i, box, controller
-    } = this.$props
-    this.$store.dispatch('controllers/load_box_param', {id: controller.broker_clientid.value, i: i, key: 'enabled'})
-    this.$store.dispatch('controllers/load_box_param', {id: controller.broker_clientid.value, i: i, key: 'blower'})
-  },
 }
 </script>
 

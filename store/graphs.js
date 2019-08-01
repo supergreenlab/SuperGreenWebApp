@@ -38,6 +38,7 @@ export const mutations = {
     state.sources = sources
   },
   add_source(state, { id, url }) {
+    if (state.sources[id]) return
     state.sources = Object.assign({}, state.sources, {
       [id]: Object.assign({metrics: []}, state.sources[id] || {}, {
         url,
@@ -57,19 +58,31 @@ export const mutations = {
   },
 }
 
+const start_source_daemon = (context, id, url) => {
+  setInterval(() => {
+    context.dispatch('reload_graph', {id, url})
+  }, 30 * 1000)
+  context.dispatch('reload_graph', {id, url})
+}
+
 let init_done = false
 export const actions = {
   async init(context) {
     if (init_done == false) {
       context.commit('init', await stored())
+      for (let i in context.state.sources) {
+        start_source_daemon(context, i, context.state.sources[i].url)
+      }
       init_done = true
     }
   },
   async load_graph(context, { id, url}) {
     context.commit('add_source', { id, url })
-    await new Promise((r) => setTimeout(r, 500))
-    const { data: { metrics: metrics } } = await axios.get(url)
-    context.commit('set_metrics', {id, metrics: metrics})
+    start_source_daemon(context, id, url)
+  },
+  async reload_graph(context, { id, url }) {
+    const { data: { metrics } } = await axios.get(url)
+    context.commit('set_metrics', {id, metrics})
   },
 }
 

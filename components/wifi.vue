@@ -19,7 +19,17 @@
 <template>
   <section :id='$style.container'>
     <Title title='WIFI CONFIG' icon='wifi-black.svg' />
-    <div :id='$style.form'>
+    <div v-if='failed' :id='$style.failed'>
+      <div>
+        Looks like we couldn't find the controller, try rebooting it an click "RETRY SEARCH", if it still fails, retry the credentials.</br>
+        If it still fails, reach up with @stant on <a href='https://discord.gg/V5bxAU' target='_blank'>discord</a>.
+      </div>
+      <div :id='$style.failedbuttons'>
+        <a href='javascript:void(0)' :class='`${$style.button} ${!this.valid ? $style.invalid : ""}`' @click='retype'>RETYPE CREDENTIALS</a>
+        <a href='javascript:void(0)' :class='`${$style.button} ${!this.valid ? $style.invalid : ""}`' @click='connect'>RETRY SEARCH</a>
+      </div>
+    </div>
+    <div v-else :id='$style.form'>
       Current mode: <b>{{ controller.wifi_status.value == 3 ? 'connected to your home wifi' : 'not connected to home wifi' }}</b>
       <div :id='$style.fields'>
         <div :class='`${$style.input} ${$style.large}`'>
@@ -29,7 +39,7 @@
           <Input label='password' name='password' type='password' v-model='password' />
         </div>
         <div :class='$style.input'>
-          <a href='javascript:void(0)' :class='!this.valid ? $style.invalid : ""' @click='connect' :id='$style.connect'>CONNECT</a>
+          <a href='javascript:void(0)' :class='`${$style.button} ${!this.valid ? $style.invalid : ""}`' @click='connect'>CONNECT</a>
         </div>
         <Loading v-if='loading' label='settings wifi credentials' />
         <Loading v-else-if='searching' label='loading wifi config' />
@@ -54,7 +64,7 @@ export default {
       searching: false,
     }
   },
-  created() {
+  mounted() {
     this.$data.ssid = this.controller.wifi_ssid.value
     this.$data.password = this.controller.wifi_password.value
   },
@@ -74,7 +84,7 @@ export default {
       await this.$store.dispatch('controllers/set_controller_param', {id: controller.broker_clientid.value, key: 'wifi_ssid', value: this.$data.ssid}) 
       try {
         await new Promise((r) => setTimeout(r, 1000))
-        await this.$store.dispatch('controllers/set_controller_param', {id: controller.broker_clientid.value, key: 'wifi_password', value: this.$data.password}) 
+        await this.$store.dispatch('controllers/set_controller_param', {id: controller.broker_clientid.value, key: 'wifi_password', value: this.$data.password, n: 1}) 
       } catch (e) {
         console.log(e)
         this.$data.failed = true
@@ -90,6 +100,11 @@ export default {
       this.$data.searching = false
       this.$data.loading = false
     },
+    retype() {
+      this.$data.failed = false
+      this.$data.searching = false
+      this.$data.loading = false
+    }
   },
 }
 </script>
@@ -100,6 +115,13 @@ export default {
   display: flex
   flex-direction: column
   padding: 0 10pt
+  @media screen and (max-width: 600px)
+    width: 100vw
+    padding: 0 10pt
+
+#failed
+  display: flex
+  flex-direction: column
 
 #form
   color: #717171
@@ -110,8 +132,12 @@ export default {
   position: relative
   align-items: flex-end
   margin: 10pt 0
+  @media screen and (max-width: 600px)
+    align-items: flex-start
+    flex-direction: column
+    font-size: 0.7em
 
-#connect
+.button
   display: flex
   align-items: center
   justify-content: center
@@ -121,11 +147,13 @@ export default {
   color: white
   text-decoration: none
   border-radius: 3pt
+  @media screen and (max-width: 600px)
+    margin: 10pt 0
 
-#connect:hover
+.button:hover
   background-color: #4BC30B
 
-#connect:active
+.button:active
   background-color: #2BA30B
 
 .invalid
@@ -133,8 +161,20 @@ export default {
   
 .input
   margin: 0 10pt
+  @media screen and (max-width: 600px)
+    margin: 10pt 0
+    width: 100%
 
 .large
   flex: 1
+
+#failedbuttons
+  display: flex
+  flex-direction: column
+  align-items: center
+
+#failedbuttons > .button
+  width: 200pt
+  margin-top: 10pt
 
 </style>

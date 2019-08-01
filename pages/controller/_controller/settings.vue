@@ -52,13 +52,17 @@ export default {
   width: 100%
   max-width: 700pt
   background-color: white
+  @media screen and (max-width: 600px)
+    padding-top: 60pt
 
 #menu
   display: flex
   align-items: center
   padding-right: 10pt
   z-index: 1000
+  background-color: white
   @media screen and (max-width: 600px)
+    font-size: 0.7em
     top: 0
     left: 0
     width: 100vw

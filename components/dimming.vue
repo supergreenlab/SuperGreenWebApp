@@ -62,16 +62,6 @@ export default {
       this.$data.expanded = !this.$data.expanded
     },
   },
-  mounted() {
-    const controller = this.controller,
-      boxid = this.$route.params.box
-    for (let i in controller.leds) {
-      const l = controller.leds[i]
-      if (l.box.value != boxid) continue
-      this.$store.dispatch('controllers/load_led_param', {id: controller.broker_clientid.value, i, key: 'dim'}) 
-    }
-    this.$store.dispatch('controllers/load_box_param', {id: controller.broker_clientid.value, i: boxid, key: 'timer_output'}) 
-  },
 }
 
 </script>

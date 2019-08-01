@@ -55,5 +55,7 @@ export default {
 #title > h1
   color: #6A6A6A
   margin: 0
+  @media screen and (max-width: 600px)
+    font-size: 1.3em
 
 </style>

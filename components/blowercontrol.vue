@@ -30,12 +30,6 @@ export default {
       return this.$store.getters['controllers/getSelected']
     },
   },
-  mounted() {
-    const controller = this.controller,
-          boxid = this.$route.params.box
-    this.$store.dispatch('controllers/load_box_param', {id: controller.broker_clientid.value, i: boxid, key: 'blower_day'})
-    this.$store.dispatch('controllers/load_box_param', {id: controller.broker_clientid.value, i: boxid, key: 'blower_night'})
-  },
   methods: {
     toggleExpand() {
       this.$data.expanded = !this.$data.expanded

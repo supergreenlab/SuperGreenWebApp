@@ -68,15 +68,6 @@ export default {
       this.$store.dispatch('controllers/set_led_param', {id: controller.broker_clientid.value, i: j, key: 'dim', value: led.dim.value == 0 ? 100 : 0}) 
     },
   },
-  mounted() {
-    const { 
-      j, led
-    } = this.$props,
-        controller = this.controller
-    this.$store.dispatch('controllers/load_led_param', {id: controller.broker_clientid.value, i: j, key: 'enabled'})
-    this.$store.dispatch('controllers/load_led_param', {id: controller.broker_clientid.value, i: j, key: 'dim'})
-    this.$store.dispatch('controllers/load_led_param', {id: controller.broker_clientid.value, i: j, key: 'box'})
-  },
 }
 </script>
 

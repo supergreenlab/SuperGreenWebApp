@@ -25,12 +25,6 @@ import BoxSubSection from '~/components/boxsubsection.vue'
 
 export default {
   components: { StatusItem, BoxSubSection, },
-  created() {
-    this.$store.dispatch('controllers/load_box_param', {id: this.controller.broker_clientid.value, i: this.boxid, key: 'sht21_temp_c'})
-    this.$store.dispatch('controllers/load_box_param', {id: this.controller.broker_clientid.value, i: this.boxid, key: 'sht21_temp_f'})
-    this.$store.dispatch('controllers/load_box_param', {id: this.controller.broker_clientid.value, i: this.boxid, key: 'sht21_humi'})
-    this.$store.dispatch('controllers/load_box_param', {id: this.controller.broker_clientid.value, i: this.boxid, key: 'arduino_co2'})
-  },
   computed: {
     controller() {
       return this.$store.getters['controllers/getSelected']

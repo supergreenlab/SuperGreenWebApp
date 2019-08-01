@@ -20,7 +20,7 @@ import axios from 'axios'
 import storage from '../utils/storage'
 
 const new_loadable_key = function(key) {
-  const def = key.integer ? (key.default || 0) : key.default || ''
+  const def = key.integer ? (key.default || 0) : (key.default || '')
   return {
     value: def,
     loaded: false,
@@ -65,9 +65,11 @@ const schedule_promise = (n, retries) => {
 }
 
 const controller_chains = {}
-const controller_chain = (id) => {
+const controller_chain = (id, n) => {
+  n = n || 3
+  id = `${id}-${n}`
   if (typeof controller_chains[id] == 'undefined') {
-    controller_chains[id] = schedule_promise(15, 3)
+    controller_chains[id] = schedule_promise(15, n)
   }
   return controller_chains[id]
 }
@@ -257,7 +259,10 @@ const zeroconf_discovery = async function (name) {
   })
 }
 
+const running_daemons = {}
 const start_controller_daemon = (context, controller) => {
+  if (running_daemons[controller.broker_clientid.value]) return
+  running_daemons[controller.broker_clientid.value] = true
   setTimeout(async () => {
     while (true) {
       try {
@@ -273,26 +278,33 @@ const start_controller_daemon = (context, controller) => {
 
     for (let i in controller.leds) {
       for (let j in controller.leds[i]) {
-        context.dispatch('load_led_param', {id: controller.broker_clientid.value, i, key: j}) 
+        if (!controller.leds[i][j].loaded) {
+          context.dispatch('load_led_param', {id: controller.broker_clientid.value, i, key: j}) 
+        }
       }
     }
     for (let i in controller.boxes) {
       for (let j in controller.boxes[i]) {
-        context.dispatch('load_box_param', {id: controller.broker_clientid.value, i, key: j}) 
+        if (!controller.boxes[i][j].loaded) {
+          context.dispatch('load_box_param', {id: controller.broker_clientid.value, i, key: j}) 
+        }
       }
     }
     for (let i in controller) {
-      if (typeof controller[i].value !== 'undefined') {
+      if (typeof controller[i].value !== 'undefined' && !controller[i].loaded) {
         context.dispatch('load_controller_param', {id: controller.broker_clientid.value, key: i}) 
       }
     }
     for (let i in controller.i2c) {
       for (let j in controller.i2c[i]) {
-        context.dispatch('load_i2c_param', {id: controller.broker_clientid.value, i, key: j}) 
+        if (!controller.i2c[i][j].loaded) {
+          context.dispatch('load_i2c_param', {id: controller.broker_clientid.value, i, key: j}) 
+        }
       }
     }
 
     setInterval(() => {
+      context.dispatch('load_controller_param', {id: controller.broker_clientid.value, key: 'time'}) 
       for (let i in controller.boxes) {
         context.dispatch('load_box_param', {id: controller.broker_clientid.value, i, key: 'sht21_temp_f'}) 
         context.dispatch('load_box_param', {id: controller.broker_clientid.value, i, key: 'sht21_temp_c'}) 
@@ -443,12 +455,12 @@ export const actions = {
       context.commit('loaded_i2c_param', {id, i, key, error: e})
     }
   },
-  async set_controller_param(context, { id, key, value }) {
+  async set_controller_param(context, { id, key, value, n, }) {
     const controller = getById(context.state, id),
           config = controller[key].config_key
     context.commit('loading_controller_param', {id, key})
     try {
-      await controller_chain(id)(async () => await axios.post(`http://${controller.wifi_ip.value}/${config.integer ? 'i' : 's'}?k=${key.toUpperCase()}&v=${value}`, {timeout: 5000}))
+      await controller_chain(id, n || 3)(async () => await axios.post(`http://${controller.wifi_ip.value}/${config.integer ? 'i' : 's'}?k=${key.toUpperCase()}&v=${value}`, {timeout: 5000}))
       await context.dispatch('load_controller_param', {id, key})
     } catch(e) {
       context.commit('loaded_controller_param', {id, key, error: e})

@@ -33,20 +33,6 @@ export default {
     }
   },
   components: { Box, Loading, },
-  methods: {
-    async retry() {
-      this.$data.failed = false
-      const controller = this.$store.getters['controllers/getSelected']
-      if (controller && controller.found == false) {
-        try {
-          await this.$store.dispatch('controllers/search_controller', {id: controller.broker_clientid.value})
-        } catch(e) {
-          console.log(e)
-          this.$data.failed = true
-        }
-      }
-    },
-  },
   computed: {
     controller() {
       return this.$store.getters['controllers/getSelected']
@@ -54,12 +40,6 @@ export default {
     box() {
       return this.$route.params.box
     },
-  },
-  mounted() {
-    this.$store.watch(state => state.controllers.selected, () => {
-      this.retry()
-    })
-    this.retry()
   },
 }
 </script>

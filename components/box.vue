@@ -67,11 +67,6 @@ export default {
         this.$store.dispatch('controllers/set_box_param', {id: controller.broker_clientid.value, i: boxid, key: 'timer_type', value: 1}) 
     },
   },
-  mounted() {
-    const controller = this.$store.getters['controllers/getSelected'],
-          boxid = this.$route.params.box
-    this.$store.dispatch('controllers/load_box_param', {id: controller.broker_clientid.value, i: boxid, key: 'enabled'}) 
-  },
 }
 </script>
 
