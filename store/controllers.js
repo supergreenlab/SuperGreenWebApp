@@ -267,6 +267,9 @@ const start_controller_daemon = (context, controller) => {
         console.log(e)
       }
     }
+
+    context.dispatch('set_controller_param', {id: controller.broker_clientid.value, key: 'time', value: parseInt(new Date().getTime() / 1000)}) 
+
     for (let i in controller.leds) {
       for (let j in controller.leds[i]) {
         context.dispatch('load_led_param', {id: controller.broker_clientid.value, i, key: j}) 
@@ -287,6 +290,11 @@ const start_controller_daemon = (context, controller) => {
         context.dispatch('load_controller_param', {id: controller.broker_clientid.value, key: i}) 
       }
     }
+
+    setInterval(() => {
+      context.dispatch('load_controller_param', {id: controller.broker_clientid.value, key: 'sht21_temp'}) 
+      context.dispatch('load_controller_param', {id: controller.broker_clientid.value, key: 'sht21_humi'}) 
+    }, 5 * 1000)
   }, 0)
 }
 
@@ -353,6 +361,7 @@ export const actions = {
     })
     context.commit('add_controller', controller)
     context.commit('end_search_new_controller', {controller, error: null})
+    start_controller_daemon(controller)
   },
   async search_controller(context, { id, ip }) {
     context.commit('set_found_try', {id, n: 1})
