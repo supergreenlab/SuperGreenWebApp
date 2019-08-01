@@ -18,24 +18,23 @@
 
 <template>
   <section :id='$style.container'>
-    <Title title='LED CONFIG' icon='light-black.svg' />
-    <div :id='$style.form'>
-      <div v-for='i in 6' :class='$style.led'>
-        <Led :n='i' />
-      </div>
+    <Title title='ADVANCED MENU' icon='light-black.svg' />
+    <div :id='$style.body'>
+      <a :href='`http://${controller.wifi_ip.value}/fs/app.html`' target='_blank'>Access admin interface</a>
     </div>
   </section>
 </template>
 
 <script>
 import Title from '~/components/settings-title.vue'
-import Led from '~/components/led-box.vue'
 
 export default {
-  components: {Title, Led,},
-  controller() {
-    return this.$store.getters['controllers/getSelected']
-  },
+  components: {Title,},
+  computed: {
+    controller() {
+      return this.$store.getters['controllers/getSelected']
+    },
+  }
 }
 </script>
 
@@ -46,42 +45,7 @@ export default {
   flex-direction: column
   padding: 0 10pt
 
-#form
-  display: flex
-  justify-content: space-around
+#body
   padding: 10pt 25pt
-  flex-wrap: wrap
-
-#fields
-  display: flex
-  align-items: flex-end
-  margin: 10pt 0
-
-#connect
-  display: flex
-  align-items: center
-  justify-content: center
-  padding: 0 15pt
-  background-color: #3BB30B
-  height: 23pt
-  color: white
-  text-decoration: none
-  border-radius: 3pt
-
-#connect:hover
-  background-color: #4BC30B
-
-#connect:active
-  background-color: #2BA30B
-  
-.input
-  margin: 0 10pt
-
-.large
-  flex: 1
-
-.led
-  margin: 10pt 5pt
-  flex-basis: 40%
 
 </style>

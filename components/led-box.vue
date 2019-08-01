@@ -23,17 +23,33 @@
     </div>
     <div :id='$style.boxes'>
       Box:
-      <div :class='$style.box' v-for='i in 3'>
+      <div :class='`${$style.box} ${controller.leds[n-1].box.value == i-1 ? $style.selected : ""}`' v-for='i in 3' @click='setLedBox(i-1)'>
         {{ i }}
       </div>
     </div>
+    <Loading v-if='loading' width='30pt' height='20pt' />
   </section>
 </template>
 
 <script>
+import Loading from '~/components/loading'
 
 export default {
-  props: ['n', 'box',],
+  props: ['n',],
+  components: {Loading,},
+  computed: {
+    controller() {
+      return this.$store.getters['controllers/getSelected']
+    },
+    loading() {
+      return this.controller.leds[this.$props.n-1].box.loading
+    },
+  },
+  methods: {
+    setLedBox(value) {
+      this.$store.dispatch('controllers/set_led_param', {id: this.controller.broker_clientid.value, i: this.$props.n-1, key: 'box', value: Math.round(value)}) 
+    },
+  },
 }
 </script>
 
@@ -41,6 +57,7 @@ export default {
 
 #container
   display: flex
+  position: relative
   flex-direction: column
   font-weight: 600
   font-size: 1.1em
@@ -75,7 +92,7 @@ export default {
 .box:active
   background-color: #dfdfdf
 
-#selected
+.selected
   border: 2pt solid #3BB30B
 
 </style>

@@ -53,7 +53,7 @@ export default {
   methods: {
     select(controller) {
       if (controller.state.value == 0) {
-        this.$router.push(`/controller/${controller.broker_clientid.value}/preset`)
+        this.$router.push(`/controller/${controller.broker_clientid.value}/setup/preset`)
       } else {
         this.$router.push(`/controller/${controller.broker_clientid.value}/0`)
       }

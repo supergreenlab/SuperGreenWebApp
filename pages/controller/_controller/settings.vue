@@ -24,6 +24,7 @@
     </section>
     <Wifi />
     <Leds />
+    <Advanced />
   </section>
 </template>
 
@@ -33,7 +34,7 @@ import Leds from '~/components/leds.vue'
 import Advanced from '~/components/advanced.vue'
 
 export default {
-  components: {Wifi, Leds,},
+  components: {Wifi, Leds, Advanced,},
   computed: {
     controller() {
       return this.$store.getters['controllers/getSelected']
@@ -46,10 +47,10 @@ export default {
 
 #container
   display: flex
+  position: relative
   flex-direction: column
   width: 100%
   max-width: 700pt
-  min-height: 100vh
   background-color: white
 
 #menu

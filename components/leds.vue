@@ -33,9 +33,6 @@ import Led from '~/components/led-box.vue'
 
 export default {
   components: {Title, Led,},
-  controller() {
-    return this.$store.getters['controllers/getSelected']
-  },
 }
 </script>
 

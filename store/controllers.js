@@ -67,7 +67,7 @@ const schedule_promise = (n, retries) => {
 const controller_chains = {}
 const controller_chain = (id) => {
   if (typeof controller_chains[id] == 'undefined') {
-    controller_chains[id] = schedule_promise(3, 3)
+    controller_chains[id] = schedule_promise(15, 3)
   }
   return controller_chains[id]
 }
@@ -265,6 +265,7 @@ const start_controller_daemon = (context, controller) => {
         break
       } catch(e) {
         console.log(e)
+        await new Promise((r) => setTimeout(r, 5000))
       }
     }
 
@@ -280,21 +281,24 @@ const start_controller_daemon = (context, controller) => {
         context.dispatch('load_box_param', {id: controller.broker_clientid.value, i, key: j}) 
       }
     }
+    for (let i in controller) {
+      if (typeof controller[i].value !== 'undefined') {
+        context.dispatch('load_controller_param', {id: controller.broker_clientid.value, key: i}) 
+      }
+    }
     for (let i in controller.i2c) {
       for (let j in controller.i2c[i]) {
         context.dispatch('load_i2c_param', {id: controller.broker_clientid.value, i, key: j}) 
       }
     }
-    for (let i in controller) {
-      if (controller[i].value) {
-        context.dispatch('load_controller_param', {id: controller.broker_clientid.value, key: i}) 
-      }
-    }
 
     setInterval(() => {
-      context.dispatch('load_controller_param', {id: controller.broker_clientid.value, key: 'sht21_temp'}) 
-      context.dispatch('load_controller_param', {id: controller.broker_clientid.value, key: 'sht21_humi'}) 
-    }, 5 * 1000)
+      for (let i in controller.boxes) {
+        context.dispatch('load_box_param', {id: controller.broker_clientid.value, i, key: 'sht21_temp_f'}) 
+        context.dispatch('load_box_param', {id: controller.broker_clientid.value, i, key: 'sht21_temp_c'}) 
+        context.dispatch('load_box_param', {id: controller.broker_clientid.value, i, key: 'sht21_humi'}) 
+      }
+    }, 5 * 60 * 1000)
   }, 0)
 }
 
@@ -361,7 +365,7 @@ export const actions = {
     })
     context.commit('add_controller', controller)
     context.commit('end_search_new_controller', {controller, error: null})
-    start_controller_daemon(controller)
+    start_controller_daemon(context, controller)
   },
   async search_controller(context, { id, ip }) {
     context.commit('set_found_try', {id, n: 1})
