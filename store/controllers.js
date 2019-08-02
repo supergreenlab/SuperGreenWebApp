@@ -125,6 +125,8 @@ export const state = () => ({
   search_n_tries: 0,
   new_controller: null,
   controllers: [],
+  ble: [],
+  ble_scan: false,
 })
 
 const storeState = (state) => {
@@ -136,9 +138,20 @@ const getById = function(state, id) {
   return controllers.find((c) => c.broker_clientid.value == id)
 }
 
+const getBleById = function(state, id) {
+  const ble = state.ble
+  return ble.find((b) => b.id == id)
+}
+
 const setById = function(state, id, controller) {
   const i = state.controllers.findIndex((c) => c.broker_clientid.value == id)
   state.controllers = Object.assign([], state.controllers, { [i]: controller }) // TODO is this useful ? i think not..
+  storeState(state)
+}
+
+const setBleById = function(state, id, device) {
+  const i = state.ble.findIndex((b) => b.id == id)
+  state.ble = Object.assign([], state.ble, { [i]: device }) // TODO is this useful ? i think not..
   storeState(state)
 }
 
@@ -229,6 +242,20 @@ export const mutations = {
     controller.i2c[i][key] = Object.assign({}, controller.i2c[i][key], {error, value, loaded: true, loading: false})
     setById(state, id, controller)
   },
+  start_ble_scan(state) {
+    state.ble_scan = true
+  },
+  stop_ble_scan(state) {
+    state.ble_scan = false
+  },
+  set_ble_device_param(state, { id, key, value }) {
+    const device = getBleById(state, id)
+    device.params[key] = value
+    setBleById(state, id, device)
+  },
+  add_ble_device(state, device) {
+    state.ble.push(device)
+  },
 }
 
 const wait_for_controller = async function (url, onTry) {
@@ -263,7 +290,7 @@ const running_daemons = {}
 const start_controller_daemon = (context, controller) => {
   if (running_daemons[controller.broker_clientid.value]) return
   running_daemons[controller.broker_clientid.value] = true
-  setTimeout(async () => {
+  (async () => {
     while (true) {
       try {
         await context.dispatch('search_controller', {id: controller.broker_clientid.value})
@@ -311,11 +338,38 @@ const start_controller_daemon = (context, controller) => {
         context.dispatch('load_box_param', {id: controller.broker_clientid.value, i, key: 'sht21_humi'}) 
       }
     }, 5 * 60 * 1000)
-  }, 0)
+  })()
+}
+
+const ble_device = async (context, device) => {
+  try {
+    device = await new Promise((resolve, reject) => { ble.connect(device.id, resolve, reject) })
+    context.commit('add_ble_device', Object.assign(device, {params: {}},))
+    const wifi_status = new DataView(await new Promise((resolve, reject) => {
+      ble.read(device.id, '00ff', '5ca36981-9c55-74a5-5415-e16bc1c3fe17', resolve, reject)
+    })).getInt32(0, true)
+    context.commit('set_ble_device_param', {id: device.id, key: 'wifi_status', value: wifi_status,})
+    ble.startNotification(device.id, '00ff', '5ca36981-9c55-74a5-5415-e16bc1c3fe17', (wifi_status) => {
+      context.commit('set_ble_device_param', {id: device.id, key: 'wifi_status', value: new DataVie(wifi_status).getInt32(0, true),})
+    })
+    const state = new DataView(await new Promise((resolve, reject) => {
+      ble.read(device.id, '00ff', '8ff6dfd2-3bd6-feb4-43ec-de5663122894', resolve, reject)
+    })).getInt32(0, true)
+    context.commit('set_ble_device_param', {id: device.id, key: 'state', value: state,})
+    ble.startNotification(device.id, '00ff', '8ff6dfd2-3bd6-feb4-43ec-de5663122894', (wifi_status) => {
+      context.commit('set_ble_device_param', {id: device.id, key: 'wifi_status', value: new DataVie(wifi_status).getInt32(0, true),})
+    })
+  } catch(e) {
+    console.log(e)
+  }
 }
 
 const has_mobile_zeroconf = function() {
   return !!window.cordova && !!window.cordova.plugins.zeroconf
+}
+
+const has_mobile_ble = function() {
+  return !!window.ble
 }
 
 const is_ip = (url) => {
@@ -331,6 +385,40 @@ export const actions = {
         start_controller_daemon(context, context.state.controllers[i])
       }
       init_done = true
+    }
+  },
+  async start_ble_scan(context) {
+    if (!has_mobile_ble()) {
+      return
+    }
+
+    const { ble } = window 
+    if (!ble.isEnabled) {
+      try {
+        await new Promise((resolve, reject) => ble.enable(resolve, reject))
+      } catch(e) {
+        console.log(e)
+        return
+      }
+    }
+    while (true) {
+      try {
+        await new Promise((resolve, reject) => {
+          const timeout = 5,
+            timer = setTimeout(resolve, timeout * 1000)
+          ble.scan([], timeout, function(device) {
+            if (device.name == '🤖🍁' && !getBleById(context.state, device.id)) {
+              ble_device(context, device)
+            }
+          }, (e) => {
+            clearTimeout(timer)
+            reject(e)
+          });
+        })
+      } catch(e) {
+        console.log(e)
+      }
+      await new Promise((r) => setTimeout(r, 5000))
     }
   },
   async search_new_controller(context) {
