@@ -249,6 +249,7 @@ export const mutations = {
     state.ble_scan = false
   },
   set_ble_device_param(state, { id, key, value }) {
+    console.log(id, key, value)
     const device = getBleById(state, id)
     device.params[key] = value
     setBleById(state, id, device)
@@ -350,14 +351,23 @@ const ble_device = async (context, device) => {
     })).getInt32(0, true)
     context.commit('set_ble_device_param', {id: device.id, key: 'wifi_status', value: wifi_status,})
     ble.startNotification(device.id, '00ff', '5ca36981-9c55-74a5-5415-e16bc1c3fe17', (wifi_status) => {
-      context.commit('set_ble_device_param', {id: device.id, key: 'wifi_status', value: new DataVie(wifi_status).getInt32(0, true),})
+      context.commit('set_ble_device_param', {id: device.id, key: 'wifi_status', value: new DataView(wifi_status).getInt32(0, true),})
     })
+
     const state = new DataView(await new Promise((resolve, reject) => {
       ble.read(device.id, '00ff', '8ff6dfd2-3bd6-feb4-43ec-de5663122894', resolve, reject)
     })).getInt32(0, true)
     context.commit('set_ble_device_param', {id: device.id, key: 'state', value: state,})
     ble.startNotification(device.id, '00ff', '8ff6dfd2-3bd6-feb4-43ec-de5663122894', (wifi_status) => {
-      context.commit('set_ble_device_param', {id: device.id, key: 'wifi_status', value: new DataVie(wifi_status).getInt32(0, true),})
+      context.commit('set_ble_device_param', {id: device.id, key: 'wifi_status', value: new DataView(wifi_status).getInt32(0, true),})
+    })
+
+    const wifi_ip = new TextDecoder('utf-8').decode(await new Promise((resolve, reject) => {
+      ble.read(device.id, '00ff', '8ca36981-9c55-74a5-5415-e16bc1c3fe17', (r) => {console.log(r);resolve(r)}, reject)
+    }))
+    context.commit('set_ble_device_param', {id: device.id, key: 'wifi_ip', value: wifi_ip,})
+    ble.startNotification(device.id, '00ff', '8ca36981-9c55-74a5-5415-e16bc1c3fe17', (wifi_ip) => {
+      context.commit('set_ble_device_param', {id: device.id, key: 'wifi_ip', value: new TextDecoder('utf-8').decode(wifi_ip),})
     })
   } catch(e) {
     console.log(e)
