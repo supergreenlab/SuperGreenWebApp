@@ -1,6 +1,6 @@
 export default ({ app, store }) => {
   const onDeviceReady = () => {
-    store.dispatch('controllers/start_ble_scan')
+    store.dispatch('controllers/init_cordova')
   }
   document.addEventListener("deviceready", onDeviceReady, false);
 }
