@@ -24,8 +24,11 @@
       <WifiEnableBle v-else-if='page == "ENABLE_BLE"' />
       <Loading v-else-if='page == "WAIT_BLE"' label='Waiting for bluetooth device' />
       <Loading v-else-if='page == "SET_WIFI"' label='Settings wifi credentials' />
-      <Loading v-else-if='page == "SEARCHING"' label='Loading wifi config' />
-      <WifiFailed v-else-if='page == "FAILED"' :retype='retype' :connect='connect'  />
+      <Loading v-else-if='page == "SEARCHING"' label='Searching' />
+      <Loading v-else-if='page == "WAIT_BLE_WIFI_STATUS"' label='Detecting config change' />
+      <Loading v-else-if='page == "WAIT_BLE_WIFI_STATUS_BACK_ON"' label='Change detected' />
+      <Loading v-else-if='page == "WAIT_WIFI_SWITCH"' label='Waiting 10s for you mobile to go back to its wifi' />
+      <WifiFailed v-else-if='page == "FAILED"' :retype='retype' :connect='search'  />
       <WifiSuccess v-else-if='page == "SUCCESS"' :retype='retype' />
     </div>
   </section>
@@ -46,6 +49,7 @@ export default {
       ssid: '',
       password: '',
       page: 'FORM',
+      bleId: '',
     }
   },
   mounted() {
@@ -58,40 +62,65 @@ export default {
     },
     bleDevices() {
       return this.$store.getters['controllers/getBLEControllers'](this.controller.wifi_ip.value)
+    },
+    bleController() {
+      return this.$store.getters['controllers/getBLEControllerById'](this.$data.bleId)
     }
   },
   methods: {
     async connect() {
-      if (this.$store.state.controllers.has_ble && !this.$store.state.controllers.ble_enabled) {
-        this.$data.page = 'ENABLE_BLE'
-        return
-      } else if (this.bleDevices.length) {
+      if (this.$store.state.controllers.has_ble && this.$store.state.controllers.ble_enabled && !this.bleDevices.length) {
+        this.$store.dispatch('controllers/start_ble_scan')
         this.$data.page = 'WAIT_BLE'
         return
       } else {
+        let wait_ble = false
+        if (this.$store.state.controllers.has_ble && this.$store.state.controllers.ble_enabled && this.bleDevices.length) {
+          console.log('using ble device')
+          this.$data.bleId = this.bleDevices[0].id
+          wait_ble = true
+        }
         this.$data.page = 'SET_WIFI'
         const controller = this.controller
-        await this.$store.dispatch('controllers/set_controller_param', {id: controller.broker_clientid.value, key: 'wifi_ssid', value: this.$data.ssid}) 
+        try {
+          await this.$store.dispatch('controllers/set_controller_param', {id: controller.broker_clientid.value, key: 'wifi_ssid', value: this.$data.ssid}) 
+        } catch(e) {
+          this.$data.page = 'FORM'
+          console.log('set_wifi_ssid', e)
+          return
+        }
         try {
           await new Promise((r) => setTimeout(r, 1000))
+          if (wait_ble) {
+            this.$data.page = 'WAIT_BLE_WIFI_STATUS'
+          }
           await this.$store.dispatch('controllers/set_controller_param', {id: controller.broker_clientid.value, key: 'wifi_password', value: this.$data.password, n: 1}) 
         } catch (e) {
           console.log(e)
         }
-        this.search()
+        if (!wait_ble) {
+          this.search()
+        }
         return
       }
     },
     async search() {
       const controller = this.controller
-      this.$data.page = 'SEARCH'
+      let ip = ''
+      this.$data.page = 'SEARCHING'
+      console.log('search', this.bleController)
+      if (this.bleController) {
+        console.log('using ble device')
+        ip = this.bleController.params.wifi_ip
+      }
       try {
-        await this.$store.dispatch('controllers/search_controller', {id: controller.broker_clientid.value, ip: ''})
+        await this.$store.dispatch('controllers/search_controller', {id: controller.broker_clientid.value, ip})
         this.$data.page = 'SUCCESS'
       } catch(e) {
         console.log(e)
         this.$data.page = 'FAILED'
       }
+      await this.$store.dispatch('controllers/load_box_param', {id: controller.broker_clientid.value, key: 'wifi_status'})
     },
     retype() {
       this.$data.page = 'FORM'
@@ -100,8 +129,31 @@ export default {
   watch: {
     bleDevices: {
       handler() {
-        if (this.$data.page == 'WAIT_BLE') {
-          controle.log(this.bleDevices)
+        console.log('bleDevices', this.bleDevices, this.$data.bleId, this.bleController)
+        if (this.bleDevices.length == 1) {
+          const bleDevice = this.bleDevices[0]
+          if (this.$data.page == 'WAIT_BLE' && bleDevice.params.wifi_status && bleDevice.params.wifi_ip) {
+            this.connect()
+          }
+        }
+      },
+    },
+    bleController: {
+      handler() {
+        console.log('bleController', this.$data.page, this.bleController.params.wifi_status)
+        if (this.$data.page == 'WAIT_BLE_WIFI_STATUS') {
+          if (this.bleController.params.wifi_status == 2) {
+            this.$data.page = 'WAIT_BLE_WIFI_STATUS_BACK_ON'
+          }
+        } else if (this.$data.page == 'WAIT_BLE_WIFI_STATUS_BACK_ON') {
+          if (this.bleController.params.wifi_status == 3) {
+            this.$data.page = 'WAIT_WIFI_SWITCH'
+            setTimeout(() => {
+              this.search()
+            }, 10000)
+          } else if (this.bleController.params.wifi_status == 4 && this.bleController.params.wifi_status == 5) {
+            this.$data.page = 'FAILED'
+          }
         }
       },
     },

@@ -39,6 +39,8 @@ export default {
 
 #container
   display: flex
+  @media screen and (max-width: 600px)
+    flex-direction: column
 
 #failedbuttons
   display: flex

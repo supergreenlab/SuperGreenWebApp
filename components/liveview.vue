@@ -19,7 +19,7 @@
 <template>
   <section :id='$style.container'>
     <div :id='$style.liveviews'>
-      <div v-for='source in sources' :class='$style.liveview' :style='{"background-image": `url(${source.url})`}' @click='open_pic(source)'>
+      <div v-for='source in sources' :class='$style.liveview' :style='{"background-image": `url(${source.url}?rand=${sourceRand})`}' @click='open_pic(source)'>
         <div><img @click='evt => remove_source(evt, source)' src='~/assets/img/remove-timelapse.svg' /></div>
       </div>
       <div :class='`${$style.liveview} ${$style.add}`' @click='show_add_source'></div>
@@ -35,7 +35,14 @@
 export default {
   data: () => ({
     showing_add_source: false,
+    sourceRand: Math.floor(Math.random() * Math.floor(Number.MAX_SAFE_INTEGER)),
   }),
+  created() {
+    this.interval = setInterval(() => this.$data.sourceRand = Math.floor(Math.random() * Math.floor(Number.MAX_SAFE_INTEGER)), 5*60*1000)
+  },
+  destroyed() {
+    clearInterval(this.interval)
+  },
   computed: {
     sources() {
       const controller = this.controller,

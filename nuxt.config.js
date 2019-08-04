@@ -78,5 +78,11 @@ export default {
 			return config;
     },
     publicPath: '/nuxt/',
+  },
+  vue: {
+    config: {
+      productionTip: false,
+      devtools: true
+    }
   }
 }

@@ -38,6 +38,7 @@ export default {
   watch: {
     loaded: {
       handler() {
+        console.log('loaded', this.loaded)
         if (this.loaded) {
           this.$router.push('/new/done')
         }

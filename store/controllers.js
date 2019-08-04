@@ -69,7 +69,7 @@ const controller_chain = (id, n) => {
   n = n || 3
   id = `${id}-${n}`
   if (typeof controller_chains[id] == 'undefined') {
-    controller_chains[id] = schedule_promise(15, n)
+    controller_chains[id] = schedule_promise(3, n)
   }
   return controller_chains[id]
 }
@@ -163,7 +163,8 @@ export const getters = {
     const selected = $nuxt.$route.params.controller
     return getById(state, selected)
   },
-  getBLEControllers: (state) => (ip) => state.ble.filter((b) => b.wifi_ip == ip),
+  getBLEControllers: (state) => (ip) => state.ble.filter((b) => b.params.wifi_ip == ip),
+  getBLEControllerById: (state) => (id) => state.ble.find((b) => b.id == id),
 }
 
 export const mutations = {
@@ -175,7 +176,7 @@ export const mutations = {
     state.has_mobile_zeroconf = has_mobile_zeroconf
   },
   ble_enabled(state, enabled) {
-    state.ble_enabled = ble_enabled
+    state.ble_enabled = enabled
   },
   configure_search_new_controller(state, { url, is_sta }) {
     state.new_controller_url = url
@@ -202,9 +203,18 @@ export const mutations = {
     state.controllers.push(controller)
     storeState(state)
   },
+  delete_controller(state, id) {
+    state.controllers = state.controllers.filter((c) => c.broker_clientid.value != id)
+    storeState(state)
+  },
   set_found(state, id) {
     let controller = getById(state, id)
     controller.found = true
+    setById(state, id, controller)
+  },
+  set_found(state, id) {
+    let controller = getById(state, id)
+    controller.found = false
     setById(state, id, controller)
   },
   set_found_try(state, { id, n }) {
@@ -259,9 +269,11 @@ export const mutations = {
     state.ble_scan = false
   },
   set_ble_device_param(state, { id, key, value }) {
-    console.log(id, key, value)
+    console.log('set_ble_device_param', id, key, value)
     const device = getBleById(state, id)
-    device.params[key] = value
+    console.log(device.params)
+    device.params = Object.assign({}, device.params, {[key]: value})
+    console.log(device.params)
     setBleById(state, id, device)
   },
   add_ble_device(state, device) {
@@ -284,14 +296,16 @@ const wait_for_controller = async function (url, onTry) {
 
 const zeroconf_discovery = async function (name) {
   return new Promise((resolve, reject) => {
-    setTimeout(() => {
+    const cancel = setTimeout(() => {
       window.cordova.plugins.zeroconf.unwatch('_http._tcp.', 'local.')
       reject()
     }, 20000)
     window.cordova.plugins.zeroconf.watch('_http._tcp.', 'local.', function({action, service}) {
+      console.log('zeroconf', action, service, name)
       if (action == 'resolved' && service.name.toLowerCase() == name.replace('.local', '').toLowerCase()) {
         resolve(service.ipv4Addresses[0])
         window.cordova.plugins.zeroconf.unwatch('_http._tcp.', 'local.')
+        clearTimeout(cancel)
       }
     })
   })
@@ -316,9 +330,9 @@ const start_controller_daemon = (context, controller) => {
 
     for (let i in controller.leds) {
       for (let j in controller.leds[i]) {
-        if (!controller.leds[i][j].loaded) {
+        //if (!controller.leds[i][j].loaded) {
           context.dispatch('load_led_param', {id: controller.broker_clientid.value, i, key: j}) 
-        }
+        //}
       }
     }
     for (let i in controller.boxes) {
@@ -329,7 +343,7 @@ const start_controller_daemon = (context, controller) => {
       }
     }
     for (let i in controller) {
-      if (typeof controller[i].value !== 'undefined' && !controller[i].loaded) {
+      if (typeof controller[i].value !== 'undefined'/* && !controller[i].loaded*/) {
         context.dispatch('load_controller_param', {id: controller.broker_clientid.value, key: i}) 
       }
     }
@@ -347,7 +361,7 @@ const start_controller_daemon = (context, controller) => {
       } catch(e) {
         console.log(e)
       }
-    }, 10 * 1000)
+    }, 60 * 1000)
     setInterval(() => {
       if (controller.found == false) return
       context.dispatch('load_controller_param', {id: controller.broker_clientid.value, key: 'time'}) 
@@ -401,6 +415,13 @@ const has_ble = function() {
   return !!window.ble
 }
 
+const is_ble_enabled = function() {
+  const { ble } = window 
+  return new Promise((resolve, reject) => {
+    ble.isEnabled(() => resolve(true), () => resolve(false))
+  })
+}
+
 const is_ip = (url) => {
   return url.match(/\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/)
 }
@@ -416,10 +437,11 @@ export const actions = {
       init_done = true
     }
   },
-  async init_cordova() {
+  async init_cordova(context) {
     context.commit('cordova_caps', {has_ble: has_ble(), has_mobile_zeroconf: has_mobile_zeroconf()})
     if (has_ble()) {
-      context.commit('ble_enabled', ble.isEnabled)
+      const { ble } = window 
+      context.commit('ble_enabled', await is_ble_enabled())
     }
   },
   async start_ble_scan(context) {
@@ -428,7 +450,7 @@ export const actions = {
     }
 
     const { ble } = window 
-    if (!ble.isEnabled) {
+    if (!await is_ble_enabled()) {
       try {
         await new Promise((resolve, reject) => ble.enable(resolve, reject))
         context.commit('ble_enabled', true)
@@ -510,32 +532,35 @@ export const actions = {
     let found_by_ip = false
     const addr = ip || controller.wifi_ip.value
     if (addr) {
+      console.log('searching by ip', ip)
       try {
         await controller_chain(id)(() => axios.get(`http://${addr}/s?k=MDNS_DOMAIN`, {timeout: 5000}), (e, n) => context.commit('set_found_try', {id, n}))
         if (ip) {
           context.commit('loaded_controller_param', {id, key: 'wifi_ip', value: addr})
         }
-        found_by_ip = true
+        context.commit('set_found', id)
+        return
       } catch(e) {
         console.log(e)
         context.commit('set_notfound', id)
       }
     }
-    if (!found_by_ip) {
-      try {
-        if (has_mobile_zeroconf()) {
-          const ip = await zeroconf_discovery(url)
-          context.commit('loaded_controller_param', {id, key: 'wifi_ip', value: ip})
-        } else {
-          const { data: ip } = await controller_chain(id)(() => axios.get(`http://${url}.local/s?k=WIFI_IP`, {timeout: 5000}), (e, n) => context.commit('set_found_try', {id, n}))
-          context.commit('loaded_controller_param', {id, key: 'wifi_ip', value: ip})
-        }
-      } catch(e) {
-        context.commit('set_notfound', id)
-        return
+    console.log('IP not found, trying zeroconf')
+    try {
+      if (has_mobile_zeroconf()) {
+        const ip = await zeroconf_discovery(url)
+        context.commit('loaded_controller_param', {id, key: 'wifi_ip', value: ip})
+      } else {
+        const { data: ip } = await controller_chain(id)(() => axios.get(`http://${url}.local/s?k=WIFI_IP`, {timeout: 5000}), (e, n) => context.commit('set_found_try', {id, n}))
+        context.commit('loaded_controller_param', {id, key: 'wifi_ip', value: ip})
       }
+      context.commit('set_found', id)
+    } catch(e) {
+      console.log('Zeroconf failed', e)
+      context.commit('set_notfound', id)
+      throw (e)
+      return
     }
-    context.commit('set_found', id)
   },
   async load_controller_param(context, { id, key }) {
     const controller = getById(context.state, id),
@@ -546,6 +571,7 @@ export const actions = {
       context.commit('loaded_controller_param', {id, key, value: config.integer ? parseInt(value) : value})
     } catch(e) {
       context.commit('loaded_controller_param', {id, key, error: e})
+      throw(e)
     }
   },
   async load_box_param(context, { id, i, key }) {
@@ -561,6 +587,7 @@ export const actions = {
       context.commit('loaded_box_param', {id, i, key, value: config.integer ? parseInt(value) : value})
     } catch(e) {
       context.commit('loaded_box_param', {id, i, key, error: e})
+      throw(e)
     }
   },
   async load_led_param(context, { id, i, key }) {
@@ -572,6 +599,7 @@ export const actions = {
       context.commit('loaded_led_param', {id, i, key, value: config.integer ? parseInt(value) : value})
     } catch(e) {
       context.commit('loaded_led_param', {id, i, key, error: e})
+      throw(e)
     }
   },
   async load_i2c_param(context, { id, i, key }) {
@@ -583,6 +611,7 @@ export const actions = {
       context.commit('loaded_i2c_param', {id, i, key, value: config.integer ? parseInt(value) : value})
     } catch(e) {
       context.commit('loaded_i2c_param', {id, i, key, error: e})
+      throw(e)
     }
   },
   async set_controller_param(context, { id, key, value, n, }) {
@@ -594,6 +623,7 @@ export const actions = {
       await context.dispatch('load_controller_param', {id, key})
     } catch(e) {
       context.commit('loaded_controller_param', {id, key, error: e})
+      throw(e)
     }
   },
   async set_box_param(context, { id, i, key, value }) {
@@ -610,6 +640,7 @@ export const actions = {
       await context.dispatch('load_box_param', {id, i, key})
     } catch(e) {
       context.commit('loaded_box_param', {id, i, key, error: e})
+      throw(e)
     }
   },
   async set_led_param(context, { id, i, key, value }) {
@@ -621,6 +652,7 @@ export const actions = {
       await context.dispatch('load_led_param', {id, i, key})
     } catch(e) {
       context.commit('loaded_led_param', {id, i, key, error: e})
+      throw(e)
     }
   },
   async set_i2c_param(context, { id, i, key }) {
@@ -632,6 +664,7 @@ export const actions = {
       await context.dispatch('load_i2c_param', {id, i, key})
     } catch(e) {
       context.commit('loaded_i2c_param', {id, i, key, error: e})
+      throw(e)
     }
   },
 }

@@ -20,7 +20,8 @@
   <section :id='$style.container'>
     <Title title='ADVANCED MENU' icon='light-black.svg' />
     <div :id='$style.body'>
-      <a :href='`http://${controller.wifi_ip.value}/fs/app.html`' target='_blank'>Access admin interface</a>
+      <a href='javascript:void(0)' @click='openAdmin'>Access admin interface</a>
+      <a href='javascript:void(0)' @click='deleteController'>Remove this controller</a>
     </div>
   </section>
 </template>
@@ -34,7 +35,16 @@ export default {
     controller() {
       return this.$store.getters['controllers/getSelected']
     },
-  }
+  },
+  methods: {
+    deleteController() {
+      this.$store.commit('controllers/delete_controller', this.controller.broker_clientid.value)
+      this.$router.replace('/')
+    },
+    openAdmin() {
+      window.open(`http://${this.controller.wifi_ip.value}/fs/app.html`)
+    },
+  },
 }
 </script>
 
