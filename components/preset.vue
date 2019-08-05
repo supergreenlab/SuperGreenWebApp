@@ -19,10 +19,8 @@
 <template>
   <section :id='$style.container' :class='(selected ? $style.selected : "")'>
     <h2>{{ title }}</h2>
-    <div :id='$style.iconw'>
-      <img :src='require(`~/assets/img/presets/${icon}`)' />
-    </div>
-    <p>{{ description }}</p>
+    <div :id='$style.iconw' :style='{"background-image": `url(${require(`~/assets/img/presets/${icon}`)})`}'></div>
+    <div :id='$style.instruction' v-html='description'></div>
   </section>
 </template>
 
@@ -39,28 +37,37 @@ export default {
   flex-direction: column
   border: 1pt solid #b4b4b4
   border-radius: 2pt
-  text-align: center
   padding: 10pt
   box-sizing: border-box
   align-items: center
   max-width: 250pt
-  width: 90%
-  height: 80%
   transition: border .2s, opacity .2s
   opacity: 0.5
+
+#container > h2
+  margin: 10pt 0
 
 .selected
   border: 3pt solid #3bb30b !important
   opacity: 1 !important
 
 #iconw
-  flex: 1
-  display: flex
-  align-items: center
-  justify-content: center
+  width: 100%
+  height: 100pt
+  background-position: center
+  background-size: contain
+  background-repeat: no-repeat
+  @media screen and (max-width: 600px)
+    height: 80pt
 
-#iconw > img
-  width: auto
-  height: auto
+#instruction
+  padding: 20pt 0
+
+#instruction > hr
+  border: 1pt solid #efefef
+  margin: 10pt 0
+
+#instruction > h3
+  margin: 10pt 0
 
 </style>

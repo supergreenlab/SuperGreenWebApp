@@ -1,7 +1,7 @@
 {
   "id": "sgkx6",
-  "title": "Super Green Kit x6",
-  "description": "2 box: 1 Veg + 1 Boom",
+  "title": "2 boxes",
+  "description": "<h3>Leds shared between the 2.</h3>Led channels <b>1, 2, 3, 4</b> will be placed in the <b>first box</b>.<br />Led channels <b>5, 6</b> will be placed in the <b>second box</b>.<hr /><b>Box #1 timer</b> will be set to <b>12h day and 12h night</b>.<br /><b>Box #2 timer</b> will be set to <b>18h day and 6h night</b>.",
   "icon": "supergreenkitx6.png",
   "keys": {
     "state": 2,

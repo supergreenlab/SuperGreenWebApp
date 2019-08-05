@@ -19,8 +19,8 @@
  <template>
    <section :id='$style.container'>
      <div>
-       Looks like we couldn't find the controller, try rebooting it an click "RETRY SEARCH", if it still fails, retry the credentials.</br>
-       If it still fails, reach up with @stant on <a href='https://discord.gg/V5bxAU' target='_blank'>discord</a>.
+       Looks like we couldn't find the controller, <b>try pressing the reset button</b> it an click "RETRY SEARCH", if it still fails, retry the credentials.</br><br />
+       If it still fails, reach up with <b>@stant</b> on <a href='https://discord.gg/V5bxAU' target='_blank'>discord</a>.
      </div>
      <div :id='$style.failedbuttons'>
        <a href='javascript:void(0)' :class='$style.button' @click='retype'>RETYPE CREDENTIALS</a>
@@ -39,6 +39,10 @@ export default {
 
 #container
   display: flex
+  align-items: center
+  justify-content: center
+  padding: 20pt 20pt
+  color: #717171
   @media screen and (max-width: 600px)
     flex-direction: column
 
@@ -46,10 +50,10 @@ export default {
   display: flex
   flex-direction: column
   align-items: center
+  margin-top: 20pt
 
 #failedbuttons > .button
   width: 200pt
-  margin-top: 10pt
 
 .button
   display: flex

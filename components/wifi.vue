@@ -21,13 +21,13 @@
     <Title title='WIFI CONFIG' icon='wifi-black.svg' />
     <div :id='$style.body'>
       <WifiForm v-if='page == "FORM"' :ssid.sync='ssid' :password.sync='password' :connect='connect' />
-      <WifiEnableBle v-else-if='page == "ENABLE_BLE"' />
-      <Loading v-else-if='page == "WAIT_BLE"' label='Waiting for bluetooth device' />
-      <Loading v-else-if='page == "SET_WIFI"' label='Settings wifi credentials' />
-      <Loading v-else-if='page == "SEARCHING"' label='Searching' />
-      <Loading v-else-if='page == "WAIT_BLE_WIFI_STATUS"' label='Detecting config change' />
-      <Loading v-else-if='page == "WAIT_BLE_WIFI_STATUS_BACK_ON"' label='Change detected' />
-      <Loading v-else-if='page == "WAIT_WIFI_SWITCH"' label='Waiting 10s for you mobile to go back to its wifi' />
+      <WifiEnableBle v-else-if='page == "ENABLE_BLE"' :connect='connect' />
+      <Loading width='150pt' v-else-if='page == "WAIT_BLE"' label='Waiting for bluetooth device' />
+      <Loading width='150pt' v-else-if='page == "SET_WIFI"' label='Settings wifi credentials' />
+      <Loading width='150pt' v-else-if='page == "SEARCHING"' label='Searching' />
+      <Loading width='150pt' v-else-if='page == "WAIT_BLE_WIFI_STATUS"' label='Detecting config change' />
+      <Loading width='150pt' v-else-if='page == "WAIT_BLE_WIFI_STATUS_BACK_ON"' label='Change detected' />
+      <Loading width='150pt' v-else-if='page == "WAIT_WIFI_SWITCH"' label='Waiting 10s for you mobile to go back to its wifi' />
       <WifiFailed v-else-if='page == "FAILED"' :retype='retype' :connect='search'  />
       <WifiSuccess v-else-if='page == "SUCCESS"' :retype='retype' />
     </div>
@@ -48,8 +48,9 @@ export default {
     return {
       ssid: '',
       password: '',
-      page: 'FORM',
+      page: 'SUCCESS',
       bleId: '',
+      blePrompted: false
     }
   },
   mounted() {
@@ -69,7 +70,10 @@ export default {
   },
   methods: {
     async connect() {
-      if (this.$store.state.controllers.has_ble && this.$store.state.controllers.ble_enabled && !this.bleDevices.length) {
+      if (this.$store.state.controllers.has_ble && this.$store.state.controllers.ble_enabled && !this.bleDevices.length && !this.$data.blePrompted) {
+        this.$data.page = 'ENABLE_BLE'
+        this.$data.blePrompted = true
+      } else if (this.$store.state.controllers.has_ble && this.$store.state.controllers.ble_enabled && !this.bleDevices.length) {
         this.$store.dispatch('controllers/start_ble_scan')
         this.$data.page = 'WAIT_BLE'
         return
@@ -169,7 +173,6 @@ export default {
   padding: 0 10pt
   @media screen and (max-width: 600px)
     width: 100vw
-    padding: 0 10pt
 
 #body
   position: relative

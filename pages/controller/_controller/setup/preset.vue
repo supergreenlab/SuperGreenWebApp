@@ -18,18 +18,31 @@
 
 <template>
   <section v-if='controller' :id='$style.container'>
-    <h1>New box detected.</h1>
-    <h3>Pick your kit:</h3>
-    <div :id='$style.presets'>
-      <div v-for='(preset, i) in presets' :class='$style.preset' v-on:click='select(i)'>
-        <Preset :id='preset.id' :title='preset.title' :icon='preset.icon' :description='preset.description' :selected='i == presetid' />
+    <div :id='$style.body'>
+      <h1>New controller setup.</h1>
+      <div :class='$style.instruction'>
+        Alright now's the time to plug in the lights!<br />
+        Press the button below once they're all connected.<br />
+        <div v-if='led_test_phase'>Switching <b>{{ led_test_phase }}</b>: {{led_n+1}}/{{controller.leds.length}}</div>
+       <a href='javascript:void(0)' :class='$style.button' @click='testLeds'>Test leds</a>
+      </div>
+      <h1>Preconfiguration</h1>
+      <div :class='$style.instruction'>
+        (All this settings can be overwritten later)
+      </div>
+      <div :id='$style.presets'>
+        <div v-for='(preset, i) in presets' :class='$style.preset' v-on:click='select(i)'>
+          <Preset :id='preset.id' :title='preset.title' :icon='preset.icon' :description='preset.description' :selected='i == presetid' />
+        </div>
       </div>
     </div>
 
     <section :id='$style.nav'>
       <NextButton :onClick='writePreset' label='Configure' />
     </section>
-    <Loading v-if='loading' :label='`Uploading config.. ${parseInt(done/total*100)}%`' width='115pt' height='80pt' />
+    <div v-if='loading' :id='$style.loading'>
+      <Loading :label='`Uploading config.. ${parseInt(done/total*100)}%`' width='115pt' height='80pt' />
+    </div>
   </section>
 </template>
 
@@ -44,7 +57,9 @@ export default {
       done: 0,
       total: 0,
       presetid: 0,
-      loading: false
+      loading: false,
+      led_n: 0,
+      led_test_phase: '',
     }
   },
   components: { Preset, NextButton, Loading, },
@@ -59,6 +74,22 @@ export default {
   methods: {
     select(i) {
       this.$data.presetid = i
+    },
+    async testLeds() {
+      this.$data.led_test_phase = 'ON'
+      for (let i in this.controller.leds) {
+        const led = this.controller.leds[i]
+        this.$data.led_n = parseInt(i)
+        await this.$store.dispatch(`controllers/set_led_param`, {id: this.controller.broker_clientid.value, i, key: 'dim', value: 100})
+      }
+      await new Promise((r) => setTimeout(r, 1000))
+      this.$data.led_test_phase = 'OFF'
+      for (let i in this.controller.leds) {
+        const led = this.controller.leds[i]
+        this.$data.led_n = parseInt(i)
+        await this.$store.dispatch(`controllers/set_led_param`, {id: this.controller.broker_clientid.value, i, key: 'dim', value: 0})
+      }
+      this.$data.led_test_phase = ''
     },
     async writePreset() {
       this.$data.loading = true
@@ -77,7 +108,8 @@ export default {
       preset.keys.leds.forEach((led, i) => promises.push(...shoot_presets(led, 'led', (k, v) => ({id: selected, key: k, value: v, i}))))
       preset.keys.boxes.forEach((box, i) => promises.push(...shoot_presets(box, 'box', (k, v) => ({id: selected, key: k, value: v, i}))))
       await Promise.all(promises)
-      this.$router.push(`/controller/${selected}/setup/name`)
+      //this.$router.push(`/controller/${selected}/setup/name`)
+      this.$router.push(`/controller/${selected}/0`)
     },
   },
 }
@@ -90,25 +122,64 @@ export default {
   flex: 1
   position: relative
   flex-direction: column
-  min-height: 100vh
-  align-items: center
-  justify-content: center
+  justify-content: space-between
+  height: 100%
   background-color: white
+  color: #616161
+
+#body
+  display: flex
+  flex-direction: column
+  align-items: center
 
 #presets
   display: flex
-  flex: 1
+  flex-wrap: wrap
   width: 100%
+  margin: 20pt 0 0 0
 
 .preset
-  width: 50%
-  display: flex
-  align-items: center
-  justify-content: center
+  flex-basis: 30%
+  margin: 10pt 10pt
+  @media screen and (max-width: 600px)
+    flex-basis: 100%
 
 #nav
   display: flex
   justify-content: flex-end
   width: 100%
+
+.button
+  display: flex
+  align-items: center
+  justify-content: center
+  padding: 0 25pt
+  background-color: #3BB30B
+  height: 23pt
+  color: white
+  text-decoration: none
+  border-radius: 3pt
+  @media screen and (max-width: 600px)
+    margin: 10pt 0
+
+.button:hover
+  background-color: #4BC30B
+
+.button:active
+  background-color: #2BA30B
+
+.instruction
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  margin: 10pt 10pt
+
+#loading
+  position: fixed
+  width: 100vw
+  height: 100vh
+  top: 0
+  left: 0
 
 </style>

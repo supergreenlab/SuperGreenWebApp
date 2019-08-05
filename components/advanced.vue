@@ -20,8 +20,8 @@
   <section :id='$style.container'>
     <Title title='ADVANCED MENU' icon='light-black.svg' />
     <div :id='$style.body'>
-      <a href='javascript:void(0)' @click='openAdmin'>Access admin interface</a>
-      <a href='javascript:void(0)' @click='deleteController'>Remove this controller</a>
+      <a href='javascript:void(0)' :class='$style.button' @click='openAdmin'>Access admin interface</a>
+      <a href='javascript:void(0)' :class='`${$style.button} ${$style.red}`' @click='deleteController'>Remove this controller</a>
     </div>
   </section>
 </template>
@@ -56,6 +56,38 @@ export default {
   padding: 0 10pt
 
 #body
+  display: flex
+  justify-content: space-around
   padding: 10pt 25pt
+  @media screen and (max-width: 600px)
+    flex-direction: column
+
+.button
+  display: flex
+  align-items: center
+  justify-content: center
+  padding: 10pt 25pt
+  background-color: #3BB30B
+  height: 23pt
+  color: white
+  text-decoration: none
+  border-radius: 3pt
+  @media screen and (max-width: 600px)
+    margin: 10pt 0
+
+.button:hover
+  background-color: #4BC30B
+
+.button:active
+  background-color: #2BA30B
+
+.red
+  background-color: #D04949
+  
+.red:hover
+  background-color: #D05959
+
+.red:active
+  background-color: #2BA30B
 
 </style>

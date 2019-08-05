@@ -212,7 +212,7 @@ export const mutations = {
     controller.found = true
     setById(state, id, controller)
   },
-  set_found(state, id) {
+  set_notfound(state, id) {
     let controller = getById(state, id)
     controller.found = false
     setById(state, id, controller)

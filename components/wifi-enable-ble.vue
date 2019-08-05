@@ -19,34 +19,21 @@
 <template>
   <section :id='$style.container'>
     <div>
-      <b>Please enable and authorize ble discovery for an easier process.</b><br />
-      WE DON'T GEOLOCALIZE, but android will still ask for localization, because ble is considered a geolocalization feature:/
+      <b>Please enable and authorize ble discovery for an easier process.</b><br /><br />
+      <b>WE DON'T GEOLOCALIZE</b>, but android will still ask for localization, because BLE is considered a geolocalization feature:/
     </div>
-    <a v-if='!scanning' href='javascript:void(0)' @click='startScan'>START BLE SCAN</a>
-    <div v-else>
-      <div v-for='device in foundDevices'>
-        {{ device.name }} {{ device.state }} {{ device.wifi_status }} {{ device.wifi_ip }}
-      </div>
-    </div>
+    <a href='javascript:void(0)' :class='$style.button' @click='connect'>START BLE SCAN</a>
   </section>
 </template>
 
 <script>
 
 export default {
+  props: ['connect',],
   data() {
     return {
       scanning: false
     }
-  },
-  methods: {
-    startScan() {
-      this.$data.scanning = true
-      this.$store.dispatch('controllers/start_ble_scan')
-    },
-    foundDevices() {
-      return this.$store.state.controllers.ble
-    },
   },
 }
 </script>
@@ -56,5 +43,25 @@ export default {
 #container
   display: flex
   flex-direction: column
+  align-items: center
+  color: #717171
+
+.button
+  display: flex
+  align-items: center
+  justify-content: center
+  padding: 0 25pt
+  background-color: #3BB30B
+  height: 23pt
+  color: white
+  text-decoration: none
+  border-radius: 3pt
+  margin: 10pt 10pt
+
+.button:hover
+  background-color: #4BC30B
+
+.button:active
+  background-color: #2BA30B
 
 </style>

@@ -1,7 +1,7 @@
 {
   "id": "sgkx4",
-  "title": "Super Green Kit x4",
-  "description": "1 box: Veg + Boom",
+  "title": "One box",
+  "description": "<h3>All leds in one box</h3><b>Box #1 timer</b> will be set to <b>18h day and 6h night</b>.",
   "icon": "supergreenkitx4.png",
   "keys": {
     "state": 2,
@@ -41,10 +41,14 @@
         "dim": 100
       },
       {
-        "enabled": 0
+        "box": 0,
+        "enabled": 1,
+        "dim": 100
       },
       {
-        "enabled": 0
+        "box": 0,
+        "enabled": 1,
+        "dim": 100
       }
     ]
   }

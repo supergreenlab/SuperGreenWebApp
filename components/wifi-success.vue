@@ -18,9 +18,9 @@
 
  <template>
    <section :id='$style.container'>
-     <div>
-       Ok, found it:)
-     </div>
+     <h1>
+       Ok, found it!
+     </h1>
      <div :id='$style.buttons'>
        <a href='javascript:void(0)' :class='$style.button' @click='retype'>BACK</a>
      </div>
@@ -37,6 +37,9 @@ export default {
 
 #container
   display: flex
+  color: #717171
+  align-items: center
+  flex-direction: column
 
 #buttons
   display: flex
