@@ -48,7 +48,7 @@ export default {
     return {
       ssid: '',
       password: '',
-      page: 'SUCCESS',
+      page: 'FORM',
       bleId: '',
       blePrompted: false
     }
