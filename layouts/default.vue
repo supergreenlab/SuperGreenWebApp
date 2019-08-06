@@ -66,6 +66,7 @@ export default {
     position: absolute
     top: 0
     left: 0
+    padding-top: 10pt
 
 #menu.hide
   margin-left: -100%

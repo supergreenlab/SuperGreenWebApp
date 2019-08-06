@@ -73,6 +73,7 @@ export default {
     left: 0
     width: 100vw
     position: fixed
+    padding-top: 15pt
 
 #boxes
   display: flex
@@ -124,6 +125,8 @@ export default {
   background-repeat: no-repeat
   cursor: pointer
   z-index: 1001
+  @media screen and (max-width: 600px)
+    top: 18pt
 
 #settings:hover
   opacity: 0.8

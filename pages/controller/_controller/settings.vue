@@ -67,6 +67,7 @@ export default {
     left: 0
     width: 100vw
     position: fixed
+    padding-top: 15pt
 
 #title
   flex: 1
