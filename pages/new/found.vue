@@ -35,6 +35,11 @@ export default {
       return this.$store.state.controllers.new_controller.loaded
     }
   },
+  mounted() {
+    if (this.loaded) {
+      this.$router.push('/new/done')
+    }
+  },
   watch: {
     loaded: {
       handler() {

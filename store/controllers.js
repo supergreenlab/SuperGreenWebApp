@@ -408,7 +408,8 @@ const ble_device = async (context, device) => {
 }
 
 const has_mobile_zeroconf = function() {
-  return !!window.cordova && !!window.cordova.plugins.zeroconf
+  console.log(window, window.cordova)
+  return !!window.cordova && !!window.cordova.plugins && !!window.cordova.plugins.zeroconf
 }
 
 const has_ble = function() {
@@ -484,7 +485,7 @@ export const actions = {
     let url = context.state.new_controller_url
     context.commit('start_search_new_controller')
 
-    if (!is_ip(url) && has_mobile_zeroconf()) {
+    if (!is_ip(url) && context.state.has_mobile_zeroconf) {
       url = await zeroconf_discovery(url)
     } else {
       if ((url = await wait_for_controller(url, () => context.commit('search_try'))) == false) {
@@ -547,7 +548,7 @@ export const actions = {
     }
     console.log('IP not found, trying zeroconf')
     try {
-      if (has_mobile_zeroconf()) {
+      if (context.state.has_mobile_zeroconf) {
         const ip = await zeroconf_discovery(url)
         context.commit('loaded_controller_param', {id, key: 'wifi_ip', value: ip})
       } else {
