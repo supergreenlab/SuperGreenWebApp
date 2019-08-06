@@ -18,9 +18,11 @@
 
 <template>
   <section :id='$style.container'>
-    <div :id='$style.boxes'>
-      <div :id='$style.menu' v-on:click='menu'></div>
-      <div :class='`${$style.box} ${settings ? $style.hidden : ""}`' v-for='box, i in controller.boxes' :id='$route.params.box == i ? $style.selected : ""' @click='select(i)'>box #{{ i+1 }}</div>
+    <div :id='$style.top'>
+      <div :id='$style.boxes'>
+          <div :id='$style.menu' v-on:click='menu'></div>
+          <div :class='`${$style.box} ${settings ? $style.hidden : ""}`' v-for='box, i in controller.boxes' :id='$route.params.box == i ? $style.selected : ""' @click='select(i)'>box #{{ i+1 }}</div>
+      </div>
       <nuxt-link :id='$style.settings' :to='`/controller/${controller.broker_clientid.value}/settings`'></nuxt-link>
     </div>
     <div :id='$style.body'>
@@ -56,26 +58,24 @@ export default {
 <style module lang=stylus>
 
 #container
-  flex: 1
-  position: relative
   display: flex
   flex-direction: column
   overflow-y: auto
   min-height: 100%
 
-#boxes
-  display: flex
-  position: relative
+#top
   background-color: #454545
   padding-left: 5pt
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25)
   z-index: 1000
-
   @media screen and (max-width: 600px)
     top: 0
     left: 0
     width: 100vw
     position: fixed
+
+#boxes
+  display: flex
 
 .box
   padding: 10pt
@@ -114,10 +114,10 @@ export default {
 #settings
   display: block
   position: absolute
-  width: 23pt
-  height: 100%
-  top: 0
+  top: 5pt
   right: 10pt
+  width: 23pt
+  height: 23pt
   background-image: url('~assets/img/settings.svg')
   background-position: center
   background-size: contain
@@ -134,25 +134,5 @@ export default {
 .settingsactive
   width: 19pt !important
   background-image: url('~assets/img/close.svg') !important
-
-#wifi
-  display: block
-  position: absolute
-  width: 23pt
-  height: 100%
-  top: 0
-  right: 40pt
-  background-image: url('~assets/img/wifi.svg')
-  background-position: center
-  background-size: contain
-  background-repeat: no-repeat
-  cursor: pointer
-  z-index: 1001
-
-#wifi:hover
-  opacity: 0.8
-
-#wifi:active
-  opacity: 0.5
 
 </style>

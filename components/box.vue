@@ -88,7 +88,7 @@ export default {
   flex-direction: column
   align-items: center
   justify-content: center
-  height: 100%
+  height: 100vh
 
 #containercenter > button
   background-color: #3bb30b

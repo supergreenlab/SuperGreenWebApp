@@ -118,14 +118,10 @@ export default {
 <style module lang=stylus>
 
 #container
-  display: flex
-  flex: 1
   position: relative
-  flex-direction: column
-  justify-content: space-between
-  height: 100%
   background-color: white
   color: #616161
+  padding: 20pt 0
 
 #body
   display: flex
@@ -134,12 +130,13 @@ export default {
 
 #presets
   display: flex
+  justify-content: space-around
   flex-wrap: wrap
   width: 100%
   margin: 20pt 0 0 0
 
 .preset
-  flex-basis: 30%
+  flex-basis: 40%
   margin: 10pt 10pt
   @media screen and (max-width: 600px)
     flex-basis: 100%
@@ -159,8 +156,7 @@ export default {
   color: white
   text-decoration: none
   border-radius: 3pt
-  @media screen and (max-width: 600px)
-    margin: 10pt 0
+  margin: 10pt 0
 
 .button:hover
   background-color: #4BC30B

@@ -39,10 +39,8 @@ export default {
 <style module lang=stylus>
 
 #container
-  display: flex
   position: relative
   flex: 1
-  flex-direction: column
   background-color: #efefef
   overflow-y: auto
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
