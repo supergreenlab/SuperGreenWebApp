@@ -62,6 +62,8 @@ export default {
 #top
   display: flex
   justify-content: flex-end
+  @media screen and (max-width: 600px)
+    padding-top: 15pt
 
 #body
   display: flex

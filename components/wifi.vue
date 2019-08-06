@@ -22,7 +22,7 @@
     <div :id='$style.body'>
       <WifiForm v-if='page == "FORM"' :ssid.sync='ssid' :password.sync='password' :connect='connect' />
       <WifiEnableBle v-else-if='page == "ENABLE_BLE"' :connect='connect' />
-      <Loading width='150pt' v-else-if='page == "WAIT_BLE"' label='Waiting for bluetooth device' />
+      <Loading width='150pt' height='50pt' v-else-if='page == "WAIT_BLE"' label='Waiting for bluetooth device' />
       <Loading width='150pt' v-else-if='page == "SET_WIFI"' label='Settings wifi credentials' />
       <Loading width='150pt' v-else-if='page == "SEARCHING"' label='Searching' />
       <Loading width='150pt' v-else-if='page == "WAIT_BLE_WIFI_STATUS"' label='Detecting config change' />
@@ -177,6 +177,7 @@ export default {
 #body
   position: relative
   min-height: 50pt
+  padding: 15pt 0
 
 #failed
   display: flex
