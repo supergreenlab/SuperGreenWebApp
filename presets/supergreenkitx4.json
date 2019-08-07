@@ -9,9 +9,9 @@
       {
         "enabled": 1,
         "timer_type": 1,
-        "on_hour": 1,
+        "on_hour": 3,
         "on_min": 0,
-        "off_hour": 19,
+        "off_hour": 21,
         "off_min": 0
       }, {
         "enabled": 0
