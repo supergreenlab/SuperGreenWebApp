@@ -23,9 +23,6 @@
 
 <script>
 export default {
-  async fetch({ store }) {
-    await store.dispatch('controllers/init')
-  },
 }
 </script>
 
@@ -36,7 +33,7 @@ export default {
   position: relative
   flex: 1
   flex-direction: column
-  background-color: #efefef
+  background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%)
   overflow-y: auto
   min-height: 100%
 

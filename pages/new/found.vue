@@ -59,6 +59,7 @@ export default {
   display: flex
   flex-direction: column
   min-height: 100vh
+  background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%)
 
 #body
   display: flex
