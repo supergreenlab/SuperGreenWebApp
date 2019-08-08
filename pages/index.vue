@@ -39,5 +39,6 @@ export default {
   background-color: #efefef
   overflow-y: auto
   min-height: 100%
+  background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%)
 
 </style>

@@ -32,7 +32,8 @@ export default {
   ** Global CSS
   */
   css: [
-		'@/assets/css/global.css'
+    '@/assets/css/global.css',
+    'element-ui/lib/theme-chalk/index.css'
   ],
 
   /*
@@ -55,12 +56,18 @@ export default {
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
+    'nuxt-element-ui',
   ],
   /*
   ** Axios module configuration
   */
   axios: {
     // See https://github.com/nuxt-community/axios-module#options
+  },
+
+  elementUI: {
+    components: ['Button'],
+    locale: 'en',
   },
 
   /*
