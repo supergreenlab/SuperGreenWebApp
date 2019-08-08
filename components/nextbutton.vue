@@ -18,9 +18,9 @@
 
 <template>
   <section :id='$style.container'>
-    <nuxt-link v-if='to' :to='to'>{{ label }} &gt;</nuxt-link>
-    <a v-else-if='onClick' href='javascript:void(0)' v-on:click='onClick'>{{ label }} &gt;</a>
-    <span v-else>{{ label }} &gt;</span>
+    <nuxt-link :id='$style.button' v-if='to' :to='to'>{{ label }} &gt;</nuxt-link>
+    <a :id='$style.button' v-else-if='onClick' href='javascript:void(0)' v-on:click='onClick'>{{ label }} &gt;</a>
+    <span :id='$style.button' v-else>{{ label }} &gt;</span>
   </section>
 </template>
 
@@ -43,14 +43,22 @@ export default {
   display: flex
   padding: 5pt
 
-#container > a
-  color: #5dbd37
+#button
+  display: flex
+  align-items: center
+  justify-content: center
+  padding: 0 25pt
+  background-color: #3BB30B
+  height: 23pt
+  color: white
   text-decoration: none
-  font-size: 1.3em
-  font-weight: 400
-  transition: opacity 0.2s
+  border-radius: 3pt
+  margin: 10pt 0
 
-#container > a:hover
-  opacity: 0.3
+#button:hover
+  background-color: #4BC30B
+
+#button:active
+  background-color: #2BA30B
 
 </style>

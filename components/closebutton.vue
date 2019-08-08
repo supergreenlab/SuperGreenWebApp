@@ -35,6 +35,16 @@ export default {
   display: flex
   padding: 5pt
 
+#container > a
+  display: flex
+  align-items: center
+  justify-content: center
+  background-color: #F27E7E
+  border-radius: 50%
+  padding: 5pt
+  width: 20pt
+  height: 20pt
+
 #container > a > img
   text-decoration: none
   transition: opacity 0.2s
