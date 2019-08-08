@@ -24,7 +24,11 @@
     </section>
     <section :id='$style.nav'>
       <NextButton :onClick='onNext' />
-      <small>* clicking this "Next &gt;" button confirms that you are major in your state and are not violating any laws.</small>
+      <small>
+        By proceeding, you explicitly agree that you are acting in coordinance with
+        local, state, and federal laws. SuperGreenLabs will not be liable for
+        consequences surrounding the legality of how the lights or grow bundle are used.
+      </small>
     </section>
   </section>
 </template>
@@ -73,5 +77,8 @@ export default {
   display: flex
   align-items: flex-end
   flex-direction: column
+
+#nav > small
+  text-align: center
 
 </style>
