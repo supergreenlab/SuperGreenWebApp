@@ -204,6 +204,7 @@ export const mutations = {
     storeState(state)
   },
   delete_controller(state, id) {
+    stop_controller_daemon(id)
     state.controllers = state.controllers.filter((c) => c.broker_clientid.value != id)
     storeState(state)
   },
@@ -314,8 +315,10 @@ const zeroconf_discovery = async function (name) {
 const running_daemons = {}
 const start_controller_daemon = (context, controller) => {
   if (running_daemons[controller.broker_clientid.value]) return
-  running_daemons[controller.broker_clientid.value] = true
-  const start = async () => {
+  running_daemons[controller.broker_clientid.value] = {
+    controller,
+  }
+  const start = async function() {
     while (true) {
       try {
         await context.dispatch('search_controller', {id: controller.broker_clientid.value})
@@ -328,51 +331,54 @@ const start_controller_daemon = (context, controller) => {
 
     context.dispatch('set_controller_param', {id: controller.broker_clientid.value, key: 'time', value: parseInt(new Date().getTime() / 1000)}) 
 
-    for (let i in controller.leds) {
-      for (let j in controller.leds[i]) {
-        //if (!controller.leds[i][j].loaded) {
-          context.dispatch('load_led_param', {id: controller.broker_clientid.value, i, key: j}) 
-        //}
-      }
-    }
-    for (let i in controller.boxes) {
-      for (let j in controller.boxes[i]) {
-        if (!controller.boxes[i][j].loaded) {
-          context.dispatch('load_box_param', {id: controller.broker_clientid.value, i, key: j}) 
-        }
-      }
-    }
-    for (let i in controller) {
-      if (typeof controller[i].value !== 'undefined'/* && !controller[i].loaded*/) {
-        context.dispatch('load_controller_param', {id: controller.broker_clientid.value, key: i}) 
-      }
-    }
-    for (let i in controller.i2c) {
-      for (let j in controller.i2c[i]) {
-        if (!controller.i2c[i][j].loaded) {
-          context.dispatch('load_i2c_param', {id: controller.broker_clientid.value, i, key: j}) 
+    const load_all = async function (name, items) {
+      for (let i in items) {
+        for (let j in items[i]) {
+          if (typeof items[i][j].value !== 'undefined') {
+            try {
+              await context.dispatch(`load_${name}_param`, {id: controller.broker_clientid.value, i, key: j}) 
+            } catch(e) {
+              console.log(e)
+            }
+          }
         }
       }
     }
 
-    setInterval(async () => {
+    await Promise.all([
+      load_all('led', controller.leds),
+      load_all('box', controller.boxes),
+      load_all('controller', [controller]),
+      load_all('i2c', controller.i2c),
+    ])
+
+    running_daemons[controller.broker_clientid.value].search_interval = setInterval(async () => {
       try {
         await context.dispatch('search_controller', {id: controller.broker_clientid.value})
       } catch(e) {
         console.log(e)
       }
     }, 60 * 1000)
-    setInterval(() => {
+    running_daemons[controller.broker_clientid.value].reload_interval = setInterval(() => {
       if (controller.found == false) return
       context.dispatch('load_controller_param', {id: controller.broker_clientid.value, key: 'time'}) 
       for (let i in controller.boxes) {
-        context.dispatch('load_box_param', {id: controller.broker_clientid.value, i, key: 'sht21_temp_f'}) 
-        context.dispatch('load_box_param', {id: controller.broker_clientid.value, i, key: 'sht21_temp_c'}) 
-        context.dispatch('load_box_param', {id: controller.broker_clientid.value, i, key: 'sht21_humi'}) 
+        (async function () {
+          await context.dispatch('load_box_param', {id: controller.broker_clientid.value, i, key: 'timer_output'}) 
+          await context.dispatch('load_box_param', {id: controller.broker_clientid.value, i, key: 'sht21_temp_f'}) 
+          await context.dispatch('load_box_param', {id: controller.broker_clientid.value, i, key: 'sht21_temp_c'}) 
+          await context.dispatch('load_box_param', {id: controller.broker_clientid.value, i, key: 'sht21_humi'}) 
+        })()
       }
     }, 5 * 60 * 1000)
   }
   start()
+}
+
+const stop_controller_daemon = (controllerId) => {
+  clearInterval(running_daemons[controllerId].search_interval)
+  clearInterval(running_daemons[controllerId].reload_interval)
+  delete running_daemons[controllerId]
 }
 
 const ble_device = async (context, device) => {
