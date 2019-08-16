@@ -18,30 +18,27 @@
 
 <template>
   <section :id='$style.container'>
-    <section :id='$style.menu'>
-      <h1 :id='$style.title'>Settings {{ controller.device_name.value }}</h1>
-      <nuxt-link :id='$style.close' :to='`/controller/${controller.broker_clientid.value}/0`'></nuxt-link>
-    </section>
-    <Wifi />
-    <Leds />
-    <Motors />
-    <Advanced />
+    <Title title='MOTOR CONFIG' icon='light-black.svg' />
+    <div :id='$style.body'>
+      <div v-for='b, i in controller.boxes' :key='i'>
+        <h1>Motor #{{ i+1 }}</h1>
+        <MotorFrequency :boxId='i' />
+      </div>
+    </div>
   </section>
 </template>
 
 <script>
-import Wifi from '~/components/wifi.vue'
-import Leds from '~/components/leds.vue'
-import Motors from '~/components/motors.vue'
-import Advanced from '~/components/advanced.vue'
+import Title from '~/components/settings-title.vue'
+import MotorFrequency from '~/components/motor-frequency.vue'
 
 export default {
-  components: {Wifi, Leds, Motors, Advanced,},
+  components: {Title, MotorFrequency,},
   computed: {
     controller() {
       return this.$store.getters['controllers/getSelected']
     },
-  }
+  },
 }
 </script>
 
@@ -49,44 +46,42 @@ export default {
 
 #container
   display: flex
-  position: relative
   flex-direction: column
-  width: 100%
-  max-width: 700pt
-  background-color: white
-  @media screen and (max-width: 600px)
-    padding-top: 60pt
+  padding: 0 10pt
 
-#menu
+#body
   display: flex
-  align-items: center
-  padding-right: 10pt
-  z-index: 1000
-  background-color: white
-  @media screen and (max-width: 600px)
-    font-size: 0.7em
-    top: 0
-    left: 0
-    width: 100vw
-    position: fixed
-    padding-top: 15pt
-
-#title
-  flex: 1
-  margin-left: 20pt
+  justify-content: space-around
+  flex-wrap: wrap
+  padding: 10pt 25pt
   color: #717171
 
-#close
-  display: block
-  justify-self: flex-end
-  width: 19pt
-  height: 19pt
-  margin: 5pt
-  background-image: url('~assets/img/close-black.svg')
-  background-position: center
-  background-size: contain
-  background-repeat: no-repeat
-  cursor: pointer
-  z-index: 1001
+.button
+  display: flex
+  align-items: center
+  justify-content: center
+  padding: 10pt 25pt
+  background-color: #3BB30B
+  height: 23pt
+  color: white
+  text-decoration: none
+  border-radius: 3pt
+  @media screen and (max-width: 600px)
+    margin: 10pt 0
+
+.button:hover
+  background-color: #4BC30B
+
+.button:active
+  background-color: #2BA30B
+
+.red
+  background-color: #D04949
+  
+.red:hover
+  background-color: #D05959
+
+.red:active
+  background-color: #2BA30B
 
 </style>
