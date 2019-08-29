@@ -5,7 +5,7 @@
     gradientfrom='#3F44B9'
     gradientto='#CEC946'>
     <section :id='$style.current'>
-      Current timer settings: &nbsp;<span :id='$style.currenthours'>{{ on_hour }}:{{ pad(on_min) }} - {{ off_hour }}:{{ pad(off_min) }}</span>
+      Current timer settings: &nbsp;<span :id='$style.currenthours'>{{ on_hour }}:{{ pad(on_min) }} - {{ off_hour }}:{{ pad(off_min) }} UTC</span>
     </section>
     <section :id='$style.container'>
       <BoxSubSection 
