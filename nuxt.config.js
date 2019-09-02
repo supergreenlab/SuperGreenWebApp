@@ -13,6 +13,7 @@ export default {
       { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
       { hid: 'description', name: 'description', content: pkg.description },
       { name: "apple-mobile-web-app-capable", content:"yes" },
+      //{ 'http-equiv': 'Content-Security-Policy', content: "default-src *; style-src * 'self' 'unsafe-inline' 'unsafe-eval'; script-src * 'self' 'unsafe-inline' 'unsafe-eval';" },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.png' }
@@ -21,7 +22,7 @@ export default {
       { src: 'cordova.js', ssr: false },
     ],
   },
-	dev: process.env.NODE_ENV === 'DEV',
+  dev: process.env.NODE_ENV === 'DEV',
 
   /*
   ** Customize the progress-bar color
@@ -32,7 +33,7 @@ export default {
   ** Global CSS
   */
   css: [
-		'@/assets/css/global.css'
+    '@/assets/css/global.css'
   ],
 
   /*

@@ -28,6 +28,7 @@
       <Loading width='150pt' v-else-if='page == "WAIT_BLE_WIFI_STATUS"' label='Detecting config change' />
       <Loading width='150pt' v-else-if='page == "WAIT_BLE_WIFI_STATUS_BACK_ON"' label='Change detected' />
       <Loading width='150pt' v-else-if='page == "WAIT_WIFI_SWITCH"' label='Waiting 10s for you mobile to go back to its wifi' />
+      <WifiFailed v-else-if='page == "PARAM_FAILED"' :retype='retype' :connect='retype'  />
       <WifiFailed v-else-if='page == "FAILED"' :retype='retype' :connect='search'  />
       <WifiSuccess v-else-if='page == "SUCCESS"' :retype='retype' />
     </div>
@@ -89,7 +90,7 @@ export default {
         try {
           await this.$store.dispatch('controllers/set_controller_param', {id: controller.broker_clientid.value, key: 'wifi_ssid', value: this.$data.ssid}) 
         } catch(e) {
-          this.$data.page = 'FORM'
+          this.$data.page = 'PARAM_FAILED'
           console.log('set_wifi_ssid', e)
           return
         }

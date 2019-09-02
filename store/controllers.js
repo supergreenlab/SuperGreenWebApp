@@ -299,11 +299,13 @@ const zeroconf_discovery = async function (name) {
   return new Promise((resolve, reject) => {
     const cancel = setTimeout(() => {
       window.cordova.plugins.zeroconf.unwatch('_http._tcp.', 'local.')
+      console.log('zeroconf not found: ', name)
       reject()
-    }, 20000)
+    }, 30000)
     window.cordova.plugins.zeroconf.watch('_http._tcp.', 'local.', function({action, service}) {
       console.log('zeroconf', action, service, name)
       if (action == 'resolved' && service.name.toLowerCase() == name.replace('.local', '').toLowerCase()) {
+        console.log('zeroconf found: ', service)
         resolve(service.ipv4Addresses[0])
         window.cordova.plugins.zeroconf.unwatch('_http._tcp.', 'local.')
         clearTimeout(cancel)
@@ -492,7 +494,12 @@ export const actions = {
     context.commit('start_search_new_controller')
 
     if (!is_ip(url) && context.state.has_mobile_zeroconf) {
-      url = await zeroconf_discovery(url)
+      try {
+        url = await zeroconf_discovery(url)
+      } catch(e) {
+        context.commit('end_search_new_controller', {controller: null, error: 'No controller found'})
+        return
+      }
     } else {
       if ((url = await wait_for_controller(url, () => context.commit('search_try'))) == false) {
         context.commit('end_search_new_controller', {controller: null, error: 'No controller found'})
