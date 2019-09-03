@@ -295,8 +295,15 @@ const wait_for_controller = async function (url, onTry) {
   return false
 }
 
+const zeroconf_cache = []
 const zeroconf_discovery = async function (name) {
   return new Promise((resolve, reject) => {
+    const cache = zeroconf_cache.find(z => z.name.toLowerCase() == name.replace('.local', '').toLowerCase())
+    if (cache) {
+      console.log('found in cache: ', cache)
+      resolve(cache.ipv4Addresses[0])
+      return
+    }
     const cancel = setTimeout(() => {
       window.cordova.plugins.zeroconf.unwatch('_http._tcp.', 'local.')
       console.log('zeroconf not found: ', name)
@@ -306,6 +313,7 @@ const zeroconf_discovery = async function (name) {
       console.log('zeroconf', action, service, name)
       if (action == 'resolved' && service.name.toLowerCase() == name.replace('.local', '').toLowerCase()) {
         console.log('zeroconf found: ', service)
+        zeroconf_cache.push(service);
         resolve(service.ipv4Addresses[0])
         window.cordova.plugins.zeroconf.unwatch('_http._tcp.', 'local.')
         clearTimeout(cancel)
