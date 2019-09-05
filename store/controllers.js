@@ -84,6 +84,7 @@ const controller_from_config = (config) => {
     i2c: [],
     leds: [],
     boxes: [],
+    motors: [],
   }
   for (let i in config.keys) {
     const key = config.keys[i]
@@ -97,6 +98,11 @@ const controller_from_config = (config) => {
         controller_defaults.boxes[key.box.index] = {}
       }
       controller_defaults.boxes[key.box.index][key.box.param] = new_loadable_key(key)
+    } else if (key.motor) {
+      if (!controller_defaults.motors[key.motor.index]) {
+        controller_defaults.motors[key.motor.index] = {}
+      }
+      controller_defaults.motors[key.motor.index][key.motor.param] = new_loadable_key(key)
     } else if (key.i2c) {
       if (!controller_defaults.i2c[key.i2c.index]) {
         controller_defaults.i2c[key.i2c.index] = {}
@@ -612,6 +618,18 @@ export const actions = {
       throw(e)
     }
   },
+  async load_motor_param(context, { id, i, key }) {
+    const controller = getById(context.state, id),
+          config = controller.motors[i][key].config_key
+    context.commit('loading_motor_param', {id, i, key})
+    try {
+      let { data: value } = await controller_chain(id)(async () => axios.get(`http://${controller.wifi_ip.value}/${config.integer ? 'i' : 's'}?k=MOTOR${i}_${key.toUpperCase()}`, {timeout: 5000}))
+      context.commit('loaded_motor_param', {id, i, key, value: config.integer ? parseInt(value) : value})
+    } catch(e) {
+      context.commit('loaded_motor_param', {id, i, key, error: e})
+      throw(e)
+    }
+  },
   async load_led_param(context, { id, i, key }) {
     const controller = getById(context.state, id),
           config = controller.leds[i][key].config_key
@@ -662,6 +680,23 @@ export const actions = {
       await context.dispatch('load_box_param', {id, i, key})
     } catch(e) {
       context.commit('loaded_box_param', {id, i, key, error: e})
+      throw(e)
+    }
+  },
+  async set_motor_param(context, { id, i, key, value }) {
+    const controller = getById(context.state, id),
+          config = controller.motors[i][key].config_key
+    context.commit('loading_motor_param', {id, i, key})
+    try {
+      if (key.indexOf('hour') !== -1) {
+        value = (value + new Date().getTimezoneOffset()/60) % 24
+        value = value < 0 ? value + 24 : value
+      }
+
+      await controller_chain(id)(async () => await axios.post(`http://${controller.wifi_ip.value}/${config.integer ? 'i' : 's'}?k=MOTOR_${i}_${key.toUpperCase()}&v=${value}`, '', {timeout: 5000}))
+      await context.dispatch('load_motor_param', {id, i, key})
+    } catch(e) {
+      context.commit('loaded_motor_param', {id, i, key, error: e})
       throw(e)
     }
   },

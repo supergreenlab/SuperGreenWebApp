@@ -20,7 +20,7 @@
   <section :id='$style.container'>
     <Input label='Frequency' name='frequency' v-model='freq' />
     <a href='javascript:void(0)' :class='`${$style.button} ${!this.valid ? $style.invalid : ""}`' @click='setBlowerFrequency'>OK</a>
-    <Loading width='100pt' height='30pt' v-if='this.controller.motors[this.$props.motorId].frequency.loading' />
+    <Loading width='100pt' height='30pt' v-if='this.controller.boxes[this.$props.boxId].blower_frequency.loading' />
   </section>
 </template>
 
@@ -30,14 +30,14 @@ import Loading from '~/components/loading'
 
 export default {
   components: {Input, Loading,},
-  props: ['motorId'],
+  props: ['boxId'],
   data() {
     return {
       freq: '',
     }
   },
   mounted() {
-    this.$data.freq = this.controller.motors[this.$props.motorId].frequency.value
+    this.$data.freq = this.controller.boxes[this.$props.boxId].blower_frequency.value
   },
   computed: {
     controller() {
@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     setBlowerFrequency() {
-      this.$store.dispatch('controllers/set_motor_param', {id: this.controller.broker_clientid.value, i: this.$props.motorId, key: 'frequency', value: this.$data.freq}) 
+      this.$store.dispatch('controllers/set_box_param', {id: this.controller.broker_clientid.value, i: this.$props.boxId, key: 'blower_frequency', value: this.$data.freq}) 
     }
   },
 }

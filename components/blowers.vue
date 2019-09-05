@@ -18,39 +18,26 @@
 
 <template>
   <section :id='$style.container'>
-    <Input label='Frequency' name='frequency' v-model='freq' />
-    <a href='javascript:void(0)' :class='`${$style.button} ${!this.valid ? $style.invalid : ""}`' @click='setBlowerFrequency'>OK</a>
-    <Loading width='100pt' height='30pt' v-if='this.controller.motors[this.$props.motorId].frequency.loading' />
+    <Title title='MOTOR CONFIG' icon='light-black.svg' />
+    <div :id='$style.body'>
+      <div v-for='b, i in controller.boxes' :key='i'>
+        <h1>Motor #{{ i+1 }}</h1>
+        <MotorFrequency :boxId='i' />
+      </div>
+    </div>
   </section>
 </template>
 
 <script>
-import Input from '~/components/settings-input.vue'
-import Loading from '~/components/loading'
+import Title from '~/components/settings-title.vue'
+import MotorFrequency from '~/components/blower-frequency.vue'
 
 export default {
-  components: {Input, Loading,},
-  props: ['motorId'],
-  data() {
-    return {
-      freq: '',
-    }
-  },
-  mounted() {
-    this.$data.freq = this.controller.motors[this.$props.motorId].frequency.value
-  },
+  components: {Title, MotorFrequency,},
   computed: {
     controller() {
       return this.$store.getters['controllers/getSelected']
     },
-    valid() {
-      return this.$data.freq >= 2 && this.$data.freq <= 40000
-    },
-  },
-  methods: {
-    setBlowerFrequency() {
-      this.$store.dispatch('controllers/set_motor_param', {id: this.controller.broker_clientid.value, i: this.$props.motorId, key: 'frequency', value: this.$data.freq}) 
-    }
   },
 }
 </script>
@@ -60,21 +47,27 @@ export default {
 #container
   display: flex
   flex-direction: column
-  position: relative
-  align-items: flex-end
   padding: 0 10pt
+
+#body
+  display: flex
+  justify-content: space-around
+  flex-wrap: wrap
+  padding: 10pt 25pt
+  color: #717171
 
 .button
   display: flex
   align-items: center
   justify-content: center
-  padding: 0 25pt
+  padding: 10pt 25pt
   background-color: #3BB30B
   height: 23pt
   color: white
   text-decoration: none
   border-radius: 3pt
-  margin: 10pt 0
+  @media screen and (max-width: 600px)
+    margin: 10pt 0
 
 .button:hover
   background-color: #4BC30B
@@ -82,7 +75,13 @@ export default {
 .button:active
   background-color: #2BA30B
 
-.invalid
-  opacity: 0.5
- 
+.red
+  background-color: #D04949
+  
+.red:hover
+  background-color: #D05959
+
+.red:active
+  background-color: #2BA30B
+
 </style>

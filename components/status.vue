@@ -33,7 +33,7 @@ export default {
       return this.$route.params.box
     },
     temperature_status() {
-      const temperature = this.controller.boxes[this.boxid].sht21_temp_c.value
+      const temperature = (this.controller.boxes[this.boxid].temp ? this.controller.boxes[this.boxid].temp : this.controller.boxes[this.boxid].sht21_temp_c).value
       if (temperature > 35)
         return [`${temperature}° - To high`, 'status-temperature-icon-high.svg', true]
       else if (temperature < 18)
@@ -41,7 +41,7 @@ export default {
       return [`${temperature}° - Ok`, 'status-temperature-icon-ok.svg', false]
     },
     humidity_status() {
-      const humidity = this.controller.boxes[this.boxid].sht21_humi.value
+      const humidity = (this.controller.boxes[this.boxid].humi ? this.controller.boxes[this.boxid].humi : this.controller.boxes[this.boxid].sht21_humi).value
       if (humidity > 75)
         return [`${humidity}% - To high`, 'status-humidity-icon-high.svg', true]
       else if (humidity < 20)
@@ -49,8 +49,8 @@ export default {
       return [`${humidity}% - Ok`, 'status-humidity-icon-ok.svg', false]
     },
     co2_status() {
-      if (!this.controller.boxes[this.boxid].arduino_co2) return false
-      const co2 = this.controller.boxes[this.boxid].arduino_co2.value
+      if (!this.controller.boxes[this.boxid].co2) return false
+      const co2 = this.controller.boxes[this.boxid].co2.value
       if (co2 > 1600)
         return [`${co2}ppm - To high`, 'status-co2-icon-high.svg', true]
       else if (co2 < 800)

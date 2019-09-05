@@ -20,9 +20,9 @@
   <section :id='$style.container'>
     <Title title='MOTOR CONFIG' icon='light-black.svg' />
     <div :id='$style.body'>
-      <div v-for='b, i in controller.boxes' :key='i'>
+      <div v-for='b, i in controller.motors' :key='i'>
         <h1>Motor #{{ i+1 }}</h1>
-        <MotorFrequency :boxId='i' />
+        <MotorFrequency :motorId='i' />
       </div>
     </div>
   </section>

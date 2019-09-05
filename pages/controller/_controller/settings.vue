@@ -24,7 +24,8 @@
     </section>
     <Wifi />
     <Leds />
-    <Motors />
+    <Motors v-if='controller.motors' />
+    <Blowers v-else />
     <Advanced />
   </section>
 </template>
@@ -33,11 +34,12 @@
 import Wifi from '~/components/wifi.vue'
 import Leds from '~/components/leds.vue'
 import Motors from '~/components/motors.vue'
+import Blowers from '~/components/blowers.vue'
 import Advanced from '~/components/advanced.vue'
 import Timer from '~/components/timer.vue'
 
 export default {
-  components: {Wifi, Leds, Motors, Advanced, Timer,},
+  components: {Wifi, Leds, Motors, Blowers, Advanced, Timer,},
   computed: {
     controller() {
       return this.$store.getters['controllers/getSelected']
