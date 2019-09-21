@@ -100,7 +100,11 @@ export default {
           .filter((k) => typeof keys[k] == 'string' || typeof keys[k] == 'number')
           .map(async (k) => {
             this.$data.total++
-            await this.$store.dispatch(`controllers/set_${type}_param`, req(k, keys[k]))
+            try {
+              await this.$store.dispatch(`controllers/set_${type}_param`, req(k, keys[k]))
+            } catch(e) {
+              console.log(e)
+            }
             this.$data.done++
           })
 
