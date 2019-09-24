@@ -57,7 +57,7 @@ export default {
       let avg = 0, n = 0
       for (let i in controller.leds) {
         const l = controller.leds[i]
-        if (l.box.value != boxid || l.enabled.value == false) continue
+        if (l.box.value != boxid) continue
         avg += l.dim.value
         ++n
       }
@@ -70,7 +70,7 @@ export default {
             boxid = this.$route.params.box
       for (let i in controller.leds) {
         const l = controller.leds[i]
-        if (l.box.value != boxid || l.enabled.value == false) continue
+        if (l.box.value != boxid) continue
         const value = controller.leds[i].dim.value + v
         this.$store.dispatch('controllers/set_led_param', {id: controller.broker_clientid.value, i, key: 'dim', value: Math.round(value)}) 
       }

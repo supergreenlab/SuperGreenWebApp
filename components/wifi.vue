@@ -71,10 +71,16 @@ export default {
   },
   methods: {
     async connect() {
+      const controller = this.controller
       if (this.$store.state.controllers.has_ble && this.$store.state.controllers.ble_enabled && !this.bleDevices.length && !this.$data.blePrompted) {
         this.$data.page = 'ENABLE_BLE'
         this.$data.blePrompted = true
       } else if (this.$store.state.controllers.has_ble && this.$store.state.controllers.ble_enabled && !this.bleDevices.length) {
+        try {
+          await this.$store.dispatch('controllers/set_controller_param', {id: controller.broker_clientid.value, key: 'ble_enabled', value: 1}) 
+        } catch(e) {
+          console.log('set_ble_enabled', e)
+        }
         this.$store.dispatch('controllers/start_ble_scan')
         this.$data.page = 'WAIT_BLE'
         return
@@ -86,7 +92,6 @@ export default {
           wait_ble = true
         }
         this.$data.page = 'SET_WIFI'
-        const controller = this.controller
         try {
           await this.$store.dispatch('controllers/set_controller_param', {id: controller.broker_clientid.value, key: 'wifi_ssid', value: this.$data.ssid}) 
         } catch(e) {
@@ -117,6 +122,11 @@ export default {
       if (this.bleController) {
         console.log('using ble device')
         ip = this.bleController.params.wifi_ip
+        try {
+          await this.$store.dispatch('controllers/set_controller_param', {id: controller.broker_clientid.value, key: 'ble_enabled', value: 1}) 
+        } catch(e) {
+          console.log('set_ble_enabled', e)
+        }
       }
       try {
         await this.$store.dispatch('controllers/search_controller', {id: controller.broker_clientid.value, ip})
@@ -138,6 +148,7 @@ export default {
         if (this.bleDevices.length == 1) {
           const bleDevice = this.bleDevices[0]
           if (this.$data.page == 'WAIT_BLE' && bleDevice.params.wifi_status && bleDevice.params.wifi_ip) {
+            
             this.connect()
           }
         }

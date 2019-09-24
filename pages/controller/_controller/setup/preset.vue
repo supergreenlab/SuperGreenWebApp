@@ -24,7 +24,7 @@
         Alright now's the time to plug in the lights!<br />
         Press the button below once they're all connected.<br />
         <div v-if='led_test_phase'>Switching <b>{{ led_test_phase }}</b>: {{led_n+1}}/{{controller.leds.length}}</div>
-       <a href='javascript:void(0)' :class='$style.button' @click='testLeds'>Test LEDs</a>
+        <a href='javascript:void(0)' :class='$style.button' @click='testLeds'>Test LEDs</a>
       </div>
       <h1>Preconfiguration</h1>
       <div :class='$style.instruction'>

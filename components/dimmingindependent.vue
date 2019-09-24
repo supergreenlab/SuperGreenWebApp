@@ -59,7 +59,7 @@ export default {
     independentValue() {
       const controller = this.controller,
             boxid = this.$route.params.box
-      return this.controller.leds.filter((l) => l.enabled.value && l.box.value == boxid).reduce((acc, l, i) => `${acc}${acc ? "-":""}${l.dim.value}%`, '')
+      return this.controller.leds.filter((l) => l.box.value == boxid).reduce((acc, l, i) => `${acc}${acc ? "-":""}${l.dim.value}%`, '')
     },
   }
 }

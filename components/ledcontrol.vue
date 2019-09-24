@@ -27,7 +27,6 @@
       <Slider v-model='dim' />
     </div>
     <Loading v-if='loading' width='30pt' height='20pt' />
-    <div v-if='led.enabled.value != 1' :id='$style.disabled'>disabled</div>
   </section>
 </template>
 
@@ -41,7 +40,7 @@ export default {
   computed: {
     loading() {
       const { led } = this.$props
-      return led.enabled.loading || led.dim.loading || led.box.loading
+      return led.dim.loading || led.box.loading
     },
     dim: {
       get() {

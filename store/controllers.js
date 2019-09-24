@@ -401,20 +401,21 @@ const ble_device = async (context, device) => {
   try {
     device = await new Promise((resolve, reject) => { ble.connect(device.id, resolve, reject) })
     context.commit('add_ble_device', Object.assign(device, {params: {}},))
+
     const wifi_status = new DataView(await new Promise((resolve, reject) => {
       ble.read(device.id, '00ff', '5ca36981-9c55-74a5-5415-e16bc1c3fe17', resolve, reject)
-    })).getInt32(0, true)
+    })).getInt8(0, true)
     context.commit('set_ble_device_param', {id: device.id, key: 'wifi_status', value: wifi_status,})
     ble.startNotification(device.id, '00ff', '5ca36981-9c55-74a5-5415-e16bc1c3fe17', (wifi_status) => {
-      context.commit('set_ble_device_param', {id: device.id, key: 'wifi_status', value: new DataView(wifi_status).getInt32(0, true),})
+      context.commit('set_ble_device_param', {id: device.id, key: 'wifi_status', value: new DataView(wifi_status).getInt8(0, true),})
     })
 
     const state = new DataView(await new Promise((resolve, reject) => {
       ble.read(device.id, '00ff', '8ff6dfd2-3bd6-feb4-43ec-de5663122894', resolve, reject)
-    })).getInt32(0, true)
+    })).getInt8(0, true)
     context.commit('set_ble_device_param', {id: device.id, key: 'state', value: state,})
     ble.startNotification(device.id, '00ff', '8ff6dfd2-3bd6-feb4-43ec-de5663122894', (wifi_status) => {
-      context.commit('set_ble_device_param', {id: device.id, key: 'wifi_status', value: new DataView(wifi_status).getInt32(0, true),})
+      context.commit('set_ble_device_param', {id: device.id, key: 'wifi_status', value: new DataView(wifi_status).getInt8(0, true),})
     })
 
     const wifi_ip = new TextDecoder('utf-8').decode(await new Promise((resolve, reject) => {
@@ -488,6 +489,7 @@ export const actions = {
           const timeout = 5,
             timer = setTimeout(resolve, timeout * 1000)
           ble.scan([], timeout, function(device) {
+            console.log(device)
             if (device.name == '🤖🍁' && !getBleById(context.state, device.id)) {
               ble_device(context, device)
             }
