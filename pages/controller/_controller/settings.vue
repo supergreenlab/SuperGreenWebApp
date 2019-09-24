@@ -24,7 +24,7 @@
     </section>
     <Wifi />
     <Leds />
-    <Motors v-if='controller.motors' />
+    <Motors v-if='controller.motors && controller.motors.length' />
     <Blowers v-else />
     <Advanced />
   </section>
