@@ -12,9 +12,9 @@
       <div :class='$style.status'>
         <StatusItem title='Humidity' :value='humidity_status[0]' :icon='humidity_status[1]' :blink='humidity_status[2]' />
       </div>
-      <div :class='$style.status' v-if='co2_status'>
+      <!--<div :class='$style.status' v-if='co2_status'>
         <StatusItem title='CO2' :value='co2_status[0]' :icon='co2_status[1]' :blink='co2_status[2]' />
-      </div>
+      </div>-->
     </div>
   </BoxSubSection>
 </template>

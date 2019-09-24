@@ -42,7 +42,7 @@
         icon='subsection-monitoring-temperature.svg'
         title='Temperature'
         :graphid='`temp.${controller.broker_clientid.value}.${boxid}`'
-        :url='`http://metrics.supergreenlab.com?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_SHT21_TEMP_C&t=72&n=50`'
+        :url='`http://metrics.supergreenlab.com?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_${temp_metric}&t=72&n=50`'
         color='#3bb30b'
         :min=10
         :max=40
@@ -54,7 +54,7 @@
         icon='subsection-monitoring-humidity.svg'
         title='Humidity'
         :graphid='`humi.${controller.broker_clientid.value}.${boxid}`'
-        :url='`http://metrics.supergreenlab.com?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_SHT21_HUMI&t=72&n=50`'
+        :url='`http://metrics.supergreenlab.com?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_${humi_metric}&t=72&n=50`'
         color='#0b81b3'
         :min=0
         :max=100
@@ -62,7 +62,7 @@
         expander='expander-blue.svg'
         :sizeChanged='sizeChanged'
         :mounted='updateHeights'/>
-      <GraphSubSection
+      <!--<GraphSubSection
         icon='subsection-monitoring-co2.svg'
         title='CO2'
         :graphid='`co2.${controller.broker_clientid.value}.${boxid}`'
@@ -73,7 +73,7 @@
         suffix='ppm'
         expander='expander-yellow.svg'
         :sizeChanged='sizeChanged'
-        :mounted='updateHeights'/>
+        :mounted='updateHeights'/>-->
     </div>
     <BoxSectionExpander @click='toggleExpand' :expanded='expanded' ref='expander' />
   </BoxSection>
@@ -118,6 +118,12 @@ export default {
     },
     boxid() {
       return this.$route.params.box
+    },
+    temp_metric() {
+      return this.controller.boxes[this.boxid].temp ? "TEMP" : "SHT21_TEMP_C"
+    },
+    humi_metric() {
+      return this.controller.boxes[this.boxid].humi ? "HUMI" : "SHT21_HUMI"
     },
   },
 }
