@@ -144,7 +144,6 @@ export default {
   watch: {
     bleDevices: {
       handler() {
-        console.log('bleDevices', this.bleDevices, this.$data.bleId, this.bleController)
         if (this.bleDevices.length == 1) {
           const bleDevice = this.bleDevices[0]
           if (this.$data.page == 'WAIT_BLE' && bleDevice.params.wifi_status && bleDevice.params.wifi_ip) {

@@ -26,6 +26,7 @@
     <Leds />
     <Motors v-if='controller.motors && controller.motors.length' />
     <Blowers v-else />
+    <ConfigUploader />
     <Advanced />
   </section>
 </template>
@@ -36,10 +37,11 @@ import Leds from '~/components/leds.vue'
 import Motors from '~/components/motors.vue'
 import Blowers from '~/components/blowers.vue'
 import Advanced from '~/components/advanced.vue'
+import ConfigUploader from '~/components/configuploader.vue'
 import Timer from '~/components/timer.vue'
 
 export default {
-  components: {Wifi, Leds, Motors, Blowers, Advanced, Timer,},
+  components: {Wifi, Leds, Motors, Blowers, ConfigUploader, Advanced, Timer,},
   computed: {
     controller() {
       return this.$store.getters['controllers/getSelected']
