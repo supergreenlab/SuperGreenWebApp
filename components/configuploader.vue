@@ -77,12 +77,15 @@ export default {
     },
     async upload() {
       const controller = this.controller
+      this.$data.uploading = true
       try {
         await axios.post(`http://${controller.wifi_ip.value}/fs/config.json`, this.config)
         await axios.post(`http://${controller.wifi_ip.value}/fs/app.html`, this.htmlapp)
+        this.$data.uploaded = true
       } catch(e) {
         console.log(e)
       }
+      this.$data.uploading = false
     },
   },
 }

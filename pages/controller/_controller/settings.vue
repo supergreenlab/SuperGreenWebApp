@@ -23,7 +23,7 @@
       <nuxt-link :id='$style.close' :to='`/controller/${controller.broker_clientid.value}/0`'></nuxt-link>
     </section>
     <Wifi />
-    <Leds />
+    <Leds v-if='controller.boxes.length > 1' />
     <Motors v-if='controller.motors && controller.motors.length' />
     <Blowers v-else />
     <ConfigUploader />

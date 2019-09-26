@@ -20,7 +20,7 @@
   <section :id='$style.container'>
     <Title title='LED CONFIG' icon='light-black.svg' />
     <div :id='$style.form'>
-      <div v-for='i in 6' :class='$style.led'>
+      <div v-for='i in controller.leds.length' :class='$style.led'>
         <Led :n='i' />
       </div>
     </div>
@@ -33,6 +33,11 @@ import Led from '~/components/led-box.vue'
 
 export default {
   components: {Title, Led,},
+  computed: {
+    controller() {
+      return this.$store.getters['controllers/getSelected']
+    },
+  }
 }
 </script>
 

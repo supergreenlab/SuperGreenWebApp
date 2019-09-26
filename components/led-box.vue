@@ -23,7 +23,7 @@
     </div>
     <div :id='$style.boxes'>
       Box:
-      <div :class='`${$style.box} ${controller.leds[n-1].box.value == i-1 ? $style.selected : ""}`' v-for='i in 3' @click='setLedBox(i-1)'>
+      <div :class='`${$style.box} ${controller.leds[n-1].box.value == i-1 ? $style.selected : ""}`' v-for='i in controller.boxes.length' @click='setLedBox(i-1)'>
         {{ i }}
       </div>
     </div>
