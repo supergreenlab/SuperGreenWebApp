@@ -303,6 +303,7 @@ const wait_for_controller = async function (url, onTry) {
 
 const zeroconf_cache = []
 const zeroconf_discovery = async function (name) {
+  console.log('zeroconf_discovery', name)
   return new Promise((resolve, reject) => {
     const cache = zeroconf_cache.find(z => z.name.toLowerCase() == name.replace('.local', '').toLowerCase())
     if (cache) {
@@ -317,9 +318,11 @@ const zeroconf_discovery = async function (name) {
     }, 30000)
     window.cordova.plugins.zeroconf.watch('_http._tcp.', 'local.', function({action, service}) {
       console.log('zeroconf', action, service, name)
+      if (action == 'resolved') {
+        zeroconf_cache.push(service);
+      }
       if (action == 'resolved' && service.name.toLowerCase() == name.replace('.local', '').toLowerCase()) {
         console.log('zeroconf found: ', service)
-        zeroconf_cache.push(service);
         resolve(service.ipv4Addresses[0])
         window.cordova.plugins.zeroconf.unwatch('_http._tcp.', 'local.')
         clearTimeout(cancel)
@@ -392,8 +395,8 @@ const start_controller_daemon = (context, controller) => {
 }
 
 const stop_controller_daemon = (controllerId) => {
-  clearInterval(running_daemons[controllerId].search_interval)
-  clearInterval(running_daemons[controllerId].reload_interval)
+  running_daemons[controllerId].search_interval && clearInterval(running_daemons[controllerId].search_interval)
+  running_daemons[controllerId].reload_interval && clearInterval(running_daemons[controllerId].reload_interval)
   delete running_daemons[controllerId]
 }
 

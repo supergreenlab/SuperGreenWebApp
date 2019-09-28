@@ -25,7 +25,7 @@
       <div :id='$style.icon'></div>
       <div :id='$style.form'>
         <h3>Search the controller by it’s name or ip address:</h3>
-        <input v-model='url' type='text' @keydown='enter' placeholder='supergreendriver or 192.168.blah.blah' />
+        <input v-model='url' type='text' @keydown='enter' placeholder='supergreendriver or ip address' />
       </div>
     </section>
     <section :id='$style.nav'>
@@ -56,8 +56,11 @@ export default {
     },
     enter(e) {
       if (e.key == 'Enter') {
-        this.onNext(e)
-        this.$router.push('/new/searching')
+        e.stopPropagation()
+        setTimeout(() => {
+          this.onNext(e)
+          this.$router.push('/new/searching')
+        }, 1)
       }
     },
   }

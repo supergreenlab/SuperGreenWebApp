@@ -18,7 +18,7 @@
 
 <template>
   <section :id='$style.container'>
-    <Title title='MOTOR CONFIG' icon='light-black.svg' />
+    <Title title='CONFIG/ADMIN UPGRADER' icon='light-black.svg' />
     <div :id='$style.body'>
       <div>
         <div><h1>1</h1>Download config from internet</div>
@@ -76,6 +76,7 @@ export default {
       this.$data.downloading = false
     },
     async upload() {
+      if (!this.config || !this.htmlapp) return
       const controller = this.controller
       this.$data.uploading = true
       try {

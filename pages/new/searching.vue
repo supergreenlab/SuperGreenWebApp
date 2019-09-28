@@ -24,8 +24,8 @@
     <section :id='$style.body'>
       <div :id='$style.loading'><Loading width='100pt' height='75pt' /></div>
       <div :id='$style.message'>
-        <h3>Please wait - Finding your controller...</h3>
-        <small>Probing {{ retries }} / 5</small>
+        <h3>Please wait - Searching your controller...</h3>
+        <small v-if='retries'>Probing {{ retries }} / 5</small>
       </div>
     </section>
   </section>
