@@ -664,7 +664,7 @@ export const actions = {
           config = controller[key].config_key
     context.commit('loading_controller_param', {id, key})
     try {
-      await controller_chain(id, n || 3)(async () => await axios.post(`http://${controller.wifi_ip.value}/${config.integer ? 'i' : 's'}?k=${key.toUpperCase()}&v=${value}`, '', {timeout: 5000}))
+      await controller_chain(id, n || 3)(async () => await axios.post(`http://${controller.wifi_ip.value}/${config.integer ? 'i' : 's'}?k=${key.toUpperCase()}&v=${encodeURIComponent(value)}`, '', {timeout: 5000}))
       await context.dispatch('load_controller_param', {id, key})
     } catch(e) {
       context.commit('loaded_controller_param', {id, key, error: e})
@@ -681,7 +681,7 @@ export const actions = {
         value = value < 0 ? value + 24 : value
       }
 
-      await controller_chain(id)(async () => await axios.post(`http://${controller.wifi_ip.value}/${config.integer ? 'i' : 's'}?k=BOX_${i}_${key.toUpperCase()}&v=${value}`, '', {timeout: 5000}))
+      await controller_chain(id)(async () => await axios.post(`http://${controller.wifi_ip.value}/${config.integer ? 'i' : 's'}?k=BOX_${i}_${key.toUpperCase()}&v=${encodeURIComponent(value)}`, '', {timeout: 5000}))
       await context.dispatch('load_box_param', {id, i, key})
     } catch(e) {
       context.commit('loaded_box_param', {id, i, key, error: e})
