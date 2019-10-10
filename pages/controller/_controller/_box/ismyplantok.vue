@@ -50,7 +50,7 @@ export default {
                 formData.append('pic', new Blob([reader.result]), 'pic.png')
                 formData.append('text', 'Hello World!')
                 try {
-                  await axios.post('http://192.168.1.123:3000', formData, {
+                  await axios.post('https://discord.supergreenlab.com', formData, {
                     headers: {
                       'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
                     }
