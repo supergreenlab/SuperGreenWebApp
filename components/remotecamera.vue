@@ -13,7 +13,7 @@
           <div :id='$style.body'>
             <Liveview />
           </div>
-          <a :id='$style.ismyplantok' href=''>Is my plant ok ?</a>
+          <nuxt-link :id='$style.ismyplantok' :to='`/controller/${$route.params.controller}/${$route.params.box}/ismyplantok`'>Is my plant ok ?</nuxt-link>
       </BoxSubSection>
     </div>
     <BoxSectionExpander @click='toggleExpand' :expanded='expanded' ref='expander' />
@@ -36,7 +36,7 @@ export default {
   },
   components: { BoxSection, BoxSubSection, Liveview, BoxSectionExpander, },
   mounted() {
-    this.$data.contentHeight = this.$refs.content.clientHeight
+    this.$data.contentHeight = this.$refs.content.clientHeight + 20
   },
   methods: {
     toggleExpand() {
