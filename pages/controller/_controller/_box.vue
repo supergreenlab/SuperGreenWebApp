@@ -109,6 +109,7 @@ export default {
 
 #body
   display: flex
+  flex: 1
   position: relative
   min-height: 100%
 

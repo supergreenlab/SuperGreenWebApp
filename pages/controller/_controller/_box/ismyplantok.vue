@@ -18,7 +18,19 @@
 
 <template>
   <section :id='$style.container'>
-    <a href='javascript:void(0)' @click='openCamera'>Open camera</a>
+    <div v-if='!file && mobile'>
+      <a href='javascript:void(0)' @click='openCamera'>Open camera</a>
+    </div>
+    <div v-if='!file && !mobile'>
+      <input type='file' @change='fileField' accept='image/*' />
+    </div>
+    <div v-else :id='$style.review'>
+      <div :id='$style.preview' :style='{"background-image": `url(${file})`}'></div>
+      <div :id='$style.form'>
+        <textarea :id='$style.text' v-model='text' ></textarea>
+        <a :id='$style.button' href='javascript:void(0)' @click='upload'>Upload</a>
+      </div>
+    </div>
   </section>
 </template>
 
@@ -26,8 +38,40 @@
 import axios from 'axios'
 
 export default {
+  data() {
+    return {
+      file: null,
+      text: '',
+      mobile: document.URL.indexOf('http://') === -1 && document.URL.indexOf('https://') === -1
+    }
+  },
   components: {},
   methods: {
+    async upload() {
+      const formData = new FormData()
+      formData.append('pic', new Blob([this.$data.file]), 'pic.png')
+      formData.append('text', this.$data.text)
+      try {
+        await axios.post('https://discord.supergreenlab.com', formData, {
+          headers: {
+            'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
+          }
+        })
+      } catch(e) {
+        console.log(e)
+      }
+    },
+    fileField(e) {
+      if (e.target.files && e.target.files[0]) {
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+          this.$data.file = reader.result
+        }
+
+        reader.readAsDataURL(e.target.files[0]);
+      }
+    },
     openCamera() {
       const options = {
         quality: 50,
@@ -46,18 +90,7 @@ export default {
               console.log('file', file)
               const reader = new FileReader()
               reader.onload = async (e) => {
-                const formData = new FormData()
-                formData.append('pic', new Blob([reader.result]), 'pic.png')
-                formData.append('text', 'Hello World!')
-                try {
-                  await axios.post('https://discord.supergreenlab.com', formData, {
-                    headers: {
-                      'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
-                    }
-                  })
-                } catch(e) {
-                  console.log(e)
-                }
+                this.$data.file = reader.result
               }
               reader.readAsArrayBuffer(file)
             }, console.log)
@@ -97,11 +130,52 @@ export default {
   background-color: white
   margin: 0pt 5pt 0 10pt
   max-width: 700pt
-  min-height: 100vh
+  height: 100%
 
   @media screen and (max-width: 600px)
     width: 100vw
     margin: 0pt 0pt 0 0pt
     padding-top: 40pt
+
+#review
+  display: flex
+  flex-direction: column
+  width: 100%
+  height: 100%
+
+#preview
+  flex: 3
+  margin: 10pt
+  background-size: contain
+  background-repeat: no-repeat
+  background-position: center
+
+#form
+  display: flex
+  width: 100%
+  flex: 1
+
+#text
+  flex: 1
+  border: 1px solid #ababab
+  border-radius: 5pt
+  padding: 5pt
+  
+#button
+  display: flex
+  align-items: center
+  justify-content: center
+  padding: 0 5pt
+  background-color: #3BB30B
+  height: 100%
+  color: white
+  text-decoration: none
+  border-radius: 3pt
+
+#button:hover
+  background-color: #4BC30B
+
+#button:active
+  background-color: #2BA30B
 
 </style>
