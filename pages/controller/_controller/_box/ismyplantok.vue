@@ -21,11 +21,11 @@
     <div v-if='!file && mobile'>
       <a href='javascript:void(0)' @click='openCamera'>Open camera</a>
     </div>
-    <div v-if='!file && !mobile'>
+    <div v-else-if='!file && !mobile'>
       <input type='file' @change='fileField' accept='image/*' />
     </div>
-    <div v-else :id='$style.review'>
-      <div :id='$style.preview' :style='{"background-image": `url(${file})`}'></div>
+    <div v-else-if='file' :id='$style.review'>
+      <div :id='$style.preview' :style='{"background-image": `url(${imageUri ? imageUri : file})`}'></div>
       <div :id='$style.form'>
         <textarea :id='$style.text' v-model='text' ></textarea>
         <a :id='$style.button' href='javascript:void(0)' @click='upload'>Upload</a>
@@ -41,6 +41,7 @@ export default {
   data() {
     return {
       file: null,
+      imageUri: null,
       text: '',
       mobile: document.URL.indexOf('http://') === -1 && document.URL.indexOf('https://') === -1,
       uploading: false,
@@ -89,18 +90,19 @@ export default {
       }
       const takePic = () => {
         navigator.camera.getPicture((imageUri) => {
-          window.resolveLocalFileSystemURL(imageUri, function success(fileEntry) {
+          window.resolveLocalFileSystemURL(imageUri, (fileEntry) => {
             console.log("got file: " + fileEntry.fullPath);
             fileEntry.file((file) => {
               console.log('file', file)
               const reader = new FileReader()
               reader.onload = async (e) => {
                 this.$data.file = reader.result
+                this.$data.imageUri = imageUri
               }
               reader.readAsArrayBuffer(file)
             }, console.log)
           }, console.log);
-        }, function cameraError(error) {
+        }, (error) => {
           console.debug("Unable to obtain picture: " + error, "app");
         }, options);
       }
@@ -138,6 +140,7 @@ export default {
   height: 100%
 
   @media screen and (max-width: 600px)
+    height: auto
     width: 100vw
     margin: 0pt 0pt 0 0pt
     padding-top: 40pt
