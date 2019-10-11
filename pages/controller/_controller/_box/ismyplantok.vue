@@ -42,7 +42,9 @@ export default {
     return {
       file: null,
       text: '',
-      mobile: document.URL.indexOf('http://') === -1 && document.URL.indexOf('https://') === -1
+      mobile: document.URL.indexOf('http://') === -1 && document.URL.indexOf('https://') === -1,
+      uploading: false,
+      error: false,
     }
   },
   components: {},
@@ -51,15 +53,18 @@ export default {
       const formData = new FormData()
       formData.append('pic', new Blob([this.$data.file]), 'pic.png')
       formData.append('text', this.$data.text)
+      this.$data.uploading = true
       try {
         await axios.post('https://discord.supergreenlab.com', formData, {
           headers: {
             'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
           }
         })
+        this.$data.file = null
       } catch(e) {
         console.log(e)
       }
+      this.$data.uploading = false
     },
     fileField(e) {
       if (e.target.files && e.target.files[0]) {
