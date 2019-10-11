@@ -18,18 +18,18 @@
 
 <template>
   <section :id='$style.container'>
-    <div v-if='!file && mobile'>
+    <div v-if='file' :id='$style.review'>
+      <div :id='$style.preview' :style='{"background-image": `url(${imageUri ? imageUri : file})`}'></div>
+      <div :id='$style.form'>
+        <textarea :id='$style.text' v-model='text' placeholder='ex: Why does my plant ... ?'></textarea>
+        <a :id='$style.button' href='javascript:void(0)' @click='upload'>Upload</a>
+      </div>
+    </div>
+    <div v-else-if='!file && mobile'>
       <a href='javascript:void(0)' @click='openCamera'>Open camera</a>
     </div>
     <div v-else-if='!file && !mobile'>
       <input type='file' @change='fileField' accept='image/*' />
-    </div>
-    <div v-else-if='file' :id='$style.review'>
-      <div :id='$style.preview' :style='{"background-image": `url(${imageUri ? imageUri : file})`}'></div>
-      <div :id='$style.form'>
-        <textarea :id='$style.text' v-model='text' ></textarea>
-        <a :id='$style.button' href='javascript:void(0)' @click='upload'>Upload</a>
-      </div>
     </div>
   </section>
 </template>
