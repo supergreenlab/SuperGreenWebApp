@@ -19,25 +19,35 @@
 <template>
   <section :id='$style.container'>
     <div v-if='file' :id='$style.review'>
-      <div :id='$style.preview' :style='{"background-image": `url(${imageUri ? imageUri : file})`}'></div>
+      <div v-if='error' :id='$style.error'>Oops.. upload failed</div>
       <div :id='$style.form'>
         <textarea :id='$style.text' v-model='text' placeholder='ex: Why does my plant ... ?'></textarea>
         <a :id='$style.button' href='javascript:void(0)' @click='upload'>Upload</a>
+        <Loading v-if='uploading' width='150pt' :label='`Uploading, please wait.. ${uploadPercentage}%`' />
       </div>
+      <div :id='$style.preview' :style='{"background-image": `url(${imageUri ? imageUri : file})`}'></div>
     </div>
-    <div v-else-if='!file && mobile'>
-      <a href='javascript:void(0)' @click='openCamera'>Open camera</a>
-    </div>
-    <div v-else-if='!file && !mobile'>
-      <input type='file' @change='fileField' accept='image/*' />
+    <div :id='$style.intro' v-else-if='!file'>
+      <div :id='$style.explain'>
+        <div :id='$style.towelie'></div>
+        <div :id='$style.explaintext'>
+          <b>Hey man, got questions about your plant or grow box setup?</b><br/><br />
+          Take a pic, write your question and the community will answer.<br />
+          Make sure to check the responses on the discord channel <b>#is-my-plant-ok</b>
+        </div>
+      </div>
+      <a v-if='mobile' href='javascript:void(0)' @click='openCamera'>Open camera</a>
+      <input v-else type='file' @change='fileField' accept='image/*' />
     </div>
   </section>
 </template>
 
 <script>
 import axios from 'axios'
+import Loading from '~/components/loading.vue'
 
 export default {
+  components: {Loading, },
   data() {
     return {
       file: null,
@@ -46,9 +56,9 @@ export default {
       mobile: document.URL.indexOf('http://') === -1 && document.URL.indexOf('https://') === -1,
       uploading: false,
       error: false,
+      uploadPercentage: 0,
     }
   },
-  components: {},
   methods: {
     async upload() {
       const formData = new FormData()
@@ -59,10 +69,14 @@ export default {
         await axios.post('https://discord.supergreenlab.com', formData, {
           headers: {
             'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
-          }
+          },
+          onUploadProgress: ( progressEvent ) => {
+            this.$data.uploadPercentage = parseInt( Math.round( ( progressEvent.loaded * 100 ) / progressEvent.total ) );
+          },
         })
         this.$data.file = null
       } catch(e) {
+        this.$data.error = true
         console.log(e)
       }
       this.$data.uploading = false
@@ -142,7 +156,7 @@ export default {
   @media screen and (max-width: 600px)
     height: auto
     width: 100vw
-    margin: 0pt 0pt 0 0pt
+    margin: 15pt 0pt 0 0pt
     padding-top: 40pt
 
 #review
@@ -162,6 +176,7 @@ export default {
   display: flex
   width: 100%
   flex: 1
+  position: relative
 
 #text
   flex: 1
@@ -185,5 +200,39 @@ export default {
 
 #button:active
   background-color: #2BA30B
+
+#error
+  color: red
+
+#intro
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  margin: 0 0 20pt 0
+
+#explain
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  margin: 20pt
+  padding: 20pt
+  background-color: #efefef
+  border-radius: 5pt
+
+#explaintext
+  text-align: center
+
+#towelie
+  width: 100pt
+  height: 100pt
+  margin: 10pt
+  border-radius: 50pt
+  background-color: white
+  background-image: url('~assets/img/towelie.png')
+  background-size: contain
+  background-repeat: no-repeat
+  background-position: center
 
 </style>
