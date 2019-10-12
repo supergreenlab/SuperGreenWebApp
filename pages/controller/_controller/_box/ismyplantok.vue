@@ -37,7 +37,7 @@
           Make sure to check the responses on the discord channel <b>#is-my-plant-ok</b>
         </div>
       </div>
-      <a v-if='mobile' href='javascript:void(0)' @click='openCamera'>Open camera</a>
+      <a v-if='mobile' :id='$style.button' :class='$style.widebutton' href='javascript:void(0)' @click='openCamera'>Open camera</a>
       <input v-else type='file' @change='fileField' accept='image/*' />
     </div>
   </section>
@@ -198,6 +198,11 @@ export default {
   color: white
   text-decoration: none
   border-radius: 3pt
+
+.widebutton
+  font-size: 1.2em
+  font-weight: 600
+  padding: 10pt 40pt !important
 
 #button:hover
   background-color: #4BC30B
