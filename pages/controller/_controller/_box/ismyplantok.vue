@@ -28,6 +28,7 @@
       <div :id='$style.preview' :style='{"background-image": `url(${imageUri ? imageUri : file})`}'></div>
     </div>
     <div :id='$style.intro' v-else-if='!file'>
+      <div :id='$style.success' v-if='success'><h3>Uploaded successfully</h3></div>
       <div :id='$style.explain'>
         <div :id='$style.towelie'></div>
         <div :id='$style.explaintext'>
@@ -56,6 +57,7 @@ export default {
       mobile: document.URL.indexOf('http://') === -1 && document.URL.indexOf('https://') === -1,
       uploading: false,
       error: false,
+      success: false,
       uploadPercentage: 0,
     }
   },
@@ -75,6 +77,7 @@ export default {
           },
         })
         this.$data.file = null
+        this.$data.success = true
       } catch(e) {
         this.$data.error = true
         console.log(e)
@@ -93,6 +96,7 @@ export default {
       }
     },
     openCamera() {
+      this.$data.success = false
       const options = {
         quality: 50,
         destinationType: Camera.DestinationType.FILE_URI,
@@ -203,6 +207,9 @@ export default {
 
 #error
   color: red
+
+#success
+  color: green
 
 #intro
   display: flex
