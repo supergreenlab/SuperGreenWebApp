@@ -21,7 +21,7 @@
     <div :id='$style.header' :style='headerstyle'>
       <img :src='require(`~/assets/img/${icon}`)' />
       <h3 :style='{color: (dark ? "#676767" : ""), "text-decoration": (linkto ? "underline" : "none")}'>{{ title }}</h3>
-      <a v-if='link && linkurl' :href='linkurl' target='_system'>{{ link }}</a>
+      <a v-if='link && linkurl' href='javascript:void(0)' @click='linkUrl'>{{ link }}</a>
     </div>
     <div :id='$style.body' :style='{height}'>
       <slot></slot>
@@ -49,7 +49,10 @@ export default {
     linkTo() {
       if (!this.$props.linkto) return
       this.$router.push(this.$props.linkto)
-    }
+    },
+    linkUrl() {
+      window.open(this.$props.linkurl, "_system")
+    },
   }
 }
 
