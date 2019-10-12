@@ -17,10 +17,10 @@
  -->
 
 <template>
-  <section :id='$style.container'>
+  <section :id='$style.container' @click='linkTo' :style='{cursor: (linkto ? "pointer" : "auto")}'>
     <div :id='$style.header' :style='headerstyle'>
       <img :src='require(`~/assets/img/${icon}`)' />
-      <h3 :style='{color: (dark ? "#676767" : "")}'>{{ title }}</h3>
+      <h3 :style='{color: (dark ? "#676767" : ""), "text-decoration": (linkto ? "underline" : "none")}'>{{ title }}</h3>
       <a v-if='link && linkurl' :href='linkurl' target='_blank'>{{ link }}</a>
     </div>
     <div :id='$style.body' :style='{height}'>
@@ -32,7 +32,7 @@
 <script>
 
 export default {
-  props: ['icon', 'title', 'link', 'linkurl', 'color', 'gradientfrom', 'gradientto', 'dark', 'height',],
+  props: ['icon', 'title', 'link', 'linkurl', 'linkto', 'color', 'gradientfrom', 'gradientto', 'dark', 'height',],
   computed: {
     headerstyle() {
       const {
@@ -45,6 +45,12 @@ export default {
       }
     },
   },
+  methods: {
+    linkTo() {
+      if (!this.$props.linkto) return
+      this.$router.push(this.$props.linkto)
+    }
+  }
 }
 
 </script>
@@ -67,9 +73,11 @@ export default {
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25)
 
 #header > img
+  background-color: white
   margin-right: 10pt
   width: 35px
   height: 35px
+  border-radius: 17.5px
 
 #header > a
   position: absolute
