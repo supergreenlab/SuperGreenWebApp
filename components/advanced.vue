@@ -42,7 +42,7 @@ export default {
       this.$router.replace('/')
     },
     openAdmin() {
-      window.open(`http://${this.controller.wifi_ip.value}/fs/app.html`)
+      window.open(`http://${this.controller.wifi_ip.value}/fs/app.html`, '_system')
     },
   },
 }

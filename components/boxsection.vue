@@ -21,7 +21,7 @@
     <div :id='$style.header' :style='headerstyle'>
       <img :src='require(`~/assets/img/${icon}`)' />
       <h3 :style='{color: (dark ? "#676767" : ""), "text-decoration": (linkto ? "underline" : "none")}'>{{ title }}</h3>
-      <a v-if='link && linkurl' :href='linkurl' target='_blank'>{{ link }}</a>
+      <a v-if='link && linkurl' :href='linkurl' target='_system'>{{ link }}</a>
     </div>
     <div :id='$style.body' :style='{height}'>
       <slot></slot>
