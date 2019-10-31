@@ -17,15 +17,6 @@
           <Loading v-if='loading' width='50pt' height='30pt' />
         </div>
       </BoxSubSection>
-      <BoxSubSection 
-        icon='subsection-nightday-shift.svg'
-        title='Night/Day shift'>
-        <div :class='$style.body'>
-          <ScheduleButtons :title='`${schedule_for(timespan, true).on_hour}h - ${this.schedule_for(timespan, true).off_hour}h`' icon='button-nightday-dayshift.svg' subtitle='Day' color='#CEC946' :selected='on_hour < off_hour' @click='day' />
-          <ScheduleButtons :title='`${schedule_for(timespan, false).on_hour}h - ${this.schedule_for(timespan, false).off_hour}h`' icon='button-nightday-nightshift.svg' subtitle='Night' color='#3F44B9' :selected='on_hour > off_hour' @click='night' />
-          <Loading v-if='loading' width='50pt' height='30pt' />
-        </div>
-      </BoxSubSection>
     </section>
   </BoxSection>
 </template>
@@ -77,23 +68,26 @@ export default {
     },
   },
   methods: {
-    schedule_for(v,day) {
+    schedule_for(v) {
       const controller = this.controller,
             boxid = this.$route.params.box,
             on_hour = controller.boxes[boxid].on_hour.value,
             off_hour = controller.boxes[boxid].off_hour.value
+      const middayh = this.$store.state.settings.middayh
 
       v = typeof v !== 'undefined' ? v : this.timespan
-      day = typeof day !== 'undefined' ? day : on_hour < off_hour
+      const onh = middayh - v/2,
+            offh = middayh + v/2
+      console.log(onh, ' ', offh)
       return {
-        on_hour: day ? 12 - v/2 : 24 - v/2,
-        off_hour: day ? 12 + v/2 : v/2,
+        on_hour: onh < 0 ? 24 + onh : onh,
+        off_hour: offh > 24 ? offh % 24 : offh,
       }
     },
     schedule(v, day) {
       const controller = this.controller,
             boxid = this.$route.params.box,
-            sc = this.schedule_for(v, day)
+            sc = this.schedule_for(v)
       this.$store.dispatch('controllers/set_box_param', {id: controller.broker_clientid.value, i: boxid, key: 'on_hour', value: sc.on_hour}) 
       this.$store.dispatch('controllers/set_box_param', {id: controller.broker_clientid.value, i: boxid, key: 'on_min', value: 0}) 
       this.$store.dispatch('controllers/set_box_param', {id: controller.broker_clientid.value, i: boxid, key: 'off_hour', value: sc.off_hour}) 
@@ -112,12 +106,6 @@ export default {
             on_hour = controller.boxes[boxid].on_hour.value,
             off_hour = controller.boxes[boxid].off_hour.value
       this.schedule(12)
-    },
-    day() {
-      this.schedule(this.timespan, true)
-    },
-    night() {
-      this.schedule(this.timespan, false)
     },
     pad(v) {
       return ('0' + v).substr(-2)

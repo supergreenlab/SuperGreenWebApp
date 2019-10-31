@@ -18,7 +18,7 @@
 
 <template>
   <section :id='$style.container'>
-    <Title title='CONFIG/ADMIN UPGRADER' icon='light-black.svg' />
+    <Title title='CONFIG/ADMIN UPGRADER' icon='upgrade.svg' />
     <div :id='$style.body'>
       <div>
         <div><h1>1</h1>Download config from internet</div>

@@ -18,7 +18,7 @@
 
 <template>
   <section :id='$style.container'>
-    <Title title='MOTOR CONFIG' icon='light-black.svg' />
+    <Title title='MOTOR CONFIG' icon='motor.svg' />
     <div :id='$style.body'>
       <div v-for='b, i in controller.motors' :key='i'>
         <h1>Motor #{{ i+1 }}</h1>

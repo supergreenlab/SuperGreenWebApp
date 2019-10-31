@@ -23,6 +23,11 @@
 import StatusItem from '~/components/statusitem.vue'
 import BoxSubSection from '~/components/boxsubsection.vue'
 
+const convertTemp = (unit, temp) => {
+  if (unit == 'metric') return temp
+  return (temp * 9/5) + 32
+}
+
 export default {
   components: { StatusItem, BoxSubSection, },
   computed: {
@@ -33,12 +38,13 @@ export default {
       return this.$route.params.box
     },
     temperature_status() {
+      const unit = this.$store.state.settings.unit
       const temperature = (this.controller.boxes[this.boxid].temp ? this.controller.boxes[this.boxid].temp : this.controller.boxes[this.boxid].sht21_temp_c).value
       if (temperature > 35)
-        return [`${temperature}° - To high`, 'status-temperature-icon-high.svg', true]
+        return [`${convertTemp(unit, temperature)}${unit == 'metric' ? '°' : 'F'} - To high`, 'status-temperature-icon-high.svg', true]
       else if (temperature < 18)
-        return [`${temperature}° - To low`, 'status-temperature-icon-low.svg', true]
-      return [`${temperature}° - Ok`, 'status-temperature-icon-ok.svg', false]
+        return [`${convertTemp(unit, temperature)}${unit == 'metric' ? '°' : 'F'} - To low`, 'status-temperature-icon-low.svg', true]
+      return [`${convertTemp(unit, temperature)}${unit == 'metric' ? '°' : 'F'} - Ok`, 'status-temperature-icon-ok.svg', false]
     },
     humidity_status() {
       const humidity = (this.controller.boxes[this.boxid].humi ? this.controller.boxes[this.boxid].humi : this.controller.boxes[this.boxid].sht21_humi).value

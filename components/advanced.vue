@@ -18,7 +18,7 @@
 
 <template>
   <section :id='$style.container'>
-    <Title title='ADVANCED MENU' icon='light-black.svg' />
+    <Title title='ADVANCED MENU' icon='advanced.svg' />
     <div :id='$style.body'>
       <a href='javascript:void(0)' :class='$style.button' @click='openAdmin'>Access admin interface</a>
       <a href='javascript:void(0)' :class='`${$style.button} ${$style.red}`' @click='deleteController'>Remove this controller</a>

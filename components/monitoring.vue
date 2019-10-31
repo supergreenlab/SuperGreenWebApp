@@ -37,7 +37,8 @@
         suffix='%'
         expander='expander-yellow.svg'
         :sizeChanged='sizeChanged'
-        :mounted='updateHeights'/>
+        :mounted='updateHeights'
+        :convertFn='v => v'/>
       <GraphSubSection
         icon='subsection-monitoring-temperature.svg'
         title='Temperature'
@@ -46,10 +47,11 @@
         color='#3bb30b'
         :min=10
         :max=40
-        suffix='°'
+        :suffix='unit == "metric" ? "°" : "F"'
         expander='expander-green.svg'
         :sizeChanged='sizeChanged'
-        :mounted='updateHeights'/>
+        :mounted='updateHeights'
+        :convertFn='v => (v * 9/5) + 32'/>
       <GraphSubSection
         icon='subsection-monitoring-humidity.svg'
         title='Humidity'
@@ -61,7 +63,8 @@
         suffix='%'
         expander='expander-blue.svg'
         :sizeChanged='sizeChanged'
-        :mounted='updateHeights'/>
+        :mounted='updateHeights'
+        :convertFn='v => v'/>
       <!--<GraphSubSection
         icon='subsection-monitoring-co2.svg'
         title='CO2'
@@ -113,6 +116,9 @@ export default {
     },
   },
   computed: {
+    unit() {
+      return this.$store.state.settings.unit
+    },
     controller() {
       return this.$store.getters['controllers/getSelected']
     },

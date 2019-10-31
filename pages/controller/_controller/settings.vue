@@ -22,6 +22,7 @@
       <h1 :id='$style.title'>Settings {{ controller.device_name.value }}</h1>
       <nuxt-link :id='$style.close' :to='`/controller/${controller.broker_clientid.value}/0`'></nuxt-link>
     </section>
+    <General />
     <Wifi />
     <Leds v-if='controller.boxes.length > 1' />
     <Motors v-if='controller.motors && controller.motors.length' />
@@ -32,6 +33,7 @@
 </template>
 
 <script>
+import General from '~/components/general.vue'
 import Wifi from '~/components/wifi.vue'
 import Leds from '~/components/leds.vue'
 import Motors from '~/components/motors.vue'
@@ -41,7 +43,7 @@ import ConfigUploader from '~/components/configuploader.vue'
 import Timer from '~/components/timer.vue'
 
 export default {
-  components: {Wifi, Leds, Motors, Blowers, ConfigUploader, Advanced, Timer,},
+  components: {General, Wifi, Leds, Motors, Blowers, ConfigUploader, Advanced, Timer,},
   computed: {
     controller() {
       return this.$store.getters['controllers/getSelected']

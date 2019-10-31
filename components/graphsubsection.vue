@@ -71,41 +71,42 @@ export default {
     this.$props.mounted()
   },
   components: {BoxSubSection, Graphs, Loading, },
-  props: ['icon', 'title', 'graphid', 'url', 'color', 'min', 'max', 'suffix', 'expander', 'sizeChanged', 'mounted'],
+  props: ['icon', 'title', 'graphid', 'url', 'color', 'min', 'max', 'suffix', 'expander', 'sizeChanged', 'mounted', 'convertFn'],
   computed: {
     lastValue() {
-      const { graphid, suffix } = this.$props,
+      const { graphid, suffix, convertFn } = this.$props,
             source = this.$store.getters['graphs/source'](graphid)
       if (!source || !source.metrics || !source.metrics.length) {
         return '-'
       }
       const v = source.metrics[source.metrics.length-1][1]
-      return `${v}${suffix}`
+      return `${convertFn(v)}${suffix}`
     },
     minValue() {
-      const { graphid, suffix } = this.$props,
+      const { graphid, suffix, convertFn } = this.$props,
             source = this.$store.getters['graphs/source'](graphid)
       if (!source || !source.metrics || !source.metrics.length) {
         return '-'
       }
       const v = Object.assign([], source.metrics).sort((m1, m2) => m1[1] - m2[1])[0][1]
-      return v
+      return convertFn(v)
     },
     maxValue() {
-      const { graphid, suffix } = this.$props,
+      const { graphid, suffix, convertFn } = this.$props,
             source = this.$store.getters['graphs/source'](graphid)
       if (!source || !source.metrics || !source.metrics.length) {
         return '-'
       }
-      return Object.assign([], source.metrics).sort((m1, m2) => m2[1] - m1[1])[0][1]
+      const v = Object.assign([], source.metrics).sort((m1, m2) => m2[1] - m1[1])[0][1]
+      return convertFn(v)
     },
     metrics() {
-      const { graphid } = this.$props,
+      const { graphid, convertFn } = this.$props,
             source = this.$store.getters['graphs/source'](graphid)
       if (!source || !source.metrics) {
         return []
       }
-      return source.metrics
+      return source.metrics.map(v => [v[0], convertFn(v[1])])
     },
     loading() {
       const { graphid } = this.$props,
