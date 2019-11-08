@@ -40,6 +40,7 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    { src: '~plugins/matomo.js', ssr: false },
     { src: '~/plugins/init', ssr: false },
     { src: '~/plugins/vue-touch', ssr: false },
     { src: '~/plugins/cordova', ssr: false },
@@ -55,6 +56,7 @@ export default {
   */
   modules: [
     // Doc: https://axios.nuxtjs.org/usage
+    ['nuxt-matomo', { matomoUrl: '//analytics.supergreenlab.com/', trackerUrl: '//analytics.supergreenlab.com/matomo.php', scriptUrl: '//analytics.supergreenlab.com/matomo.js', siteId: 2 }],
     '@nuxtjs/axios',
   ],
   /*

@@ -12,8 +12,8 @@
 </template>
 
 <script>
-import Logo from '../components/logo'
-import Controllers from '../components/controllers'
+import Logo from '../components/common/logo.vue'
+import Controllers from '../components/layout/controllers.vue'
 
 export default {
   data() {

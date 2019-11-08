@@ -34,9 +34,9 @@
 </template>
 
 <script>
-import Logo from '~/components/logo'
-import CloseButton from '~/components/closebutton'
-import NextButton from '~/components/nextbutton'
+import Logo from '~/components/common/logo.vue'
+import CloseButton from '~/components/common/closebutton.vue'
+import NextButton from '~/components/common/nextbutton.vue'
 
 export default {
   components: { Logo, CloseButton, NextButton, },

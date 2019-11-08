@@ -37,8 +37,8 @@
 </template>
 
 <script>
-import CloseButton from '~/components/closebutton'
-import NextButton from '~/components/nextbutton'
+import CloseButton from '~/components/common/closebutton.vue'
+import NextButton from '~/components/common/nextbutton.vue'
 
 export default {
   components: { CloseButton, NextButton, },

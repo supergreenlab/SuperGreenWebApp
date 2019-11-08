@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import NextButton from '~/components/nextbutton'
+import NextButton from '~/components/common/nextbutton'
 
 export default {
   components: { NextButton, },

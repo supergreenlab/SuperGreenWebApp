@@ -23,8 +23,8 @@
 </template>
 
 <script>
-import Box from '~/components/box'
-import Loading from '~/components/loading'
+import Box from '~/components/controls/box.vue'
+import Loading from '~/components/common/loading.vue'
 
 export default {
   data() {

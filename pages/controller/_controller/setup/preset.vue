@@ -47,9 +47,9 @@
 </template>
 
 <script>
-import Preset from '~/components/preset'
-import NextButton from '~/components/nextbutton'
-import Loading from '~/components/loading'
+import Preset from '~/components/setup/presets/preset.vue'
+import NextButton from '~/components/common/nextbutton.vue'
+import Loading from '~/components/common/loading.vue'
 
 export default {
   data() {

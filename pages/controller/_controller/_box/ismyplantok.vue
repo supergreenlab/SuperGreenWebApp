@@ -45,7 +45,7 @@
 
 <script>
 import axios from 'axios'
-import Loading from '~/components/loading.vue'
+import Loading from '~/components/common/loading.vue'
 
 export default {
   components: {Loading, },
@@ -68,7 +68,7 @@ export default {
       formData.append('text', this.$data.text)
       this.$data.uploading = true
       try {
-        await axios.post('https://discord.supergreenlab.com', formData, {
+        await axios.post('https://towelie.supergreenlab.com/ismyplantok', formData, {
           headers: {
             'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
           },
@@ -78,8 +78,10 @@ export default {
         })
         this.$data.file = null
         this.$data.success = true
+        this.$matomo && this.$matomo.trackEvent('ismyplantok', 'uploaded_pic')
       } catch(e) {
         this.$data.error = true
+        this.$matomo && this.$matomo.trackEvent('ismyplantok', 'uploaded_pic_failed')
         console.log(e)
       }
       this.$data.uploading = false
@@ -118,10 +120,17 @@ export default {
                 this.$data.imageUri = imageUri
               }
               reader.readAsArrayBuffer(file)
-            }, console.log)
-          }, console.log);
+            }, (err) => {
+              this.$matomo && this.$matomo.trackEvent('ismyplantok', 'fileEntry_file_failed')
+              console.log(err)
+            })
+          }, (err) => {
+            this.$matomo && this.$matomo.trackEvent('ismyplantok', 'resolveLocalFileSystemURL_failed')
+            console.log(err)
+          });
         }, (error) => {
           console.debug("Unable to obtain picture: " + error, "app");
+          this.$matomo && this.$matomo.trackEvent('ismyplantok', 'camera_failed')
         }, options);
       }
       if (device.platform == 'Android') {

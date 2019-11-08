@@ -32,8 +32,8 @@
 </template>
 
 <script>
-import CloseButton from '~/components/closebutton.vue'
-import Loading from '~/components/loading'
+import CloseButton from '~/components/common/closebutton.vue'
+import Loading from '~/components/common/loading.vue'
 
 export default {
   components: { CloseButton, Loading, },

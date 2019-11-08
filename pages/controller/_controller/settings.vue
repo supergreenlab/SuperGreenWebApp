@@ -33,17 +33,16 @@
 </template>
 
 <script>
-import General from '~/components/general.vue'
-import Wifi from '~/components/wifi.vue'
-import Leds from '~/components/leds.vue'
-import Motors from '~/components/motors.vue'
-import Blowers from '~/components/blowers.vue'
-import Advanced from '~/components/advanced.vue'
-import ConfigUploader from '~/components/configuploader.vue'
-import Timer from '~/components/timer.vue'
+import General from '~/components/settings/general/general.vue'
+import Wifi from '~/components/settings/wifi/wifi.vue'
+import Leds from '~/components/settings/leds/leds.vue'
+import Motors from '~/components/settings/motors/motors.vue'
+import Blowers from '~/components/settings/motors/legacy/blowers.vue'
+import Advanced from '~/components/settings/advanced/advanced.vue'
+import ConfigUploader from '~/components/settings/upgrade/configuploader.vue'
 
 export default {
-  components: {General, Wifi, Leds, Motors, Blowers, ConfigUploader, Advanced, Timer,},
+  components: {General, Wifi, Leds, Motors, Blowers, ConfigUploader, Advanced,},
   computed: {
     controller() {
       return this.$store.getters['controllers/getSelected']

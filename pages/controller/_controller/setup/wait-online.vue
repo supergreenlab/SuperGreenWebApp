@@ -79,9 +79,9 @@
 </template>
 
 <script>
-import CloseButton from '~/components/closebutton'
-import NextButton from '~/components/nextbutton'
-import Loading from '~/components/loading'
+import CloseButton from '~/components/common/closebutton.vue'
+import NextButton from '~/components/common/nextbutton.vue'
+import Loading from '~/components/common/loading.vue'
 
 export default {
   data() {
