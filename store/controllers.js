@@ -239,6 +239,11 @@ export const mutations = {
     controller.boxes[i][key] = Object.assign({}, controller.boxes[i][key], {loading: true})
     setById(state, id, controller)
   },
+  loading_motor_param(state, { id, i, key }) {
+    let controller = getById(state, id)
+    controller.boxes[i][key] = Object.assign({}, controller.motors[i][key], {loading: true})
+    setById(state, id, controller)
+  },
   loading_led_param(state, { id, i, key }) {
     let controller = getById(state, id)
     controller.leds[i][key] = Object.assign({}, controller.leds[i][key], {loading: true})
@@ -257,6 +262,11 @@ export const mutations = {
   loaded_box_param(state, { id, i, key, value, error }) {
     let controller = getById(state, id)
     controller.boxes[i][key] = Object.assign({}, controller.boxes[i][key], {error, value, loaded: true, loading: false})
+    setById(state, id, controller)
+  },
+  loaded_motor_param(state, { id, i, key, value, error }) {
+    let controller = getById(state, id)
+    controller.motors[i][key] = Object.assign({}, controller.motors[i][key], {error, value, loaded: true, loading: false})
     setById(state, id, controller)
   },
   loaded_led_param(state, { id, i, key, value, error }) {
@@ -367,6 +377,7 @@ const start_controller_daemon = (context, controller) => {
     await Promise.all([
       load_all('led', controller.leds),
       load_all('box', controller.boxes),
+      load_all('motor', controller.motors),
       load_all('controller', [controller]),
       load_all('i2c', controller.i2c),
     ])
@@ -628,7 +639,7 @@ export const actions = {
           config = controller.motors[i][key].config_key
     context.commit('loading_motor_param', {id, i, key})
     try {
-      let { data: value } = await controller_chain(id)(async () => axios.get(`http://${controller.wifi_ip.value}/${config.integer ? 'i' : 's'}?k=MOTOR${i}_${key.toUpperCase()}`, {timeout: 5000}))
+      let { data: value } = await controller_chain(id)(async () => axios.get(`http://${controller.wifi_ip.value}/${config.integer ? 'i' : 's'}?k=MOTOR_${i}_${key.toUpperCase()}`, {timeout: 5000}))
       context.commit('loaded_motor_param', {id, i, key, value: config.integer ? parseInt(value) : value})
     } catch(e) {
       context.commit('loaded_motor_param', {id, i, key, error: e})

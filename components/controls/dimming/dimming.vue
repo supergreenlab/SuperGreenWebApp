@@ -1,0 +1,84 @@
+<!--
+      Copyright (C) 2019  SuperGreenLab <towelie@supergreenlab.com>
+      Author: Constantin Clauzel <constantin.clauzel@gmail.com>
+
+      This program is free software: you can redistribute it and/or modify
+      it under the terms of the GNU General Public License as published by
+      the Free Software Foundation, either version 3 of the License, or
+      (at your option) any later version.
+
+      This program is distributed in the hope that it will be useful,
+      but WITHOUT ANY WARRANTY; without even the implied warranty of
+      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+      GNU General Public License for more details.
+
+      You should have received a copy of the GNU General Public License
+      along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ -->
+
+<template>
+  <BoxSection
+    icon='section-light-dimming.svg'
+    title='Light dimming'
+    color='#F4F4E7'
+    :dark=true>
+    <div :id='$style.body'>
+      <div :id='$style.left'>
+        <DimmingMasterSwitch :expanded='expanded' :controller='controller' :loading='loading'/>
+      </div>
+      <div :id='$style.right'>
+        <DimmingIndependent :expanded='expanded' :controller='controller' :loading='loading'/>
+      </div>
+    </div>
+    <BoxSectionExpander @click='toggleExpand' :expanded='expanded' ref='expander' />
+  </BoxSection>
+</template>
+
+<script>
+
+import BoxSection from '~/components/controls/common/boxsection.vue'
+import BoxSectionExpander from '~/components/controls/common/boxsectionexpander.vue'
+import DimmingMasterSwitch from '~/components/controls/dimming/dimmingmasterswitch.vue'
+import DimmingIndependent from '~/components/controls/dimming/dimmingindependent.vue'
+
+export default {
+  components: { BoxSection, BoxSectionExpander, DimmingMasterSwitch, DimmingIndependent, },
+  data() {
+    return {
+      expanded: false,
+    }
+  },
+  computed: {
+    controller() {
+      return this.$store.getters['controllers/getSelected']
+    },
+    loading() {
+      const controller = this.controller
+      return controller.leds.findIndex((l) => l.dim.loading) != -1
+    },
+  },
+  methods: {
+    toggleExpand() {
+      this.$matomo && this.$matomo.trackEvent('dimming', 'expand')
+      this.$data.expanded = !this.$data.expanded
+    },
+  },
+}
+
+</script>
+
+<style module lang=stylus>
+
+#body
+  display: flex
+  position: relative
+  @media screen and (max-width: 600px)
+    flex-direction: column
+
+#left
+  flex: 0.6
+
+#right
+  flex: 1
+
+</style>
