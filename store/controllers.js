@@ -30,7 +30,7 @@ const newLoadableKey = function(key) {
   }
 }
 
-const schedule_promise = (n, retries) => {
+const schedulePromise = (n, retries) => {
   let loading_param_promise = Promise.resolve(),
       promises = []
   return function(req_func, ret_func) {
@@ -69,11 +69,11 @@ const controllerChain = (id, n) => {
   n = n || 3
   id = `${id}-${n}`
   if (typeof controllerChains[id] == 'undefined') {
-    controllerChains[id] = schedule_promise(3, n)
+    controllerChains[id] = schedulePromise(3, n)
   }
   return controllerChains[id]
 }
-const discoveryChain = schedule_promise(3, 3)
+const discoveryChain = schedulePromise(3, 3)
 
 const controllerFromconfig = (config) => {
   const controller_defaults = {
@@ -365,7 +365,7 @@ export const actions = {
     let url = context.state.new_controller_url
     context.commit('startSearchNewController')
 
-    if (!is_ip(url) && context.state.has_mobile_zeroconf) {
+    if (!is_ip(url) && context.rootState.has_mobile_zeroconf) {
       try {
         url = await zeroconf_discovery(url)
       } catch(e) {

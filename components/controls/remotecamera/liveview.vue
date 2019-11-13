@@ -19,13 +19,13 @@
 <template>
   <section :id='$style.container'>
     <div :id='$style.liveviews'>
-      <div v-for='source in sources' :class='$style.liveview' :style='{"background-image": `url(${source.url}?rand=${sourceRand})`}' @click='open_pic(source)'>
-        <div><img @click='evt => remove_source(evt, source)' src='~/assets/img/remove-timelapse.svg' /></div>
+      <div v-for='source in sources' :class='$style.liveview' :style='{"background-image": `url(${source.url}?rand=${sourceRand})`}' @click='openPic(source)'>
+        <div><img @click='evt => removeSource(evt, source)' src='~/assets/img/remove-timelapse.svg' /></div>
       </div>
-      <div :class='`${$style.liveview} ${$style.add}`' @click='show_add_source'></div>
+      <div :class='`${$style.liveview} ${$style.add}`' @click='showAddSource'></div>
       <div v-if='showing_add_source' :id='$style.add_source'>
         <input type='text' ref='name' />
-        <button @click='add_source()'>add timelapse</button>
+        <button @click='addSource()'>add timelapse</button>
       </div>
     </div>
   </section>
@@ -55,25 +55,25 @@ export default {
     },
   },
   methods: {
-    show_add_source() {
+    showAddSource() {
       this.$data.showing_add_source = !this.$data.showing_add_source
     },
-    add_source() {
+    addSource() {
       const controller = this.controller,
             i = this.$route.params.box,
             sources = this.sources
       this.$data.showing_add_source = false
-      this.$store.commit('liveviews/add_source', {
+      this.$store.commit('liveviews/addSource', {
         id: `${controller.broker_clientid.value}.${i}.${sources.length}`,
         url: this.$refs.name.value,
       })
     },
-    remove_source(evt, source) {
+    removeSource(evt, source) {
       evt.preventDefault()
       evt.stopPropagation()
-      this.$store.commit('liveviews/remove_source', source)
+      this.$store.commit('liveviews/removeSource', source)
     },
-    open_pic(source) {
+    openPic(source) {
       window.open(source.url, source.id)
     },
   },

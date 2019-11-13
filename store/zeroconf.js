@@ -20,43 +20,40 @@ const isAvailable = function() {
   return !!window.cordova && !!window.cordova.plugins && !!window.cordova.plugins.zeroconf
 }
 
-const zeroconf_cache = []
-const zeroconfDiscovery = async function (name) {
-  return new Promise((resolve, reject) => {
-    const cache = zeroconf_cache.find(z => z.name.toLowerCase() == name.replace('.local', '').toLowerCase())
-    if (cache) {
-      resolve(cache.ipv4Addresses[0])
-      return
+const zeroconfDiscovery = (context) => {
+  window.cordova.plugins.zeroconf.watch('_http._tcp.', 'local.', ({action, service}) => {
+    if (action == 'resolved') {
+      context.commit('addDevice', service)
     }
-    const cancel = setTimeout(() => {
-      window.cordova.plugins.zeroconf.unwatch('_http._tcp.', 'local.')
-      reject()
-    }, 30000)
-    window.cordova.plugins.zeroconf.watch('_http._tcp.', 'local.', function({action, service}) {
-      if (action == 'resolved') {
-        zeroconf_cache.push(service);
-      }
-      if (action == 'resolved' && service.name.toLowerCase() == name.replace('.local', '').toLowerCase()) {
-        resolve(service.ipv4Addresses[0])
-        window.cordova.plugins.zeroconf.unwatch('_http._tcp.', 'local.')
-        clearTimeout(cancel)
-      }
-    })
   })
 }
 
 export const state = () => ({
+  devices: [],
   available: false,
 })
 
 export const mutations = {
   init(state, { available }) {
     state.available = available
-  }
+  },
+  addDevice(state, device) {
+    if (state.devices.findIndex((d) => d.ipv4Addresses[0] == device.ipv4Addresses[0]) != -1) {
+      state.devices.push(device)
+    }
+  },
 }
 
 export const actions = {
   async init(context) {
-    context.commit('init', {available: isAvailable()})
+    const available = isAvailable()
+    context.commit('init', {available})
+    if (available) {
+      zeroconfDiscovery(context)
+    }
   },
+}
+
+export const getters = {
+  getDeviceByName: (state) => (name) => state.devices.find(d => d.name.toLowerCase() == name.replace('.local', '').toLowerCase()),
 }

@@ -68,7 +68,7 @@ export default {
     },
   },
   methods: {
-    schedule_for(v) {
+    scheduleFor(v) {
       const controller = this.controller,
             boxid = this.$route.params.box,
             on_hour = controller.boxes[boxid].on_hour.value,
@@ -87,7 +87,7 @@ export default {
     schedule(v, day) {
       const controller = this.controller,
             boxid = this.$route.params.box,
-            sc = this.schedule_for(v)
+            sc = this.scheduleFor(v)
       this.$store.dispatch('controllers/setBoxParam', {id: controller.broker_clientid.value, i: boxid, key: 'on_hour', value: sc.on_hour}) 
       this.$store.dispatch('controllers/setBoxParam', {id: controller.broker_clientid.value, i: boxid, key: 'on_min', value: 0}) 
       this.$store.dispatch('controllers/setBoxParam', {id: controller.broker_clientid.value, i: boxid, key: 'off_hour', value: sc.off_hour}) 

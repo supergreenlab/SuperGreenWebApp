@@ -95,7 +95,7 @@ export default {
       this.$data.loading = true
       const preset = this.$store.state.presets.configs[this.$data.presetid],
             selected = this.$route.params.controller,
-            shoot_presets = (keys, type, req) =>
+            shootPresets = (keys, type, req) =>
         Object.keys(keys)
           .filter((k) => typeof keys[k] == 'string' || typeof keys[k] == 'number')
           .map(async (k) => {
@@ -108,9 +108,9 @@ export default {
             this.$data.done++
           })
 
-      let promises = shoot_presets(preset.keys, 'controller', (k, v) => ({id: selected, key: k, value: v,}))
-      preset.keys.leds.forEach((led, i) => promises.push(...shoot_presets(led, 'led', (k, v) => ({id: selected, key: k, value: v, i}))))
-      preset.keys.boxes.forEach((box, i) => promises.push(...shoot_presets(box, 'box', (k, v) => ({id: selected, key: k, value: v, i}))))
+      let promises = shootPresets(preset.keys, 'controller', (k, v) => ({id: selected, key: k, value: v,}))
+      preset.keys.leds.forEach((led, i) => promises.push(...shootPresets(led, 'led', (k, v) => ({id: selected, key: k, value: v, i}))))
+      preset.keys.boxes.forEach((box, i) => promises.push(...shootPresets(box, 'box', (k, v) => ({id: selected, key: k, value: v, i}))))
       await Promise.all(promises)
       //this.$router.push(`/controller/${selected}/setup/name`)
       this.$router.push(`/controller/${selected}/0`)
