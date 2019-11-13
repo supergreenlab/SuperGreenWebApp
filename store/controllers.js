@@ -524,7 +524,7 @@ export const actions = {
       throw(e)
     }
   },
-  async set_box_param(context, { id, i, key, value }) {
+  async setBoxParam(context, { id, i, key, value }) {
     const controller = getById(context.state, id),
           config = controller.boxes[i][key].config_key
     context.commit('loadingBoxParam', {id, i, key})
