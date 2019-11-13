@@ -38,8 +38,11 @@ export const mutations = {
     state.available = available
   },
   addDevice(state, device) {
-    if (state.devices.findIndex((d) => d.ipv4Addresses[0] == device.ipv4Addresses[0]) != -1) {
+    const index = state.devices.findIndex((d) => d.ipv4Addresses[0] == device.ipv4Addresses[0])
+    if (index == -1) {
       state.devices.push(device)
+    } else {
+      state.devices[index] = device
     }
   },
 }
@@ -55,5 +58,7 @@ export const actions = {
 }
 
 export const getters = {
-  getDeviceByName: (state) => (name) => state.devices.find(d => d.name.toLowerCase() == name.replace('.local', '').toLowerCase()),
+  getDeviceByName: (state) => (name) => {
+    return state.devices.find(d => d.name.toLowerCase() == name.replace('.local', '').toLowerCase())
+  },
 }

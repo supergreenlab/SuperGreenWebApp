@@ -1,6 +1,7 @@
 export default ({ app, store }) => {
   const onDeviceReady = () => {
-    store.dispatch('controllers/init_cordova')
+    store.dispatch('zeroconf/init')
+    store.dispatch('ble/init')
     window.open = cordova.InAppBrowser.open
   }
   document.addEventListener("deviceready", onDeviceReady, false);

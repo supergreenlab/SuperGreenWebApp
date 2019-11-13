@@ -365,9 +365,9 @@ export const actions = {
     let url = context.state.new_controller_url
     context.commit('startSearchNewController')
 
-    if (!is_ip(url) && context.rootState.has_mobile_zeroconf) {
+    if (!is_ip(url) && context.rootState.zeroconf.available) {
       try {
-        url = await zeroconf_discovery(url)
+        url = context.rootGetters['zeroconf/getDeviceByName'](url).ipv4Addresses[0]
       } catch(e) {
         context.commit('endSearchNewController', {controller: null, error: 'No controller found'})
         return
@@ -433,8 +433,8 @@ export const actions = {
     }
     console.log('IP not found, trying zeroconf')
     try {
-      if (context.state.has_mobile_zeroconf) {
-        const ip = await zeroconf_discovery(url)
+      if (context.rootState.zeroconf.available) {
+        const ip = context.rootGetters['zeroconf/getDeviceByName'](url).ipv4Addresses[0]
         context.commit('loadedControllerParam', {id, key: 'wifi_ip', value: ip})
       } else {
         const { data: ip } = await controllerChain(id)(() => axios.get(`http://${url}.local/s?k=WIFI_IP`, {timeout: 5000}), (e, n) => context.commit('setFoundTry', {id, n}))
