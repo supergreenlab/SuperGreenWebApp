@@ -47,7 +47,7 @@ export default {
   },
   methods: {
     setLedBox(value) {
-      this.$store.dispatch('controllers/set_led_param', {id: this.controller.broker_clientid.value, i: this.$props.n-1, key: 'box', value: Math.round(value)}) 
+      this.$store.dispatch('controllers/setLedParam', {id: this.controller.broker_clientid.value, i: this.$props.n-1, key: 'box', value: Math.round(value)}) 
     },
   },
 }

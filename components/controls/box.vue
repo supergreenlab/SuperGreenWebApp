@@ -65,8 +65,8 @@ export default {
     enable() {
       const controller = this.$store.getters['controllers/getSelected'],
         boxid = this.$route.params.box
-      this.$store.dispatch('controllers/set_box_param', {id: controller.broker_clientid.value, i: boxid, key: 'enabled', value: 1}) 
-      this.$store.dispatch('controllers/set_box_param', {id: controller.broker_clientid.value, i: boxid, key: 'timer_type', value: 1}) 
+      this.$store.dispatch('controllers/setBoxParam', {id: controller.broker_clientid.value, i: boxid, key: 'enabled', value: 1}) 
+      this.$store.dispatch('controllers/setBoxParam', {id: controller.broker_clientid.value, i: boxid, key: 'timer_type', value: 1}) 
     },
   },
 }

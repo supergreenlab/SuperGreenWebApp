@@ -40,11 +40,11 @@ export const mutations = {
     state.unit = unit
     state.middayh = middayh
   },
-  set_unit(state, unit) {
+  setUnit(state, unit) {
     state.unit = unit
     storeState(state)
   },
-  set_middayh(state, middayh) {
+  setMidDayH(state, middayh) {
     state.middayh = middayh
     storeState(state)
   },

@@ -63,10 +63,10 @@ export default {
       return this.$store.getters['controllers/getSelected']
     },
     bleDevices() {
-      return this.$store.getters['controllers/getBLEControllers'](this.controller.wifi_ip.value)
+      return this.$store.getters['ble/getControllers'](this.controller.wifi_ip.value)
     },
     bleController() {
-      return this.$store.getters['controllers/getBLEControllerById'](this.$data.bleId)
+      return this.$store.getters['ble/getControllerById'](this.$data.bleId)
     }
   },
   methods: {
@@ -77,11 +77,11 @@ export default {
         this.$data.blePrompted = true
       } else if (this.$store.state.controllers.has_ble && this.$store.state.controllers.ble_enabled && !this.bleDevices.length) {
         try {
-          await this.$store.dispatch('controllers/set_controller_param', {id: controller.broker_clientid.value, key: 'ble_enabled', value: 1}) 
+          await this.$store.dispatch('controllers/setControllerParam', {id: controller.broker_clientid.value, key: 'ble_enabled', value: 1}) 
         } catch(e) {
           console.log('set_ble_enabled', e)
         }
-        this.$store.dispatch('controllers/start_ble_scan')
+        this.$store.dispatch('ble/startBleScan')
         this.$data.page = 'WAIT_BLE'
         return
       } else {
@@ -93,7 +93,7 @@ export default {
         }
         this.$data.page = 'SET_WIFI'
         try {
-          await this.$store.dispatch('controllers/set_controller_param', {id: controller.broker_clientid.value, key: 'wifi_ssid', value: this.$data.ssid}) 
+          await this.$store.dispatch('controllers/setControllerParam', {id: controller.broker_clientid.value, key: 'wifi_ssid', value: this.$data.ssid}) 
         } catch(e) {
           this.$data.page = 'PARAM_FAILED'
           console.log('set_wifi_ssid', e)
@@ -104,7 +104,7 @@ export default {
           if (wait_ble) {
             this.$data.page = 'WAIT_BLE_WIFI_STATUS'
           }
-          await this.$store.dispatch('controllers/set_controller_param', {id: controller.broker_clientid.value, key: 'wifi_password', value: this.$data.password, n: 1}) 
+          await this.$store.dispatch('controllers/setControllerParam', {id: controller.broker_clientid.value, key: 'wifi_password', value: this.$data.password, n: 1}) 
         } catch (e) {
           console.log(e)
         }
@@ -123,19 +123,19 @@ export default {
         console.log('using ble device')
         ip = this.bleController.params.wifi_ip
         try {
-          await this.$store.dispatch('controllers/set_controller_param', {id: controller.broker_clientid.value, key: 'ble_enabled', value: 1}) 
+          await this.$store.dispatch('controllers/setControllerParam', {id: controller.broker_clientid.value, key: 'ble_enabled', value: 1}) 
         } catch(e) {
           console.log('set_ble_enabled', e)
         }
       }
       try {
-        await this.$store.dispatch('controllers/search_controller', {id: controller.broker_clientid.value, ip})
+        await this.$store.dispatch('controllers/searchController', {id: controller.broker_clientid.value, ip})
         this.$data.page = 'SUCCESS'
       } catch(e) {
         console.log(e)
         this.$data.page = 'FAILED'
       }
-      await this.$store.dispatch('controllers/load_box_param', {id: controller.broker_clientid.value, key: 'wifi_status'})
+      await this.$store.dispatch('controllers/loadControllerParam', {id: controller.broker_clientid.value, key: 'wifi_status'})
     },
     retype() {
       this.$data.page = 'FORM'
@@ -155,7 +155,6 @@ export default {
     },
     bleController: {
       handler() {
-        console.log('bleController', this.$data.page, this.bleController.params.wifi_status)
         if (this.$data.page == 'WAIT_BLE_WIFI_STATUS') {
           if (this.bleController.params.wifi_status == 2) {
             this.$data.page = 'WAIT_BLE_WIFI_STATUS_BACK_ON'

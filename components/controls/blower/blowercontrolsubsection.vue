@@ -61,7 +61,7 @@ export default {
         const controller = this.controller,
               boxid = this.$route.params.box,
               { param } = this.$props
-        this.$store.dispatch('controllers/set_box_param', {id: controller.broker_clientid.value, i: boxid, key: param, value: Math.round(value)}) 
+        this.$store.dispatch('controllers/setBoxParam', {id: controller.broker_clientid.value, i: boxid, key: param, value: Math.round(value)}) 
       },
     },
     loading() {

@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     setBlowerFrequency() {
-      this.$store.dispatch('controllers/set_box_param', {id: this.controller.broker_clientid.value, i: this.$props.boxId, key: 'blower_frequency', value: this.$data.freq}) 
+      this.$store.dispatch('controllers/setBoxParam', {id: this.controller.broker_clientid.value, i: this.$props.boxId, key: 'blower_frequency', value: this.$data.freq}) 
     }
   },
 }

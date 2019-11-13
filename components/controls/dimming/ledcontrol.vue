@@ -51,7 +51,7 @@ export default {
           j, led
         } = this.$props,
           controller = this.controller
-        this.$store.dispatch('controllers/set_led_param', {id: controller.broker_clientid.value, i: j, key: 'dim', value: Math.round(value)}) 
+        this.$store.dispatch('controllers/setLedParam', {id: controller.broker_clientid.value, i: j, key: 'dim', value: Math.round(value)}) 
       },
     },
     controller() {
@@ -64,7 +64,7 @@ export default {
         j, led
       } = this.$props,
         controller = this.controller
-      this.$store.dispatch('controllers/set_led_param', {id: controller.broker_clientid.value, i: j, key: 'dim', value: led.dim.value == 0 ? 100 : 0}) 
+      this.$store.dispatch('controllers/setLedParam', {id: controller.broker_clientid.value, i: j, key: 'dim', value: led.dim.value == 0 ? 100 : 0}) 
     },
   },
 }

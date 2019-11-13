@@ -61,10 +61,10 @@ export default {
     async saveWifi() {
       this.$data.loading = true
       const controller = this.controller
-      await this.$store.dispatch('controllers/set_controller_param', {id: controller.broker_clientid.value, key: 'wifi_ssid', value: this.$data.ssid}) 
+      await this.$store.dispatch('controllers/setControllerParam', {id: controller.broker_clientid.value, key: 'wifi_ssid', value: this.$data.ssid}) 
       try {
         await new Promise((r) => setTimeout(r, 1000))
-        await this.$store.dispatch('controllers/set_controller_param', {id: controller.broker_clientid.value, key: 'wifi_password', value: this.$data.password}) 
+        await this.$store.dispatch('controllers/setControllerParam', {id: controller.broker_clientid.value, key: 'wifi_password', value: this.$data.password}) 
       } catch (e) {
         console.log(e)
       }

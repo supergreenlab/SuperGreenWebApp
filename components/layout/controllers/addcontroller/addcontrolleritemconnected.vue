@@ -29,7 +29,7 @@ export default {
   }),
   methods: {
     wifi() {
-      this.$store.commit('controllers/configure_search_new_controller', {url: this.$data.url, is_sta: true})
+      this.$store.commit('controllers/configureSearchNewController', {url: this.$data.url, is_sta: true})
       this.$router.push('/new/plug')
     },
   },

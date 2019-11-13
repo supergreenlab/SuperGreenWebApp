@@ -80,14 +80,14 @@ export default {
       for (let i in this.controller.leds) {
         const led = this.controller.leds[i]
         this.$data.led_n = parseInt(i)
-        await this.$store.dispatch(`controllers/set_led_param`, {id: this.controller.broker_clientid.value, i, key: 'duty', value: 100})
+        await this.$store.dispatch(`controllers/setLedParam`, {id: this.controller.broker_clientid.value, i, key: 'duty', value: 100})
       }
       await new Promise((r) => setTimeout(r, 1000))
       this.$data.led_test_phase = 'OFF'
       for (let i in this.controller.leds) {
         const led = this.controller.leds[i]
         this.$data.led_n = parseInt(i)
-        await this.$store.dispatch(`controllers/set_led_param`, {id: this.controller.broker_clientid.value, i, key: 'duty', value: 0})
+        await this.$store.dispatch(`controllers/setLedParam`, {id: this.controller.broker_clientid.value, i, key: 'duty', value: 0})
       }
       this.$data.led_test_phase = ''
     },
@@ -101,7 +101,7 @@ export default {
           .map(async (k) => {
             this.$data.total++
             try {
-              await this.$store.dispatch(`controllers/set_${type}_param`, req(k, keys[k]))
+              await this.$store.dispatch(`controllers/set${type[0].toUpperCase() + type.slice(1)}Param`, req(k, keys[k]))
             } catch(e) {
               console.log(e)
             }

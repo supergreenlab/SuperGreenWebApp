@@ -36,7 +36,7 @@ export const mutations = {
   init(state, { first_start }) {
     state.first_start = first_start
   },
-  first_start(state) {
+  firstStart(state) {
     state.first_start = false
     storeState(state)
   },

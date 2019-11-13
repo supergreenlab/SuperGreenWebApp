@@ -42,11 +42,11 @@ export default {
   props: ['onClose'],
   methods: {
     first() {
-      this.$store.commit('controllers/configure_search_new_controller', {url: '192.168.4.1', is_sta: false})
+      this.$store.commit('controllers/configureSearchNewController', {url: '192.168.4.1', is_sta: false})
       this.$router.push('/new/plug')
     },
     wifi() {
-      this.$store.commit('controllers/configure_search_new_controller', {url: '', is_sta: true})
+      this.$store.commit('controllers/configureSearchNewController', {url: '', is_sta: true})
       this.$router.push('/new/wifi-sta')
     },
     shop() {

@@ -110,7 +110,7 @@ export default {
       this.$data.loading = true
       const controller = this.$store.getters['controllers/getSelected']
       try {
-        await this.$store.dispatch('controllers/search_controller', {id: controller.broker_clientid.value, ip: this.isvalid ? this.$data.addr : ''})
+        await this.$store.dispatch('controllers/searchController', {id: controller.broker_clientid.value, ip: this.isvalid ? this.$data.addr : ''})
       } catch(e) {
         console.log(e)
         this.$data.failed = true

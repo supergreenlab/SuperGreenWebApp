@@ -52,7 +52,7 @@ export default {
       if (!/^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/.test(this.$data.url) && this.$data.url.indexOf('.local') == -1) {
         url = `${url}.local`
       }
-      this.$store.commit('controllers/configure_search_new_controller', {url, is_sta: true})
+      this.$store.commit('controllers/configureSearchNewController', {url, is_sta: true})
     },
     enter(e) {
       if (e.key == 'Enter') {

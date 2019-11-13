@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     deleteController() {
-      this.$store.commit('controllers/delete_controller', this.controller.broker_clientid.value)
+      this.$store.commit('controllers/deleteController', this.controller.broker_clientid.value)
       this.$router.replace('/')
     },
     openAdmin() {

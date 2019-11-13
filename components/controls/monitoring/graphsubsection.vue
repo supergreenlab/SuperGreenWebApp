@@ -125,7 +125,7 @@ export default {
   },
   created() {
     const { graphid, url } = this.$props
-    this.$store.dispatch('graphs/load_graph', {id: graphid, url})
+    this.$store.dispatch('graphs/loadGraph', {id: graphid, url})
   },
 }
 </script>

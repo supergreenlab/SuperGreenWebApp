@@ -43,8 +43,8 @@ export default {
   layout: 'fullscreen',
   methods: {
     onNext() {
-      this.$store.commit('app/first_start')
-      this.$store.commit('controllers/configure_search_new_controller', {url: '192.168.4.1', is_sta: false})
+      this.$store.commit('app/firstStart')
+      this.$store.commit('controllers/configureSearchNewController', {url: '192.168.4.1', is_sta: false})
       this.$router.push('/new/plug')
     }
   }

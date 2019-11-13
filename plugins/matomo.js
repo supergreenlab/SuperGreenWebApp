@@ -9,7 +9,7 @@ export default ({ app }) => {
     let sglid = window.localStorage.getItem('sglid')
     if (!sglid) {
       sglid = uuidv4()
-      window.localStorage.setItem('sglid')
+      window.localStorage.setItem('sglid', sglid)
     }
     app.$matomo && app.$matomo.setUserId(sglid)
   }

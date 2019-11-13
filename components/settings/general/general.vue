@@ -64,7 +64,7 @@ export default {
         if (isNaN(parseInt(middayh))) {
           return
         }
-        this.$store.commit('settings/set_middayh', parseInt(middayh))
+        this.$store.commit('settings/setMidDayH', parseInt(middayh))
       }
     },
   },

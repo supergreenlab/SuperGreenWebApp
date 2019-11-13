@@ -49,7 +49,7 @@ export default {
   },
   methods: {
     setBlowerFrequency() {
-      this.$store.dispatch('controllers/set_motor_param', {id: this.controller.broker_clientid.value, i: this.$props.motorId, key: 'frequency', value: this.$data.freq}) 
+      this.$store.dispatch('controllers/setMotorParam', {id: this.controller.broker_clientid.value, i: this.$props.motorId, key: 'frequency', value: this.$data.freq}) 
     }
   },
 }

@@ -62,7 +62,7 @@ export default {
     },
   },
   mounted() {
-    this.$store.dispatch('controllers/search_new_controller')
+    this.$store.dispatch('controllers/searchNewController')
   },
 }
 </script>

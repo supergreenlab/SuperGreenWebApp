@@ -36,7 +36,7 @@ export const mutations = {
   init(state, { sources }) {
     state.sources = sources
   },
-  add_source(state, { id, url }) {
+  addSource(state, { id, url }) {
     state.sources = Object.assign({}, state.sources, {
       [id]: {
         id,
@@ -45,7 +45,7 @@ export const mutations = {
     })
     storeState(state)
   },
-  remove_source(state, { id }) {
+  removeSource(state, { id }) {
     const keys = Object.keys(state.sources).filter((k) => k != id) 
     state.sources = keys.reduce((acc, k) => {acc[k] = state.sources[k]; return acc}, {})
     storeState(state)
