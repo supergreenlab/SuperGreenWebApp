@@ -367,7 +367,7 @@ export const actions = {
 
     if (!is_ip(url) && context.rootState.zeroconf.available) {
       try {
-        url = context.rootGetters['zeroconf/getDeviceByName'](url).ipv4Addresses[0]
+        url = await context.rootGetters['zeroconf/getDeviceByName'](url).ipv4Addresses[0]
       } catch(e) {
         context.commit('endSearchNewController', {controller: null, error: 'No controller found'})
         return

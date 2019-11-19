@@ -30,7 +30,7 @@
         icon='subsection-monitoring-light.svg'
         title='Light'
         :graphid='`light.${controller.broker_clientid.value}.${boxid}`'
-        :url='`https://api.supergreenlab.com/metrics?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_TIMER_OUTPUT&t=72&n=50`'
+        :url='`${api}/metrics?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_TIMER_OUTPUT&t=72&n=50`'
         color='#D4CF5D'
         :min=10
         :max=40
@@ -43,7 +43,7 @@
         icon='subsection-monitoring-temperature.svg'
         title='Temperature'
         :graphid='`temp.${controller.broker_clientid.value}.${boxid}`'
-        :url='`https://api.supergreenlab.com/metrics?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_${temp_metric}&t=72&n=50`'
+        :url='`${api}/metrics?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_${temp_metric}&t=72&n=50`'
         color='#3bb30b'
         :min=10
         :max=40
@@ -56,7 +56,7 @@
         icon='subsection-monitoring-humidity.svg'
         title='Humidity'
         :graphid='`humi.${controller.broker_clientid.value}.${boxid}`'
-        :url='`https://api.supergreenlab.com/metrics?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_${humi_metric}&t=72&n=50`'
+        :url='`${api}/metrics?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_${humi_metric}&t=72&n=50`'
         color='#0b81b3'
         :min=0
         :max=100
@@ -69,7 +69,7 @@
         icon='subsection-monitoring-co2.svg'
         title='CO2'
         :graphid='`co2.${controller.broker_clientid.value}.${boxid}`'
-        :url='`https://api.supergreenlab.com/metrics?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_ARDUINO_CO2&t=72&n=50`'
+        :url='`${api}/metrics?cid=${controller.broker_clientid.value}&q=BOX_${boxid}_ARDUINO_CO2&t=72&n=50`'
         color='#DDB31C'
         :min=300
         :max=2500
@@ -84,6 +84,7 @@
 
 <script>
 
+import config from '~/config.json'
 import BoxSection from '~/components/controls/common/boxsection.vue'
 import BoxSubSection from '~/components/controls/common/boxsubsection.vue'
 import BoxSectionExpander from '~/components/controls/common/boxsectionexpander.vue'
@@ -117,6 +118,9 @@ export default {
     },
   },
   computed: {
+    api() {
+      return config[process.env.NODE_ENV].api
+    },
     unit() {
       return this.$store.state.settings.unit
     },

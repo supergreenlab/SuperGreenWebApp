@@ -22,6 +22,7 @@ const isAvailable = function() {
 
 const zeroconfDiscovery = (context) => {
   window.cordova.plugins.zeroconf.watch('_http._tcp.', 'local.', ({action, service}) => {
+    console.log('zeroconfDiscovery', service)
     if (action == 'resolved') {
       context.commit('addDevice', service)
     }
@@ -38,12 +39,16 @@ export const mutations = {
     state.available = available
   },
   addDevice(state, device) {
-    const index = state.devices.findIndex((d) => d.ipv4Addresses[0] == device.ipv4Addresses[0])
+    const index = state.devices.findIndex((d) => d.name == device.name)
     if (index == -1) {
+      console.log('addDevice', 'adding')
       state.devices.push(device)
     } else {
+      console.log('addDevice', 'replacing')
       state.devices[index] = device
     }
+  },
+  refreshDevice(state, name) {
   },
 }
 
@@ -58,7 +63,7 @@ export const actions = {
 }
 
 export const getters = {
-  getDeviceByName: (state) => (name) => {
+  getDeviceByName: (state) => async (name) => {
     return state.devices.find(d => d.name.toLowerCase() == name.replace('.local', '').toLowerCase())
   },
 }

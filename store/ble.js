@@ -97,12 +97,14 @@ export const mutations = {
     setBleById(state, id, device)
   },
   addDevice(state, device) {
+    console.log('ble.addDevice', device)
     state.devices.push(device)
   },
 }
 
 export const actions = {
   async init(context) {
+    console.log('ble', {available: isAvailable(), enabled: isAvailable() && await isEnabled()})
     context.commit('init', {available: isAvailable(), enabled: isAvailable() && await isEnabled()})
   },
   async startScan(context) {

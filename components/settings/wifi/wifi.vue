@@ -72,10 +72,11 @@ export default {
   methods: {
     async connect() {
       const controller = this.controller
-      if (this.$store.state.controllers.has_ble && this.$store.state.controllers.ble_enabled && !this.bleDevices.length && !this.$data.blePrompted) {
+      console.log('this.$store.state.ble.available', this.$store.state.ble.available, 'this.$store.state.ble.enabled', this.$store.state.ble.enabled)
+      if (this.$store.state.ble.available && !this.$store.state.ble.enabled && !this.bleDevices.length && !this.$data.blePrompted) {
         this.$data.page = 'ENABLE_BLE'
         this.$data.blePrompted = true
-      } else if (this.$store.state.controllers.has_ble && this.$store.state.controllers.ble_enabled && !this.bleDevices.length) {
+      } else if (this.$store.state.ble.available && this.$store.state.ble.enabled && !this.bleDevices.length) {
         try {
           await this.$store.dispatch('controllers/setControllerParam', {id: controller.broker_clientid.value, key: 'ble_enabled', value: 1}) 
         } catch(e) {
@@ -86,7 +87,7 @@ export default {
         return
       } else {
         let wait_ble = false
-        if (this.$store.state.controllers.has_ble && this.$store.state.controllers.ble_enabled && this.bleDevices.length) {
+        if (this.$store.state.ble.available && this.$store.state.ble.enabled && this.bleDevices.length) {
           console.log('using ble device')
           this.$data.bleId = this.bleDevices[0].id
           wait_ble = true
@@ -144,6 +145,7 @@ export default {
   watch: {
     bleDevices: {
       handler() {
+        console.log('watch bleDevices')
         if (this.bleDevices.length == 1) {
           const bleDevice = this.bleDevices[0]
           if (this.$data.page == 'WAIT_BLE' && bleDevice.params.wifi_status && bleDevice.params.wifi_ip) {
@@ -155,6 +157,7 @@ export default {
     },
     bleController: {
       handler() {
+        console.log('watch bleController')
         if (this.$data.page == 'WAIT_BLE_WIFI_STATUS') {
           if (this.bleController.params.wifi_status == 2) {
             this.$data.page = 'WAIT_BLE_WIFI_STATUS_BACK_ON'

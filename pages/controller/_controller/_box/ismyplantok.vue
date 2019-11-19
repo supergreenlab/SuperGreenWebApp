@@ -44,6 +44,8 @@
 </template>
 
 <script>
+
+import config from '~/config.json'
 import axios from 'axios'
 import Loading from '~/components/common/loading.vue'
 
@@ -68,7 +70,8 @@ export default {
       formData.append('text', this.$data.text)
       this.$data.uploading = true
       try {
-        await axios.post('https://towelie.supergreenlab.com/ismyplantok', formData, {
+        const { towelie } = config[process.env.NODE_ENV]
+        await axios.post('${towelie}/ismyplantok', formData, {
           headers: {
             'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
           },
