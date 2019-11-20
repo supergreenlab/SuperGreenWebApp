@@ -56,7 +56,7 @@ export default {
     },
     unit: {
       get() { return this.$store.state.settings.unit },
-      set(unit) { this.$store.commit('settings/set_unit', unit) }
+      set(unit) { this.$store.commit('settings/setUnit', unit) }
     },
     middayh: {
       get() { return this.$store.state.settings.middayh },
