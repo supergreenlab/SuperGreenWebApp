@@ -71,7 +71,7 @@ export default {
       this.$data.uploading = true
       try {
         const { towelie } = config[process.env.NODE_ENV]
-        await axios.post('${towelie}/ismyplantok', formData, {
+        await axios.post(`${towelie}/ismyplantok`, formData, {
           headers: {
             'Content-Type': `multipart/form-data; boundary=${formData._boundary}`
           },
