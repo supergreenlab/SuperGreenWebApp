@@ -51,7 +51,7 @@
         expander='expander-green.svg'
         :sizeChanged='sizeChanged'
         :mounted='updateHeights'
-        :convertFn='v => (v * 9/5) + 32'/>
+        :convertFn='v => unit == "metric" ? v : (v * 9/5) + 32'/>
       <GraphSubSection
         icon='subsection-monitoring-humidity.svg'
         title='Humidity'
