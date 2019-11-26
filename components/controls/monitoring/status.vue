@@ -41,10 +41,10 @@ export default {
       const unit = this.$store.state.settings.unit
       const temperature = (this.controller.boxes[this.boxid].temp ? this.controller.boxes[this.boxid].temp : this.controller.boxes[this.boxid].sht21_temp_c).value
       if (temperature > 35)
-        return [`${convertTemp(unit, temperature)}${unit == 'metric' ? '°' : 'F'} - To high`, 'status-temperature-icon-high.svg', true]
+        return [`${convertTemp(unit, temperature)}${unit == 'metric' ? '°' : '°F'} - To high`, 'status-temperature-icon-high.svg', true]
       else if (temperature < 18)
-        return [`${convertTemp(unit, temperature)}${unit == 'metric' ? '°' : 'F'} - To low`, 'status-temperature-icon-low.svg', true]
-      return [`${convertTemp(unit, temperature)}${unit == 'metric' ? '°' : 'F'} - Ok`, 'status-temperature-icon-ok.svg', false]
+        return [`${convertTemp(unit, temperature)}${unit == 'metric' ? '°' : '°F'} - To low`, 'status-temperature-icon-low.svg', true]
+      return [`${convertTemp(unit, temperature)}${unit == 'metric' ? '°' : '°F'} - Ok`, 'status-temperature-icon-ok.svg', false]
     },
     humidity_status() {
       const humidity = (this.controller.boxes[this.boxid].humi ? this.controller.boxes[this.boxid].humi : this.controller.boxes[this.boxid].sht21_humi).value

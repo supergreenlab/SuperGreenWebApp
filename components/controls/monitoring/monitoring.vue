@@ -47,7 +47,7 @@
         color='#3bb30b'
         :min=10
         :max=40
-        :suffix='unit == "metric" ? "°" : "F"'
+        :suffix='unit == "metric" ? "°" : "°F"'
         expander='expander-green.svg'
         :sizeChanged='sizeChanged'
         :mounted='updateHeights'
