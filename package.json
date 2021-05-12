@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.8.0",
-    "chart.js": "^2.9.2",
+    "chart.js": "^2.9.4",
     "cross-env": "^5.2.1",
     "momentjs": "^2.0.0",
     "nuxt": "^2.10.2",
